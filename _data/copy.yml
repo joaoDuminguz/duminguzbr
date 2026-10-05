@@ -3,7 +3,8 @@
 #
 # ESTE ARQUIVO É UM ESPELHO, NÃO A FONTE.
 # A fonte é o deck de copy do projeto no DigitalOffice
-# (1_clientes/<cliente>/<projeto>/copia.md, escrito pelo Marketing). Uma palavra
+# (2_casa/duminguz/nacional/2026-site/copia.md — marca da casa: o João
+# aprova, o Yargo revisa; decisoes/0006). Uma palavra
 # errada é corrigida lá primeiro, depois copiada para cá.
 #
 # Todo trecho é { text, status }. A situação viaja junto com o texto, para o
@@ -23,24 +24,97 @@
 shared:
   nav:
     items:
-      - { label: "Início",  url: "/" }
-      - { label: "Contato", url: "#contato" }
-    status: ok
+      - { label: "Trabalhos",     url: "#trabalhos" }
+      - { label: "Como funciona", url: "#como-funciona" }
+      - { label: "Perguntas",     url: "#perguntas" }
+      - { label: "Contato",       url: "#contato" }
+    status: draft
   footer:
     line:
-      text: "[FRASE DO RODAPÉ]"
-      status: missing
+      text: "João Duminguz - Design de marca, site e redes · João Pessoa, Paraíba"
+      status: draft
 
 # --- Título e descrição por página (o copy_key de cada página escolhe) -----
 meta:
   home:
-    title:       { text: "[TÍTULO DA HOME]", status: missing }
-    description: { text: "[DESCRIÇÃO DA HOME]", status: missing }
+    title:       { text: "João Duminguz - Design de marca, site e redes", status: draft }
+    description: { text: "Designer em João Pessoa, atendendo o Brasil inteiro. Marca, site e redes sociais pensados como um sistema só. Orçamento pelo WhatsApp.", status: draft }
     share:       { src: "", status: missing }
 
 # --- Home ------------------------------------------------------------------
+# A ordem das seções é a do deck (copia.md, "A página, de cima para baixo").
 home:
   hero:
-    titulo:    { text: "[TÍTULO]",        status: missing }
-    subtitulo: { text: "[SUBTÍTULO]",     status: missing }
-    cta:       { text: "Fale com a gente", url: "#contato", status: draft }
+    titulo:    { text: "A) Marca, site e redes, desenhados como um sistema só. · B) Desenho a marca do seu negócio, e tudo o que sai dela. · C) Uma marca que funciona igual na fachada, no site e no Instagram.", status: pick }
+    subtitulo: { text: "Sou João Duminguz, designer em João Pessoa. Há 14 anos desenho marcas, sites e peças para redes sociais, e faço tudo conversar.", status: draft }
+    cta:       { text: "Pedir orçamento pelo WhatsApp", url: "#contato", status: draft }
+    promessa:  { text: "Orçamento em 24 horas.", status: pick }
+    provas:
+      - { text: "14 anos de design, desde 2012", status: draft }
+      - { text: "Um design system mantido por dez anos numa empresa de tecnologia", status: draft }
+      - { text: "Atendo o Brasil inteiro", status: draft }
+
+  servicos:
+    titulo: { text: "O que eu faço", status: draft }
+    itens:
+      - nome:  { text: "Marca", status: draft }
+        texto: { text: "Logotipo, cores, tipografia e o manual que diz como usar tudo isso. Para negócio novo ou para marca que precisa de uma atualização sem perder o que já é seu.", status: draft }
+      - nome:  { text: "Site", status: draft }
+        texto: { text: "Landing page ou site institucional, desenhado e construído por mim, com o contato direto no WhatsApp.", status: draft }
+      - nome:  { text: "Redes sociais e motion", status: draft }
+        texto: { text: "Posts, vídeos curtos e animação do logo, feitos a partir da marca para o feed ficar com cara de um negócio só.", status: draft }
+    tambem: { text: "Também faço design de interface e de aplicativo, apresentações e pitch decks, ilustração para marcas, e impressos como rótulo e cardápio.", status: draft }
+
+  trabalhos:
+    titulo: { text: "Trabalhos", status: draft }
+    itens:
+      - id: redcred
+        nome:  { text: "RedCred - Marca e marketing", status: draft }
+        texto: { text: "Uma empresa de soluções financeiras precisava de marca e de marketing. Criei a marca, organizei os processos internos, montei o time de marketing e dirigi a arte das campanhas, de 2020 a 2021.", status: draft }
+      - id: paofrances
+        nome:  { text: "Pão Francês da Serra - Redesenho de marca", status: draft }
+        texto: { text: "Uma padaria de família, com uma marca que a dona conhecia de cor. Redesenhei o logo sem tirar dela o que ela reconhecia, e entreguei junto o manual da marca e um kit de ilustrações para embalagens e redes.", status: draft }
+      - id: facil
+        nome:  { text: "Fácil Soluções - Design de interface", status: draft }
+        texto: { text: "Desenhei o design system e a arquitetura de interface do produto de uma empresa de tecnologia com certificação ISO 9001. O sistema foi mantido por dez anos enquanto o produto crescia.", status: draft }
+    mais:
+      titulo: { text: "Mais marcas", status: draft }
+      texto:  { text: "Logotipos e identidades para negócios reais, e o rótulo da cerveja artesanal Maledita.", status: draft }
+
+  passos:
+    titulo: { text: "Como funciona", status: draft }
+    itens:
+      - nome:  { text: "Conversa", status: draft }
+        texto: { text: "Você me conta pelo WhatsApp o que o seu negócio faz e o que precisa.", status: draft }
+      - nome:  { text: "Orçamento", status: draft }
+        texto: { text: "Mando o orçamento com o que vou entregar, o prazo e o valor.", status: draft }
+      - nome:  { text: "Criação", status: draft }
+        texto: { text: "Desenho, mostro, e ajustamos juntos até ficar certo.", status: draft }
+      - nome:  { text: "Entrega", status: draft }
+        texto: { text: "Você recebe todos os arquivos, prontos para usar, e o manual de como usar.", status: draft }
+
+  sobre:
+    titulo: { text: "Quem sou", status: draft }
+    texto:  { text: "Sou João Duminguz, artista digital e designer de João Pessoa, na Paraíba. Desde 2012 desenho marcas, interfaces e peças de comunicação. Passei dez anos cuidando do design de um produto de tecnologia e os últimos anos dirigindo arte para estúdios de games. O que levo de lá para o seu negócio é o hábito de pensar a marca como um sistema: cada peça nova já nasce sabendo como se encaixar nas outras.", status: draft }
+    frase:  { text: "A) Desenhado à mão, construído como sistema. · B) Feito à mão, pensado como sistema.", status: pick }
+
+  perguntas:
+    titulo: { text: "Perguntas frequentes", status: draft }
+    itens:
+      - pergunta: { text: "Quanto custa?", status: draft }
+        resposta: { text: "Depende do que o seu negócio precisa: uma marca nova, um site, ou os dois. Me conta pelo WhatsApp e eu mando o orçamento com o valor e o prazo.", status: draft }
+      - pergunta: { text: "Você atende fora de João Pessoa?", status: draft }
+        resposta: { text: "Sim. Atendo o Brasil inteiro, pelo WhatsApp e por videochamada.", status: draft }
+      - pergunta: { text: "Quem faz o trabalho?", status: draft }
+        resposta: { text: "Eu. Você fala direto comigo, do primeiro contato à entrega.", status: draft }
+      - pergunta: { text: "Já tenho um logo. Precisa jogar fora?", status: draft }
+        resposta: { text: "Não. Muitas vezes o melhor é redesenhar mantendo o que o seu cliente já reconhece, como fiz na Pão Francês da Serra.", status: draft }
+      - pergunta: { text: "O que eu recebo no final?", status: draft }
+        resposta: { text: "Os arquivos em todos os formatos de que você precisa, para imprimir e para usar no digital, e o manual da marca.", status: draft }
+      - pergunta: { text: "Quanto tempo leva?", status: draft }
+        resposta: { text: "[PRAZO]", status: missing }
+
+  contato:
+    titulo: { text: "Vamos conversar sobre o seu negócio?", status: draft }
+    texto:  { text: "Me manda uma mensagem no WhatsApp. Respondo eu mesmo.", status: draft }
+    cta:    { text: "Abrir o WhatsApp", status: draft }

@@ -9,7 +9,10 @@
 {%- assign c = site.data.contato -%}
 <footer class="rodape" id="contato">
   <div class="wrap">
-    {%- if f.line.text and f.line.text != "" %}
+    {%- comment -%} Só `ok` vai ao ar; o /proto/ (show_status) mostra tudo, com marca. {%- endcomment -%}
+    {%- assign mostra_frase = false -%}
+    {%- if f.line.status == "ok" or page.show_status -%}{%- assign mostra_frase = true -%}{%- endif -%}
+    {%- if mostra_frase and f.line.text and f.line.text != "" %}
     <p class="rodape__frase{% include mark.html slot=f.line %}">{{ f.line.text }}</p>
     {%- endif %}
 

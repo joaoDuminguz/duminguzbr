@@ -15,9 +15,12 @@
 <header class="nav">
   <div class="wrap">
     <a class="logo" href="{{ base | append: '/' | relative_url }}">{{ site.title }}</a>
+    {%- comment -%} Só um menu `ok` vai ao ar; o /proto/ (show_status) mostra qualquer um. {%- endcomment -%}
+    {%- assign menu = site.data.copy.shared.nav -%}
+    {%- if menu.status == "ok" or page.show_status %}
     <nav aria-label="Principal">
       <ul>
-        {%- for item in site.data.copy.shared.nav.items %}
+        {%- for item in menu.items %}
         {%- if item.url contains '#' -%}
           {%- assign alvo = item.url -%}
         {%- else -%}
@@ -27,5 +30,6 @@
         {%- endfor %}
       </ul>
     </nav>
+    {%- endif %}
   </div>
 </header>
