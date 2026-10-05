@@ -63,7 +63,9 @@ home:
         texto: { text: "Landing page ou site institucional, desenhado e construído por mim, com o contato direto no WhatsApp.", status: draft }
       - nome:  { text: "Redes sociais e motion", status: draft }
         texto: { text: "Posts, vídeos curtos e animação do logo, feitos a partir da marca para o feed ficar com cara de um negócio só.", status: draft }
-    tambem: { text: "Também faço design de interface e de aplicativo, apresentações e pitch decks, ilustração para marcas, e impressos como rótulo e cardápio.", status: draft }
+      - nome:  { text: "Vídeo e 3D", status: draft }
+        texto: { text: "Render de produto, motion graphic e animação no Blender e no After Effects, para anúncio, rede social e site.", status: draft }
+    tambem: { text: "Também faço design de interface e de aplicativo, apresentações e pitch decks, ilustração 2D e 3D para marcas, e impressos como rótulo e cardápio.", status: draft }
 
   trabalhos:
     titulo: { text: "Trabalhos", status: draft }
