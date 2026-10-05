@@ -47,7 +47,7 @@ exclui, e só o `_config.painel.yml` o liga.
 | Aba | O que faz |
 |---|---|
 | **Design system** | A paleta, os papéis de cada cor nos dois registros e a tipografia, lidos de `css/marca-tokens.css`. Botões de copiar o valor, o CSS de cada estilo, e os tokens inteiros para a aba Theme do Paper |
-| **Componentes** | Cada seção marcada com `data-componente`, nos wireframes e na proposta visual. **Copiar para o Paper** copia a seção como HTML autossuficiente, **na largura e na altura do aparelho da prévia** — PC para o quadro de 1440 × 900, Celular para o de 390 × 844: estilo calculado embutido, `::before`/`::after` viram elementos, imagens viram `data:` URI. **Baixar HTML** salva o mesmo num arquivo, para conferir no navegador |
+| **Componentes** | Cada seção marcada com `data-componente`, nos wireframes e na proposta visual. **Copiar para o Paper** copia a seção como HTML autossuficiente, **na largura e na altura do aparelho da prévia** — PC para o quadro de 1440 × 900, Celular para o de 390 × 844: estilo calculado embutido (o Paper só lê estilo inline), `::before`/`::after` viram elementos, cada camada ganha `layer-name`, e as imagens apontam para a URL pública do GitHub Pages (`paper_imagens` no `_config.painel.yml`), de onde o Paper as sobe. O código vai também como texto puro, que é o que o Paper lê ao colar. **Baixar HTML** salva o mesmo num arquivo, para conferir no navegador |
 | **Copy** | Todo trecho do `copy.yml`, com texto e situação editáveis. A prévia muda na hora. **Nada é gravado sozinho:** *Baixar copy.yml* gera o arquivo inteiro, que substitui `_data/copy.yml` |
 
 À direita, a prévia: wireframe ou site real, em celular (390), tablet (768) ou PC (1440).

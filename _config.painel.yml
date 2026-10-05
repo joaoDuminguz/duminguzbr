@@ -14,3 +14,7 @@ exclude:
   - paper-out
   - .claude
   - abrir-painel.bat
+
+# Endereço público das imagens, para o "Copiar para o Paper": o Paper sobe as
+# imagens a partir de uma URL pública. Troque pelo domínio quando ele estiver no ar.
+paper_imagens: https://joaoduminguz.github.io/duminguzbr

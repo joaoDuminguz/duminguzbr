@@ -389,11 +389,19 @@ robots: noindex
     if (!c || c === "none" || c === "normal") return null;
     var span = doc.createElement("span");
     span.setAttribute("style", estilo(cs, null));
-    span.setAttribute("aria-hidden", "true");
+    span.setAttribute("layer-name", "detalhe");
     var m = c.match(/^"(.*)"$/); if (m) span.textContent = m[1];
     return span;
   }
   function absoluto(url) { try { return new URL(url, previa.contentWindow.location.href).href; } catch (e) { return url; } }
+  /* O Paper sobe as imagens a partir de uma URL PÚBLICA (docs: paper.design/docs/paste/html).
+     As do site estão no GitHub Pages: o caminho local vira o endereço publicado. */
+  var PUBLICO = "{{ site.paper_imagens | default: '' }}";
+  function publico(url) {
+    var a = absoluto(url);
+    if (!PUBLICO) return a;
+    try { var u = new URL(a); return PUBLICO.replace(/\/$/, "") + u.pathname; } catch (e) { return a; }
+  }
   function paraDataURI(url) {
     return fetch(absoluto(url)).then(function (r) { return r.blob(); }).then(function (b) {
       return new Promise(function (ok) { var f = new FileReader(); f.onload = function () { ok(f.result); }; f.readAsDataURL(b); });
@@ -407,7 +415,10 @@ robots: noindex
     orig.forEach(function (o, i) {
       var n = novos[i];
       n.setAttribute("style", estilo(win.getComputedStyle(o), o));
-      ["class", "data-copy", "data-embaralhar", "data-alvo", "data-tema", "id", "tabindex", "loading", "fetchpriority"].forEach(function (a) { n.removeAttribute(a); });
+      var classes = o.classList ? Array.prototype.filter.call(o.classList, function (c) { return !/^(is-|painel-)/.test(c); }) : [];
+      var nomeCamada = o.getAttribute("data-componente") || classes[0] || "";
+      if (nomeCamada) n.setAttribute("layer-name", nomeCamada);
+      ["class", "data-copy", "data-embaralhar", "data-alvo", "data-tema", "id", "tabindex", "loading", "fetchpriority", "aria-hidden", "aria-label", "aria-current", "aria-roledescription", "role"].forEach(function (a) { n.removeAttribute(a); });
       if (n.nodeName === "IMG") return;
       var antes = pseudo(win.getComputedStyle(o, "::before"), doc), depois = pseudo(win.getComputedStyle(o, "::after"), doc);
       if (antes) n.insertBefore(antes, n.firstChild);
@@ -418,10 +429,11 @@ robots: noindex
     var tarefas = [];
     copia.querySelectorAll("img").forEach(function (img) {
       img.removeAttribute("srcset");
-      tarefas.push(paraDataURI(img.getAttribute("src")).then(function (d) { img.setAttribute("src", d); }));
+      if (PUBLICO) img.setAttribute("src", publico(img.getAttribute("src")));
+      else tarefas.push(paraDataURI(img.getAttribute("src")).then(function (d) { img.setAttribute("src", d); }));
     });
     return Promise.all(tarefas).then(function () {
-      return '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;600;700&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">' + copia.outerHTML;
+      return copia.outerHTML;
     });
   }
   /* A prévia vai à altura real do aparelho enquanto copia: 100dvh vira 900, não a altura esticada do palco. */
@@ -435,7 +447,8 @@ robots: noindex
     if (!s.getClientRects().length) { aviso(nome + " não aparece nesta largura — troque Celular/PC"); return; }
     var feito = naAlturaReal(function () { return comEstilo(s, previa.contentWindow); });
     var html = feito.then(function (h) { return new Blob([h], { type: "text/html" }); });
-    var texto = feito.then(function () { return new Blob([s.innerText], { type: "text/plain" }); });
+    /* O Paper lê o texto puro da área de transferência como CÓDIGO: vai o HTML nos dois formatos. */
+    var texto = feito.then(function (h) { return new Blob([h], { type: "text/plain" }); });
     navigator.clipboard.write([new ClipboardItem({ "text/html": html, "text/plain": texto })])
       .then(function () { aviso(nome + " copiado em " + largura + " px — cole no Paper"); })
       .catch(function (e) { aviso("Não copiou: " + e.message); });
@@ -444,7 +457,7 @@ robots: noindex
   function baixarParaPaper(s, nome) {
     if (!s.getClientRects().length) { aviso(nome + " não aparece nesta largura — troque Celular/PC"); return; }
     return naAlturaReal(function () { return comEstilo(s, previa.contentWindow); }).then(function (h) {
-      var pagina = '<!doctype html><html lang="pt-BR"><head><title>' + nome + " · " + largura + '</title></head><body style="margin:0">' + h + "</body></html>";
+      var pagina = '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>' + nome + " · " + largura + '</title><link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;600;700&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet"></head><body style="margin:0">' + h + "</body></html>";
       var a = document.createElement("a");
       a.href = URL.createObjectURL(new Blob([pagina], { type: "text/html" }));
       a.download = "paper-" + nome.toLowerCase().normalize("NFD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + "-" + largura + ".html";
