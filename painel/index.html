@@ -338,33 +338,127 @@ robots: noindex
   previa.addEventListener("load", function () { listarComponentes(); });
 
   /* ---------- componentes ---------- */
-  var PROPS = ["display", "flex-direction", "flex-wrap", "justify-content", "align-items", "gap",
-    "grid-template-columns", "padding", "margin", "width", "max-width", "min-height", "aspect-ratio",
-    "font-family", "font-size", "font-weight", "line-height", "letter-spacing", "text-transform",
-    "text-align", "color", "background-color", "border-top", "border-bottom", "border-radius", "list-style"];
+  /* ---------- copiar para o Paper ----------
+     Plano A do fluxo (ponte manual, zero chamadas do Paper). O componente sai
+     como HTML autossuficiente, na largura da prévia e na ALTURA do aparelho:
+       · estilo calculado embutido em cada elemento (só o que foge do padrão);
+       · ::before e ::after viram elementos de verdade (cantos, marcadores…);
+       · imagens viram data: URI, para abrir no Paper sem o servidor local.
+     O ClipboardItem recebe uma promessa, então a cópia vale mesmo com o
+     tempo de embutir as imagens. */
+  var PROPS = ["display", "position", "top", "right", "bottom", "left", "z-index",
+    "flex-direction", "flex-wrap", "flex", "justify-content", "align-items", "align-self", "gap",
+    "grid-template-columns", "grid-template-rows", "grid-column", "grid-row",
+    "padding", "margin", "width", "height", "max-width", "max-height", "min-width", "min-height", "aspect-ratio",
+    "box-sizing", "overflow", "object-fit", "object-position",
+    "font-family", "font-size", "font-weight", "font-style", "line-height", "letter-spacing", "text-transform",
+    "text-align", "text-decoration-line", "white-space", "color", "-webkit-text-stroke", "opacity", "mix-blend-mode",
+    "background-color", "background-image", "background-size", "background-position",
+    "border-top", "border-right", "border-bottom", "border-left", "border-radius",
+    "box-shadow", "clip-path", "transform", "transform-origin", "translate", "rotate", "scale",
+    "filter", "mask-image", "-webkit-mask-image", "list-style", "vertical-align", "fill", "stroke"];
   var PADRAO = ["normal", "none", "auto", "0px", "start", "row", "nowrap", "rgba(0, 0, 0, 0)",
-    "0px none rgb(34, 34, 34)", "0px 0px", "0px none rgb(0, 0, 0)"];
+    "0px 0px", "visible", "static", "content-box", "0 1 auto", "stretch", "50% 50%", "50% 50% 0px",
+    "0% 0%", "outside none disc", "baseline", "fill", "repeat"];
+  var ALTURA = { 390: 844, 768: 1024, 1440: 900 };
+
+  var SO_SVG = ["fill", "stroke"];
+  function estilo(cs, el) {
+    var transformado = ["transform", "translate", "rotate", "scale"].some(function (p) { var v = cs.getPropertyValue(p); return v && v !== "none"; });
+    var svg = el && (el.namespaceURI === "http://www.w3.org/2000/svg");
+    return PROPS.map(function (p) { return [p, cs.getPropertyValue(p)]; })
+      .filter(function (d) {
+        var p = d[0], v = d[1];
+        if (!v) return false;
+        if (p === "display") return true;
+        /* margem e padding sempre: o "0" do site precisa vencer o padrão do navegador (40px na lista, margem no título) */
+        if (p === "margin" || p === "padding") return true;
+        if (p === "text-decoration-line") return v !== "none" || (el && el.nodeName === "A");   /* link sem sublinhado, como no site */
+        if (/^border-(top|right|bottom|left)$/.test(p)) return !/^0px/.test(v);
+        if (p === "z-index") return v !== "auto";                       /* "1" é valor, não padrão */
+        if (p === "opacity") return v !== "1";
+        if (p === "-webkit-text-stroke") return !/^0px/.test(v);
+        if (p === "transform-origin") return transformado;
+        if (SO_SVG.indexOf(p) >= 0) return svg;
+        return PADRAO.indexOf(v) < 0;
+      })
+      .map(function (d) { return d[0] + ":" + d[1]; }).join(";");
+  }
+  function pseudo(cs, doc) {
+    var c = cs.getPropertyValue("content");
+    if (!c || c === "none" || c === "normal") return null;
+    var span = doc.createElement("span");
+    span.setAttribute("style", estilo(cs, null));
+    span.setAttribute("aria-hidden", "true");
+    var m = c.match(/^"(.*)"$/); if (m) span.textContent = m[1];
+    return span;
+  }
+  function absoluto(url) { try { return new URL(url, previa.contentWindow.location.href).href; } catch (e) { return url; } }
+  function paraDataURI(url) {
+    return fetch(absoluto(url)).then(function (r) { return r.blob(); }).then(function (b) {
+      return new Promise(function (ok) { var f = new FileReader(); f.onload = function () { ok(f.result); }; f.readAsDataURL(b); });
+    }).catch(function () { return absoluto(url); });
+  }
   function comEstilo(el, win) {
+    var doc = win.document;
     var copia = el.cloneNode(true);
     var orig = [el].concat(Array.prototype.slice.call(el.querySelectorAll("*")));
     var novos = [copia].concat(Array.prototype.slice.call(copia.querySelectorAll("*")));
     orig.forEach(function (o, i) {
-      var cs = win.getComputedStyle(o), n = novos[i];
-      /* Só o que difere do padrão: o Paper recebe um estilo legível, não 26 linhas por elemento. */
-      n.setAttribute("style", PROPS.map(function (p) { return [p, cs.getPropertyValue(p)]; })
-        .filter(function (d) { return d[0] === "display" || PADRAO.indexOf(d[1]) < 0; })
-        .map(function (d) { return d[0] + ":" + d[1]; }).join(";"));
-      n.removeAttribute("class"); n.removeAttribute("data-copy");
+      var n = novos[i];
+      n.setAttribute("style", estilo(win.getComputedStyle(o), o));
+      ["class", "data-copy", "data-embaralhar", "data-alvo", "data-tema", "id", "tabindex", "loading", "fetchpriority"].forEach(function (a) { n.removeAttribute(a); });
+      if (n.nodeName === "IMG") return;
+      var antes = pseudo(win.getComputedStyle(o, "::before"), doc), depois = pseudo(win.getComputedStyle(o, "::after"), doc);
+      if (antes) n.insertBefore(antes, n.firstChild);
+      if (depois) n.appendChild(depois);
     });
-    copia.setAttribute("data-paper", copia.getAttribute("data-componente") || "");
+    copia.setAttribute("data-paper", el.getAttribute("data-componente") || "");
     copia.removeAttribute("data-componente");
-    return copia.outerHTML;
+    var tarefas = [];
+    copia.querySelectorAll("img").forEach(function (img) {
+      img.removeAttribute("srcset");
+      tarefas.push(paraDataURI(img.getAttribute("src")).then(function (d) { img.setAttribute("src", d); }));
+    });
+    return Promise.all(tarefas).then(function () {
+      return '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;600;700&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">' + copia.outerHTML;
+    });
   }
+  /* A prévia vai à altura real do aparelho enquanto copia: 100dvh vira 900, não a altura esticada do palco. */
+  function naAlturaReal(fn) {
+    var h = previa.style.height;
+    previa.style.height = (ALTURA[largura] || 900) + "px";
+    return new Promise(function (ok) { requestAnimationFrame(function () { requestAnimationFrame(ok); }); })
+      .then(fn).finally(function () { previa.style.height = h; });
+  }
+  function copiarParaPaper(s, nome) {
+    if (!s.getClientRects().length) { aviso(nome + " não aparece nesta largura — troque Celular/PC"); return; }
+    var feito = naAlturaReal(function () { return comEstilo(s, previa.contentWindow); });
+    var html = feito.then(function (h) { return new Blob([h], { type: "text/html" }); });
+    var texto = feito.then(function () { return new Blob([s.innerText], { type: "text/plain" }); });
+    navigator.clipboard.write([new ClipboardItem({ "text/html": html, "text/plain": texto })])
+      .then(function () { aviso(nome + " copiado em " + largura + " px — cole no Paper"); })
+      .catch(function (e) { aviso("Não copiou: " + e.message); });
+    return feito;
+  }
+  function baixarParaPaper(s, nome) {
+    if (!s.getClientRects().length) { aviso(nome + " não aparece nesta largura — troque Celular/PC"); return; }
+    return naAlturaReal(function () { return comEstilo(s, previa.contentWindow); }).then(function (h) {
+      var pagina = '<!doctype html><html lang="pt-BR"><head><title>' + nome + " · " + largura + '</title></head><body style="margin:0">' + h + "</body></html>";
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([pagina], { type: "text/html" }));
+      a.download = "paper-" + nome.toLowerCase().normalize("NFD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + "-" + largura + ".html";
+      a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+      aviso(nome + " baixado — abra no navegador para conferir");
+      return pagina;
+    });
+  }
+  window.__paper = { comEstilo: comEstilo, naAlturaReal: naAlturaReal, baixar: baixarParaPaper };
   function listarComponentes() {
     var doc, alvo = $("#componentes");
     try { doc = previa.contentDocument; } catch (e) {}
     var secoes = doc ? doc.querySelectorAll("[data-componente]") : [];
-    if (!secoes.length) { alvo.innerHTML = '<p class="ajuda">Esta página da prévia não tem componentes marcados. Escolha <b>Wireframe</b>.</p>'; return; }
+    if (!secoes.length) { alvo.innerHTML = '<p class="ajuda">Esta página da prévia não tem componentes marcados. Escolha um wireframe ou a proposta visual.</p>'; return; }
     alvo.innerHTML = "";
     secoes.forEach(function (s) {
       var nome = s.getAttribute("data-componente");
@@ -373,15 +467,15 @@ robots: noindex
       linha.innerHTML = "<b></b>" +
         '<button class="btn" data-acao="ver">Ver na prévia</button>' +
         '<button class="btn forte" data-acao="paper">Copiar para o Paper</button>' +
+        '<button class="btn" data-acao="baixar" title="Baixa o mesmo HTML num arquivo, para conferir no navegador">Baixar HTML</button>' +
         "<small>" + n + " trechos de copy</small>";
       $("b", linha).textContent = nome;
       linha.addEventListener("click", function (e) {
         var b = e.target.closest("[data-acao]"); if (!b) return;
-        if (b.getAttribute("data-acao") === "ver") s.scrollIntoView({ block: "start" });
-        else {
-          var html = comEstilo(s, previa.contentWindow);
-          copiar(s.innerText, html).then(function () { aviso(nome + " copiado em " + largura + " px — cole no Paper"); });
-        }
+        var acao = b.getAttribute("data-acao");
+        if (acao === "ver") s.scrollIntoView({ block: "start" });
+        else if (acao === "baixar") baixarParaPaper(s, nome);
+        else copiarParaPaper(s, nome);
       });
       alvo.appendChild(linha);
     });

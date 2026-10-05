@@ -31,7 +31,7 @@ contato|contato|titulo|conversa|noite
 <p class="aviso-proposta">Proposta visual · textos em rascunho · o layout final é do Estúdio, no Paper</p>
 
 <div class="sis">
-  <aside class="sis-menu" id="sis-menu" aria-label="Navegação">
+  <aside class="sis-menu" id="sis-menu" aria-label="Navegação" data-componente="Menu lateral">
     <a class="sis-marca" href="#s-inicio"><img src="{{ '/img/logo-duminguz-escuro.svg' | relative_url }}" alt="Duminguz" width="150" height="63"></a>
     <span class="sis-descritor">Design digital</span>
     <nav>
@@ -52,7 +52,7 @@ contato|contato|titulo|conversa|noite
     <a class="botao" href="#s-contato" data-copy="home.hero.cta">{{ c.hero.cta.text }}</a>
   </aside>
 
-  <header class="sis-topo">
+  <header class="sis-topo" data-componente="Barra do topo (celular)">
     <span class="sis-atual" id="sis-atual" aria-live="polite">01 {{ c.hero.menu.text }}</span>
     <button class="sis-abrir" aria-expanded="false" aria-controls="sis-menu">Menu</button>
   </header>
