@@ -51,6 +51,10 @@ exclui, e só o `_config.painel.yml` o liga.
 | **Copy** | Todo trecho do `copy.yml`, com texto e situação editáveis. A prévia muda na hora. **Nada é gravado sozinho:** *Baixar copy.yml* gera o arquivo inteiro, que substitui `_data/copy.yml` |
 
 À direita, a prévia: wireframe ou site real, em celular (390), tablet (768) ou PC (1440).
+**⧉ Abrir em outra aba** abre o visualizador (`/painel/ver/`): o site sozinho na aba, em
+tamanho real no PC, e numa moldura de aparelho no celular (390 × 844) e no tablet
+(768 × 1024), com botão de girar. As edições do painel chegam lá ao vivo
+(`BroadcastChannel`); **Página pura** abre a página sem visualizador e sem edições.
 
 Como a prévia ouve o painel: cada trecho no `/proto/` tem `data-copy="<caminho no
 copy.yml>"` (o include `slot.html` escreve isso), e o `proto/ponte.js` aplica o que o

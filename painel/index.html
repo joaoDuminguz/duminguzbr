@@ -186,7 +186,8 @@ robots: noindex
         <option value="{{ '/proto/' | relative_url }}">Wireframe</option>
         <option value="{{ '/' | relative_url }}">Site real</option>
       </select>
-      <button class="btn" id="recarregar" title="Recarregar a prévia">↻</button>
+      <button class="btn" id="recarregar" title="Recarregar a prévia" aria-label="Recarregar a prévia">↻</button>
+      <button class="btn" id="nova-aba" title="Abrir o site sozinho em outra aba, no tamanho real">⧉ Abrir em outra aba</button>
       <small id="escala"></small>
     </div>
     <div class="palco" id="palco">
@@ -317,8 +318,17 @@ robots: noindex
   });
   $("#pagina").addEventListener("change", function () { previa.src = this.value; });
   $("#recarregar").addEventListener("click", function () { previa.contentWindow.location.reload(); });
+  $("#nova-aba").addEventListener("click", function () {
+    var u = "{{ '/painel/ver/' | relative_url }}?w=" + largura + "&p=" + encodeURIComponent($("#pagina").value);
+    window.open(u, "_blank", "noopener");
+  });
 
-  function enviar(msg) { if (previa.contentWindow) previa.contentWindow.postMessage(msg, location.origin); }
+  /* As edições vão para a prévia e, pelo canal, para o visualizador em outra aba. */
+  var canal = null; try { canal = new BroadcastChannel("painel-copy"); } catch (e) {}
+  function enviar(msg) {
+    if (previa.contentWindow) previa.contentWindow.postMessage(msg, location.origin);
+    if (canal) canal.postMessage(msg);
+  }
   function enviarTudo() { enviar({ tipo: "copy", lista: trechos().map(function (t) { return { path: t.path, text: t.slot.text, status: t.slot.status }; }) }); }
   window.addEventListener("message", function (e) {
     if (e.origin === location.origin && e.data && e.data.tipo === "pronto") enviarTudo();
