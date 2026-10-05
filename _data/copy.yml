@@ -45,10 +45,10 @@ meta:
 # A ordem das seções é a do deck (copia.md, "A página, de cima para baixo").
 home:
   hero:
-    titulo:    { text: "A) Marca, site e redes, desenhados como um sistema só. · B) Desenho a marca do seu negócio, e tudo o que sai dela. · C) Uma marca que funciona igual na fachada, no site e no Instagram.", status: pick }
-    subtitulo: { text: "Sou João Duminguz, designer em João Pessoa. Há 14 anos desenho marcas, sites e peças para redes sociais, e faço tudo conversar.", status: draft }
+    titulo:    { text: "Feito à mão, pensado como sistema.", status: ok }
+    subtitulo: { text: "Marca, site, vídeo e 3D para o seu negócio. Sou João Duminguz, designer e artista em João Pessoa, e desenho tudo isso como uma coisa só.", status: draft }
     cta:       { text: "Pedir orçamento pelo WhatsApp", url: "#contato", status: draft }
-    promessa:  { text: "Orçamento em 24 horas.", status: pick }
+    promessa:  { text: "", status: missing }   # sem promessa pública de prazo
     provas:
       - { text: "14 anos de design, desde 2012", status: draft }
       - { text: "Um design system mantido por dez anos numa empresa de tecnologia", status: draft }
@@ -79,9 +79,15 @@ home:
       - id: facil
         nome:  { text: "Fácil Soluções - Design de interface", status: draft }
         texto: { text: "Desenhei o design system e a arquitetura de interface do produto de uma empresa de tecnologia com certificação ISO 9001. O sistema foi mantido por dez anos enquanto o produto crescia.", status: draft }
+      - id: nike
+        nome:  { text: "Proposta para a Nike - Motion 3D", status: draft }
+        texto: { text: "Na Sortium, uma equipe de três fez um vídeo para propor uma parceria à Nike, que recebeu bem o material. Fiz sozinho a abertura, em Blender, e animei um personagem. O resto do vídeo é do Cacio, e o storyboard, de um colega da equipe.", status: draft }
+      - id: cosmogene
+        nome:  { text: "Cosmogene - Design system e motion", status: draft }
+        texto: { text: "Num jogo da Sortium, defini o sistema visual inteiro: design system, interface, ícones e arte conceitual. E animei no After Effects os vídeos de divulgação do jogo.", status: draft }
     mais:
       titulo: { text: "Mais marcas", status: draft }
-      texto:  { text: "Logotipos e identidades para negócios reais, e o rótulo da cerveja artesanal Maledita.", status: draft }
+      texto:  { text: "Logotipos e identidades para negócios reais, e o logo e o rótulo da cerveja artesanal Maledita.", status: draft }
 
   passos:
     titulo: { text: "Como funciona", status: draft }
@@ -98,7 +104,7 @@ home:
   sobre:
     titulo: { text: "Quem sou", status: draft }
     texto:  { text: "Sou João Duminguz, artista digital e designer de João Pessoa, na Paraíba. Desde 2012 desenho marcas, interfaces e peças de comunicação. Passei dez anos cuidando do design de um produto de tecnologia e os últimos anos dirigindo arte para estúdios de games. O que levo de lá para o seu negócio é o hábito de pensar a marca como um sistema: cada peça nova já nasce sabendo como se encaixar nas outras.", status: draft }
-    frase:  { text: "A) Desenhado à mão, construído como sistema. · B) Feito à mão, pensado como sistema.", status: pick }
+    frase:  { text: "", status: missing }   # virou o título da primeira tela
 
   perguntas:
     titulo: { text: "Perguntas frequentes", status: draft }
@@ -108,13 +114,13 @@ home:
       - pergunta: { text: "Você atende fora de João Pessoa?", status: draft }
         resposta: { text: "Sim. Atendo o Brasil inteiro, pelo WhatsApp e por videochamada.", status: draft }
       - pergunta: { text: "Quem faz o trabalho?", status: draft }
-        resposta: { text: "Eu. Você fala direto comigo, do primeiro contato à entrega.", status: draft }
+        resposta: { text: "Eu, e você fala direto comigo do primeiro contato à entrega. Quando o projeto pede marketing, como anúncios e gestão das redes, trabalho junto com um parceiro de marketing.", status: draft }
       - pergunta: { text: "Já tenho um logo. Precisa jogar fora?", status: draft }
         resposta: { text: "Não. Muitas vezes o melhor é redesenhar mantendo o que o seu cliente já reconhece, como fiz na Pão Francês da Serra.", status: draft }
       - pergunta: { text: "O que eu recebo no final?", status: draft }
         resposta: { text: "Os arquivos em todos os formatos de que você precisa, para imprimir e para usar no digital, e o manual da marca.", status: draft }
       - pergunta: { text: "Quanto tempo leva?", status: draft }
-        resposta: { text: "[PRAZO]", status: missing }
+        resposta: { text: "Depende do tamanho do projeto. O prazo vem escrito no orçamento, antes de começar.", status: draft }
 
   contato:
     titulo: { text: "Vamos conversar sobre o seu negócio?", status: draft }
