@@ -50,9 +50,19 @@
   /* ---------- 1. menu ---------- */
   var links = document.querySelectorAll("[data-alvo]"), atual = document.getElementById("sis-atual");
   var menu = document.getElementById("sis-menu"), abrir = document.querySelector(".sis-abrir");
+  var sis = document.querySelector(".sis");
+  /* A tela atual empresta a cor dela ao sistema: o indicador do menu e, no
+     celular, a barra do topo. */
+  function pintarSistema(tela) {
+    var cs = getComputedStyle(tela);
+    sis.style.setProperty("--sinal-atual", cs.getPropertyValue("--sinal"));
+    sis.style.setProperty("--topo-bg", cs.getPropertyValue("--dgz-bg"));
+    sis.style.setProperty("--topo-fg", cs.getPropertyValue("--dgz-fg"));
+  }
   var olho = new IntersectionObserver(function (es) {
     es.forEach(function (e) {
       if (!e.isIntersecting) return;
+      pintarSistema(e.target);
       links.forEach(function (l) {
         if (l.getAttribute("data-alvo") === e.target.id) {
           l.setAttribute("aria-current", "true");

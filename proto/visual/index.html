@@ -17,13 +17,13 @@ stylesheets:
 {%- endcomment -%}
 {%- assign c = site.data.copy.home -%}
 {%- capture telas -%}
-inicio|hero|menu|casa
-servicos|servicos|titulo|camadas
-trabalhos|trabalhos|titulo|grade
-passos|passos|titulo|passos
-sobre|sobre|titulo|pessoa
-perguntas|perguntas|titulo|pergunta
-contato|contato|titulo|conversa
+inicio|hero|menu|casa|osso
+servicos|servicos|titulo|camadas|mar
+trabalhos|trabalhos|titulo|grade|tinta
+passos|passos|titulo|passos|canion
+sobre|sobre|titulo|pessoa|areia
+perguntas|perguntas|titulo|pergunta|argila
+contato|contato|titulo|conversa|noite
 {%- endcapture -%}
 {%- assign telas = telas | newline_to_br | split: "<br />" %}
 
@@ -32,17 +32,17 @@ contato|contato|titulo|conversa
 
 <div class="sis">
   <aside class="sis-menu" id="sis-menu" aria-label="Navegação">
-    <a class="sis-marca" href="#s-inicio" data-embaralhar>Duminguz</a>
+    <a class="sis-marca" href="#s-inicio"><img src="{{ '/img/logo-duminguz-escuro.svg' | relative_url }}" alt="Duminguz" width="150" height="63"></a>
     <span class="sis-descritor">Design digital</span>
     <nav>
       <ol>
         {%- for t in telas %}
         {%- assign partes = t | strip | split: "|" %}
-        {%- assign k1 = partes[1] %}{% assign k2 = partes[2] %}{% assign k3 = partes[3] %}
+        {%- assign k1 = partes[1] %}{% assign k2 = partes[2] %}{% assign k3 = partes[3] %}{% assign tema = partes[4] %}
         {%- assign sec = c[k1] %}{% assign rot = sec[k2] %}
         {%- capture cp %}home.{{ k1 }}.{{ k2 }}{% endcapture %}
-        <li><a href="#s-{{ partes[0] }}" data-alvo="s-{{ partes[0] }}">
-          <span class="idx">{{ forloop.index | prepend: "0" | slice: -2, 2 }}</span>
+        <li data-tema="{{ tema }}"><a href="#s-{{ partes[0] }}" data-alvo="s-{{ partes[0] }}">
+          <span class="idx"><i class="sinal" aria-hidden="true"></i>{{ forloop.index | prepend: "0" | slice: -2, 2 }}</span>
           {% include icone.html nome=k3 %}
           <span class="rotulo" data-copy="{{ cp }}" data-embaralhar>{{ rot.text }}</span>
         </a></li>
@@ -60,7 +60,7 @@ contato|contato|titulo|conversa
   <main class="sis-telas" id="conteudo">
 
     {%- assign h = c.hero %}
-    <section class="tela tela--inicio" id="s-inicio" data-componente="Boas-vindas">
+    <section class="tela tela--inicio" id="s-inicio" data-tema="osso" data-componente="Boas-vindas">
       <div class="conteudo">
         <h1 class="h0" data-copy="home.hero.titulo" data-embaralhar>{{ h.titulo.text }}</h1>
         <p class="apoio" data-copy="home.hero.subtitulo">{{ h.subtitulo.text }}</p>
@@ -83,14 +83,18 @@ contato|contato|titulo|conversa
 
     {%- assign sv = c.servicos %}
     {%- assign icones = "camadas,tela,feed,cubo" | split: "," %}
-    <section class="tela" id="s-servicos" data-componente="O que eu faço">
+    {%- assign artes = "marca-tiagovalerio,site-facil,redcred-parceiro,3d-escultura" | split: "," %}
+    {%- assign legendas = "Identidade visual do músico Tiago Valério|Interface da Fácil Soluções|Cartaz da campanha da RedCred|Personagem 3D esculpido no Blender" | split: "|" %}
+    <section class="tela" id="s-servicos" data-tema="mar" data-componente="O que eu faço">
       <div class="conteudo">
         <p class="olho" data-copy="home.servicos.titulo">{{ sv.titulo.text }}</p>
         <h2 class="h1" data-copy="home.servicos.frase" data-embaralhar>{{ sv.frase.text }}</h2>
         <ul class="cartoes">
           {%- for i in sv.itens %}
           {%- assign ic = icones[forloop.index0] %}
+          {%- assign arte = artes[forloop.index0] %}{% assign legenda = legendas[forloop.index0] %}
           <li class="cartao">
+            <img class="cartao-arte" src="{{ '/img/' | append: arte | append: '.webp' | relative_url }}" alt="{{ legenda }}" loading="lazy">
             {% include icone.html nome=ic %}
             <h3 data-copy="home.servicos.itens.{{ forloop.index0 }}.nome">{{ i.nome.text }}</h3>
             <p data-copy="home.servicos.itens.{{ forloop.index0 }}.texto">{{ i.texto.text }}</p>
@@ -102,7 +106,7 @@ contato|contato|titulo|conversa
     </section>
 
     {%- assign t = c.trabalhos %}
-    <section class="tela" id="s-trabalhos" data-componente="Trabalhos">
+    <section class="tela" id="s-trabalhos" data-tema="tinta" data-componente="Trabalhos">
       <div class="conteudo">
         <p class="olho" data-copy="home.trabalhos.titulo">{{ t.titulo.text }}</p>
         <h2 class="h1" data-copy="home.trabalhos.frase" data-embaralhar>{{ t.frase.text }}</h2>
@@ -150,7 +154,7 @@ contato|contato|titulo|conversa
     </section>
 
     {%- assign p = c.passos %}
-    <section class="tela" id="s-passos" data-componente="Como funciona">
+    <section class="tela" id="s-passos" data-tema="canion" data-componente="Como funciona">
       <div class="conteudo">
         <p class="olho" data-copy="home.passos.titulo">{{ p.titulo.text }}</p>
         <h2 class="h1" data-copy="home.passos.frase" data-embaralhar>{{ p.frase.text }}</h2>
@@ -167,8 +171,9 @@ contato|contato|titulo|conversa
     </section>
 
     {%- assign b = c.sobre %}
-    <section class="tela tela--sobre" id="s-sobre" data-componente="Quem sou">
+    <section class="tela tela--sobre" id="s-sobre" data-tema="areia" data-componente="Quem sou">
       <span class="ano" aria-hidden="true">2012</span>
+      <figure class="sobre-arte"><img src="{{ '/img/ilustracao-reddream.webp' | relative_url }}" alt="Red Dream, ilustração da graphic novel O que Impele" loading="lazy" width="1100" height="1047"><figcaption>O que Impele · graphic novel</figcaption></figure>
       <div class="conteudo">
         <p class="olho" data-copy="home.sobre.titulo">{{ b.titulo.text }}</p>
         <h2 class="h1" data-copy="home.sobre.frase" data-embaralhar>{{ b.frase.text }}</h2>
@@ -177,7 +182,7 @@ contato|contato|titulo|conversa
     </section>
 
     {%- assign q = c.perguntas %}
-    <section class="tela" id="s-perguntas" data-componente="Perguntas frequentes">
+    <section class="tela" id="s-perguntas" data-tema="argila" data-componente="Perguntas frequentes">
       <div class="conteudo">
         <p class="olho" data-copy="home.perguntas.titulo">{{ q.titulo.text }}</p>
         <h2 class="h1" data-copy="home.perguntas.frase" data-embaralhar>{{ q.frase.text }}</h2>
@@ -193,7 +198,7 @@ contato|contato|titulo|conversa
     </section>
 
     {%- assign k = c.contato %}
-    <section class="tela tela--contato" id="s-contato" data-componente="Contato">
+    <section class="tela tela--contato" id="s-contato" data-tema="noite" data-componente="Contato">
       <div class="conteudo">
         <p class="olho" data-copy="home.contato.titulo">{{ k.titulo.text }}</p>
         <h2 class="h0" data-copy="home.contato.frase" data-embaralhar>{{ k.frase.text }}</h2>

@@ -11,7 +11,7 @@ body {
   letter-spacing: .01em; overflow: hidden;
   -webkit-font-smoothing: antialiased;
 }
-img { display: block; max-width: 100%; }
+img { display: block; max-width: 100%; height: auto; }
 a { color: inherit; }
 :focus-visible { outline: 2px solid var(--dgz-affordance); outline-offset: 3px; }
 .pular { position: absolute; left: -999px; }
@@ -45,12 +45,12 @@ h3 { font: 700 clamp(15px, 1.1vw, 18px) / 1.2 var(--dgz-font-display); letter-sp
 .botao {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
   font: 700 clamp(var(--dgz-button-floor), .9vw, 15px) / 1.3 var(--dgz-font-body); letter-spacing: .04em; text-transform: uppercase; text-align: center;
-  color: var(--dgz-bone); background: var(--dgz-affordance); text-decoration: none;
+  color: var(--btn-fg, var(--dgz-bone)); background: var(--dgz-affordance); text-decoration: none;
   padding: 16px 22px; border: 0; clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
   transition: background-color .15s;
 }
-.botao:hover { background: var(--dgz-accent); }
-.botao:active { background: var(--dgz-response); }
+.botao:hover { background: var(--dgz-accent); color: var(--btn-fg-hover, var(--btn-fg, var(--dgz-bone))); }
+.botao:active { background: var(--dgz-response); color: var(--dgz-bone); }
 .botao--grande { padding: 22px 32px; font-size: 16px; }
 
 /* --- a moldura do sistema ------------------------------------------------ */
@@ -64,7 +64,7 @@ h3 { font: 700 clamp(15px, 1.1vw, 18px) / 1.2 var(--dgz-font-display); letter-sp
 .sis-descritor { font: 700 10px var(--dgz-font-display); letter-spacing: .26em; text-transform: uppercase; color: var(--dgz-fg-dim); margin-bottom: 36px; }
 .sis-menu ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
 .sis-menu nav a {
-  position: relative; display: grid; grid-template-columns: 26px 24px 1fr; align-items: center; gap: 12px;
+  position: relative; display: grid; grid-template-columns: 36px 24px 1fr; align-items: center; gap: 12px;
   padding: 11px 10px; text-decoration: none; color: var(--dgz-fg-dim);
   transition: color .15s, background-color .15s;
 }
@@ -72,7 +72,7 @@ h3 { font: 700 clamp(15px, 1.1vw, 18px) / 1.2 var(--dgz-font-display); letter-sp
 .sis-menu nav a[aria-current="true"] { color: var(--dgz-fg); }
 .sis-menu nav a[aria-current="true"]::before { content: ""; position: absolute; left: -22px; top: 8px; bottom: 8px; width: 3px; background: var(--dgz-accent); }
 .sis-menu nav a[aria-current="true"] .ico { color: var(--dgz-affordance); }
-.idx { font: 600 12px var(--dgz-font-display); letter-spacing: .08em; }
+.idx { font: 600 12px var(--dgz-font-display); letter-spacing: .08em; white-space: nowrap; }
 .rotulo { font-weight: 700; font-size: 14px; letter-spacing: .02em; }
 .ico { width: 22px; height: 22px; flex: none; }
 .sis-menu .botao { margin-top: auto; }
@@ -85,7 +85,7 @@ h3 { font: 700 clamp(15px, 1.1vw, 18px) / 1.2 var(--dgz-font-display); letter-sp
   display: grid; grid-template-columns: minmax(0, 1fr); align-items: center;
   padding: 64px clamp(24px, 6vw, 112px); border-bottom: 1px solid var(--dgz-rule);
 }
-.tela:nth-child(even) { background: var(--dgz-bg-raised); }
+.tela { background: var(--dgz-bg); color: var(--dgz-fg); }
 .conteudo { position: relative; min-width: 0; max-width: 1180px; }
 
 /* cantos de recorte, o "quadro" do sistema (cor --dgz-frame) */
@@ -123,10 +123,9 @@ h3 { font: 700 clamp(15px, 1.1vw, 18px) / 1.2 var(--dgz-font-display); letter-sp
 
 /* 02 — o que eu faço */
 .cartoes { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); background: var(--dgz-rule); border: 1px solid var(--dgz-rule); }
-.cartao { background: var(--dgz-bg); padding: 28px 24px 30px; transition: background-color .2s; }
+.cartao { padding: 28px 24px 30px; transition: background-color .2s; overflow: hidden; }
 .cartao .ico { width: 30px; height: 30px; color: var(--dgz-affordance); margin-bottom: 26px; transition: color .2s, transform .2s; }
-.cartao p { margin: 0; color: var(--dgz-fg-dim); font-size: 15px; }
-.cartao:hover { background: var(--dgz-bone); }
+.cartao p { margin: 0; font-size: 15px; }
 .cartao:hover .ico { color: var(--dgz-accent); transform: translateY(-3px); }
 .nota { color: var(--dgz-fg-dim); margin: 24px 0 0; font-size: 15px; max-width: 52em; }
 
@@ -168,7 +167,7 @@ h3 { font: 700 clamp(15px, 1.1vw, 18px) / 1.2 var(--dgz-font-display); letter-sp
 
 /* 05 — quem sou: o ano como arte */
 .ano {
-  position: absolute; right: -2vw; bottom: -6vw; font: 700 clamp(160px, 30vw, 480px) / .8 var(--dgz-font-display);
+  position: absolute; right: -1vw; bottom: -3vw; font: 700 clamp(120px, 19vw, 300px) / .8 var(--dgz-font-display);
   color: transparent; -webkit-text-stroke: 1px var(--dgz-clay); opacity: .55; pointer-events: none; letter-spacing: -.04em;
 }
 
@@ -182,17 +181,91 @@ h3 { font: 700 clamp(15px, 1.1vw, 18px) / 1.2 var(--dgz-font-display); letter-sp
 .faq summary:hover { color: var(--dgz-affordance); }
 .faq details p { margin: 0 0 22px; color: var(--dgz-fg-dim); max-width: 46em; }
 
-/* 07 — contato: o fecho, no tom escuro da marca */
-.tela--contato { background: var(--dgz-ink) !important; color: var(--dgz-bone); }
-.tela--contato .olho { color: var(--dgz-blue); }
-.tela--contato .apoio { color: var(--dgz-bone); }
+/* 07 — contato */
 .tela--contato .botao { margin-top: 36px; }
-.rodape-linha { margin: 64px 0 0; font: 600 11px var(--dgz-font-display); letter-spacing: .18em; text-transform: uppercase; color: #9A9285; }
+.rodape-linha { margin: 64px 0 0; font: 600 11px var(--dgz-font-display); letter-spacing: .18em; text-transform: uppercase; color: var(--dgz-fg-dim); }
+
+/* ==========================================================================
+   COR POR SEÇÃO — cada tela tem um tema: um fundo que leva texto corrido
+   (contraste AA medido em 2026-10-05) e uma cor-sinal. O tema redefine os
+   PAPÉIS da marca (--dgz-bg, --dgz-fg, --dgz-affordance…) dentro da tela, então
+   nenhum componente muda. Só a paleta da marca; cyberpunk fica de fora
+   (registro nacional, ADR 0222).
+
+   Fundos com texto corrido: bone e bone escuro (ink 14,6 · 13,2), sea-deep
+   (bone 7,0), ink (bone 14,6), canyon (bone 7,3). Clay, earth e sea não passam
+   para texto: entram como sinal, frase grande (≥ 3:1) e campo de cor.
+   ========================================================================== */
+[data-tema="osso"]   { --sinal: var(--dgz-clay); }
+[data-tema="mar"]    { --sinal: var(--dgz-blue); }
+[data-tema="tinta"]  { --sinal: var(--dgz-clay); }
+[data-tema="canion"] { --sinal: var(--dgz-canyon); }
+[data-tema="areia"]  { --sinal: var(--dgz-earth); }
+[data-tema="argila"] { --sinal: var(--dgz-clay); }
+[data-tema="noite"]  { --sinal: var(--dgz-blue); }
+
+/* claros */
+.tela[data-tema="areia"] {
+  --dgz-bg: #EAE0C4; --dgz-bg-raised: var(--dgz-bone); --dgz-rule: #D6CBAE; --dgz-frame: var(--dgz-earth);
+}
+.tela[data-tema="argila"] { --dgz-frame: var(--dgz-clay); }
+.tela[data-tema="argila"] .h1 { color: var(--dgz-clay); }              /* clay em texto grande: 3,6 */
+.tela[data-tema="argila"] { background: linear-gradient(90deg, var(--dgz-bg) calc(100% - 9vw), var(--dgz-clay) 0); }
+
+/* escuros: texto bone, ação blue com texto ink, hover bone */
+.tela[data-tema="mar"], .tela[data-tema="tinta"], .tela[data-tema="canion"], .tela[data-tema="noite"] {
+  --dgz-fg: var(--dgz-bone); --dgz-affordance: var(--dgz-blue); --btn-fg: var(--dgz-ink);
+  --dgz-accent: var(--dgz-bone); --btn-fg-hover: var(--dgz-ink); --dgz-response: var(--dgz-clay);
+}
+.tela[data-tema="mar"] {
+  --dgz-bg: var(--dgz-sea-deep); --dgz-bg-raised: #1F6276;
+  --dgz-fg-dim: #CFE0DC; --dgz-rule: #3F7383; --dgz-frame: var(--dgz-blue);
+}
+.tela[data-tema="tinta"], .tela[data-tema="noite"] {
+  --dgz-bg: var(--dgz-ink); --dgz-bg-raised: #26221F;
+  --dgz-fg-dim: #B3AB9D; --dgz-rule: #3A352F; --dgz-frame: var(--dgz-clay);
+}
+.tela[data-tema="noite"] { --dgz-frame: var(--dgz-blue); }
+.tela[data-tema="noite"] .h0 { color: var(--dgz-blue); }               /* blue sobre ink: 9,4 */
+.tela[data-tema="canion"] {
+  --dgz-bg: var(--dgz-canyon); --dgz-bg-raised: #9A3A24;
+  --dgz-fg-dim: #F0DCCF; --dgz-rule: #B0573F; --dgz-frame: var(--dgz-bone);
+  --dgz-response: var(--dgz-sea-deep);
+}
+.tela[data-tema="canion"] .num { color: var(--dgz-blue); }             /* blue sobre canyon: 4,7 */
+.tela[data-tema="canion"] .passos { border-top-color: var(--dgz-bone); }
+
+/* a cor-sinal: marcadores, olho, cantos */
+.provas li::before { background: var(--sinal); }
+.tela[data-tema] .olho { color: var(--dgz-affordance); }
+.tela[data-tema="osso"] .olho, .tela[data-tema="areia"] .olho, .tela[data-tema="argila"] .olho { color: var(--dgz-sea-deep); }
+.cartao { background: var(--dgz-bg-raised); }
+.cartao:hover { background: var(--dgz-bg); }
+.cartao p { color: var(--dgz-fg-dim); }
+.ano { -webkit-text-stroke-color: var(--sinal); }
+
+/* o menu mostra a cor de cada seção, e a seção atual pinta o indicador */
+.sinal { display: inline-block; width: 7px; height: 7px; margin-right: 6px; background: var(--sinal); vertical-align: 1px; }
+.sis { --sinal-atual: var(--dgz-clay); }
+.sis-menu nav a[aria-current="true"]::before { background: var(--sinal-atual); }
+
+/* imagens: a arte dentro do cartão de serviço, e a ilustração em Quem sou */
+.cartao-arte { max-width: none; width: calc(100% + 48px); margin: -28px -24px 22px; aspect-ratio: 16 / 9; object-fit: cover; filter: saturate(.9); transition: filter .25s; }
+.cartao:hover .cartao-arte { filter: saturate(1.1); }
+.tela--sobre .conteudo { max-width: 52%; }
+.sobre-arte { position: absolute; right: clamp(24px, 6vw, 112px); top: 50%; translate: 0 -50%; width: min(36%, 62dvh); margin: 0; }
+.sobre-arte { z-index: 1; }
+.sobre-arte img { width: 100%; height: auto; max-height: 70dvh; object-fit: cover; box-shadow: 0 20px 44px rgba(28, 26, 24, .3); }
+.sobre-arte figcaption { margin-top: 10px; font: 700 10px var(--dgz-font-display); letter-spacing: .2em; text-transform: uppercase; color: var(--dgz-fg-dim); }
 
 /* --- celular -------------------------------------------------------------- */
 @media (max-width: 899px) {
   .sis { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
-  .sis-topo { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--dgz-bg-raised); border-bottom: 1px solid var(--dgz-rule); grid-row: 1; }
+  .sis-topo { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; grid-row: 1;
+    background: var(--topo-bg, var(--dgz-bg-raised)); color: var(--topo-fg, var(--dgz-fg)); border-bottom: 3px solid var(--sinal-atual); transition: background-color .25s, color .25s; }
+  .sis-abrir { color: inherit !important; border-color: currentColor !important; }
+  .tela--sobre .conteudo { max-width: none; }
+  .sobre-arte { position: relative; right: auto; top: auto; translate: none; width: 62%; margin: 28px 0 0; }
   .sis-atual { font: 700 12px var(--dgz-font-display); letter-spacing: .18em; text-transform: uppercase; }
   .sis-abrir { font: 700 12px var(--dgz-font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--dgz-fg); background: transparent; border: 1px solid var(--dgz-fg); padding: 8px 14px; }
   .sis-telas { grid-row: 2; }
