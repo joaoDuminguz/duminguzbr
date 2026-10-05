@@ -33,6 +33,31 @@ depois `gem install bundler`.
 
 ---
 
+## O painel de construção — só na sua máquina
+
+Dois cliques em **`abrir-painel.bat`**, ou:
+
+```bash
+bundle exec jekyll serve --config _config.yml,_config.painel.yml --disable-disk-cache
+```
+
+e abra <http://127.0.0.1:4000/painel/>. **Ele nunca é publicado:** o `_config.yml` o
+exclui, e só o `_config.painel.yml` o liga.
+
+| Aba | O que faz |
+|---|---|
+| **Design system** | A paleta, os papéis de cada cor nos dois registros e a tipografia, lidos de `css/marca-tokens.css`. Botões de copiar o valor, o CSS de cada estilo, e os tokens inteiros para a aba Theme do Paper |
+| **Componentes** | Cada seção do wireframe (`data-componente`). **Copiar para o Paper** copia a seção como HTML com o estilo embutido, **na largura da prévia** — PC para o quadro de 1440, Celular para o de 390 |
+| **Copy** | Todo trecho do `copy.yml`, com texto e situação editáveis. A prévia muda na hora. **Nada é gravado sozinho:** *Baixar copy.yml* gera o arquivo inteiro, que substitui `_data/copy.yml` |
+
+À direita, a prévia: wireframe ou site real, em celular (390), tablet (768) ou PC (1440).
+
+Como a prévia ouve o painel: cada trecho no `/proto/` tem `data-copy="<caminho no
+copy.yml>"` (o include `slot.html` escreve isso), e o `proto/ponte.js` aplica o que o
+painel manda por `postMessage`.
+
+---
+
 ## Como o repositório é organizado
 
 ```text

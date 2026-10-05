@@ -1,0 +1,16 @@
+# _config.painel.yml — liga o painel de construção (/painel/), SÓ na máquina.
+#
+#   bundle exec jekyll serve --config _config.yml,_config.painel.yml --disable-disk-cache
+#
+# Uma lista de exclude num segundo arquivo SUBSTITUI a do primeiro; esta é a
+# mesma lista do _config.yml, sem o painel. O GitHub Pages usa só o
+# _config.yml, então o painel nunca é publicado.
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - vendor
+  - paper-in
+  - paper-out
+  - .claude
+  - abrir-painel.bat

@@ -13,7 +13,7 @@
     {%- assign mostra_frase = false -%}
     {%- if f.line.status == "ok" or page.show_status -%}{%- assign mostra_frase = true -%}{%- endif -%}
     {%- if mostra_frase and f.line.text and f.line.text != "" %}
-    <p class="rodape__frase{% include mark.html slot=f.line %}">{{ f.line.text }}</p>
+    <p class="rodape__frase{% include mark.html slot=f.line %}" data-copy="shared.footer.line">{{ f.line.text }}</p>
     {%- endif %}
 
     {%- if c.whatsapp %}

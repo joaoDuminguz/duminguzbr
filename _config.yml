@@ -33,6 +33,8 @@ exclude:
   - paper-in        # Job 0: o que vai do repositório para o Paper
   - paper-out       # Job 1: o que volta do Paper (CSS copiado, PNGs de referência)
   - .claude
+  - painel          # o painel de construção: só local, ver _config.painel.yml
+  - abrir-painel.bat
 
 # ---------------------------------------------------------------------------
 # Front matter padrão, por pasta. A regra mais específica vence.

@@ -17,8 +17,8 @@ body {
 .pular:focus { left: 16px; top: 16px; background: #fff; padding: 8px; }
 
 .nav { background: #ddd; padding: 16px 0; }
-.nav .wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
-.nav ul { display: flex; gap: 16px; list-style: none; margin: 0; padding: 0; }
+.nav .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; }
+.nav ul { display: flex; flex-wrap: wrap; gap: 8px 16px; list-style: none; margin: 0; padding: 0; }
 .nav a { color: #222; }
 .logo { font-weight: 700; text-decoration: none; }
 
@@ -36,3 +36,22 @@ h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 16px; }
 .is-draft::after   { content: " RASCUNHO"; font-size: .7rem; color: #c80; }
 .is-pick::after    { content: " ESCOLHER"; font-size: .7rem; color: #06c; }
 .is-missing::after { content: " FALTANDO"; font-size: .7rem; color: #c00; }
+
+/* --- As seções do deck (2026-10-05) ------------------------------------- */
+h2 { font-size: 1.5rem; margin: 0 0 24px; }
+h3 { font-size: 1.1rem; margin: 0 0 8px; }
+.hero__sub { font-size: 1.15rem; max-width: 40em; }
+.provas { list-style: none; padding: 0; margin: 32px 0 0; display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: .9rem; }
+.grade { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.cartao { background: #e6e6e6; padding: 20px; }
+.nota { margin-top: 24px; color: #555; }
+.lista-trabalhos { list-style: none; padding: 0; margin: 0 0 40px; display: grid; gap: 32px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.imagem { aspect-ratio: 4 / 3; background: #ccc; color: #666; display: grid; place-items: center; font-size: .8rem; letter-spacing: .1em; margin-bottom: 12px; }
+.retrato { aspect-ratio: 1; max-width: 240px; }
+details { border-top: 1px solid #ccc; padding: 12px 0; }
+summary { cursor: pointer; font-weight: 600; }
+
+/* O painel aponta um trecho: piscada curta, cortada para movimento reduzido */
+.painel-alvo { animation: painel-alvo 1.2s ease-out; }
+@keyframes painel-alvo { from { background: #ffe58a; } to { background: transparent; } }
+@media (prefers-reduced-motion: reduce) { .painel-alvo { animation: none; background: #ffe58a; } }

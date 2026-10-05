@@ -48,7 +48,6 @@ home:
     titulo:    { text: "Feito à mão, pensado como sistema.", status: ok }
     subtitulo: { text: "Marca, site, vídeo e 3D para o seu negócio. Sou João Duminguz, designer e artista em João Pessoa, e desenho tudo isso como uma coisa só.", status: draft }
     cta:       { text: "Pedir orçamento pelo WhatsApp", url: "#contato", status: draft }
-    promessa:  { text: "", status: missing }   # sem promessa pública de prazo
     provas:
       - { text: "14 anos de design, desde 2012", status: draft }
       - { text: "Um design system mantido por dez anos numa empresa de tecnologia", status: draft }
@@ -104,7 +103,6 @@ home:
   sobre:
     titulo: { text: "Quem sou", status: draft }
     texto:  { text: "Sou João Duminguz, artista digital e designer de João Pessoa, na Paraíba. Desde 2012 desenho marcas, interfaces e peças de comunicação. Passei dez anos cuidando do design de um produto de tecnologia e os últimos anos dirigindo arte para estúdios de games. O que levo de lá para o seu negócio é o hábito de pensar a marca como um sistema: cada peça nova já nasce sabendo como se encaixar nas outras.", status: draft }
-    frase:  { text: "", status: missing }   # virou o título da primeira tela
 
   perguntas:
     titulo: { text: "Perguntas frequentes", status: draft }

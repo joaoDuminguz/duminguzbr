@@ -1,0 +1,503 @@
+---
+layout: null
+robots: noindex
+---
+{%- comment -%}
+  painel/ — o painel de construção do site. SÓ LOCAL: fica fora do build
+  publicado (exclude no _config.yml) e entra com _config.painel.yml:
+
+    bundle exec jekyll serve --config _config.yml,_config.painel.yml --disable-disk-cache
+
+  ou o abrir-painel.bat. Três abas à esquerda (design system, componentes,
+  copy) e a prévia à direita, em celular, tablet ou PC.
+
+  A copy editada aqui vive no navegador até ser exportada: "Baixar copy.yml"
+  gera o arquivo inteiro, que substitui _data/copy.yml. Nada é gravado sozinho.
+{%- endcomment -%}
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Painel - {{ site.title }}</title>
+<link rel="stylesheet" href="{{ '/css/marca-tokens.css' | relative_url }}">
+<style>
+  :root, [data-register] {
+    --p-fundo: var(--dgz-bg); --p-elevado: var(--dgz-bg-raised); --p-texto: var(--dgz-fg);
+    --p-texto-2: var(--dgz-fg-dim); --p-linha: var(--dgz-rule); --p-acao: var(--dgz-affordance);
+    --p-destaque: var(--dgz-accent);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--p-fundo); color: var(--p-texto); font: 15px/1.45 var(--dgz-font-body); }
+  button, select, textarea, input { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--p-acao); outline-offset: 2px; }
+
+  .painel { display: grid; grid-template-columns: 2fr 1fr; height: 100vh; }
+  .esq { overflow: auto; border-right: 1px solid var(--p-linha); }
+  .dir { display: grid; grid-template-rows: auto 1fr; min-width: 0; background: var(--p-elevado); }
+
+  header.topo { position: sticky; top: 0; z-index: 2; background: var(--p-fundo); border-bottom: 1px solid var(--p-linha); padding: 14px 24px 0; }
+  .titulo { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .titulo h1 { font: 700 18px/1 var(--dgz-font-display); text-transform: uppercase; letter-spacing: .04em; margin: 0; }
+  .titulo span { color: var(--p-texto-2); font-size: 13px; }
+  [role="tablist"] { display: flex; gap: 4px; margin-top: 12px; }
+  [role="tab"] { background: none; border: 0; border-bottom: 3px solid transparent; padding: 8px 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: 13px; color: var(--p-texto-2); }
+  [role="tab"][aria-selected="true"] { color: var(--p-texto); border-bottom-color: var(--p-acao); }
+  [role="tab"]:hover { color: var(--p-texto); }
+  .aba { padding: 24px; }
+  .aba[hidden] { display: none; }
+  h2 { font: 700 13px/1 var(--dgz-font-display); text-transform: uppercase; letter-spacing: .12em; color: var(--p-texto-2); margin: 32px 0 12px; }
+  h2:first-child { margin-top: 0; }
+  .ajuda { color: var(--p-texto-2); font-size: 13px; margin: 0 0 16px; max-width: 60em; }
+
+  .btn { background: var(--p-fundo); border: 1px solid var(--p-linha); padding: 6px 10px; font-size: 13px; }
+  .btn:hover { border-color: var(--p-acao); color: var(--p-acao); }
+  .btn.forte { background: var(--p-acao); border-color: var(--p-acao); color: var(--dgz-bone); }
+  .btn.forte:hover { background: var(--dgz-response); border-color: var(--dgz-response); color: var(--dgz-bone); }
+  .btn[aria-pressed="true"] { background: var(--p-texto); color: var(--p-fundo); border-color: var(--p-texto); }
+
+  /* design system */
+  .amostras { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .amostra { border: 1px solid var(--p-linha); background: var(--p-elevado); }
+  .amostra .cor { height: 64px; }
+  .amostra .info { padding: 8px 10px; font-size: 12px; display: grid; gap: 2px; }
+  .amostra code { font-size: 11px; color: var(--p-texto-2); }
+  .amostra .btn { margin: 0 10px 10px; }
+  .registros { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .registro { padding: 16px; border: 1px solid var(--p-linha); background: var(--dgz-bg); color: var(--dgz-fg); }
+  .registro h3 { margin: 0 0 12px; font: 700 12px var(--dgz-font-display); letter-spacing: .12em; text-transform: uppercase; }
+  .papel { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 3px 0; }
+  .papel i { width: 18px; height: 18px; border: 1px solid var(--dgz-rule); flex: none; }
+  .papel code { margin-left: auto; color: var(--dgz-fg-dim); }
+  .tipo { border-top: 1px solid var(--p-linha); padding: 14px 0; display: grid; grid-template-columns: 140px 1fr auto; gap: 16px; align-items: center; }
+  .tipo .meta { font-size: 12px; color: var(--p-texto-2); }
+  .tipo .meta b { color: var(--p-texto); display: block; font-size: 13px; }
+  .tipo .exemplo { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; line-height: var(--dgz-leading); }
+
+  /* componentes */
+  .comp { display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--p-linha); padding: 12px 0; flex-wrap: wrap; }
+  .comp b { margin-right: auto; }
+  .comp small { color: var(--p-texto-2); width: 100%; }
+
+  /* copy */
+  .filtros { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+  .filtros input { border: 1px solid var(--p-linha); background: var(--p-elevado); padding: 6px 10px; min-width: 220px; }
+  .grupo { margin-bottom: 24px; }
+  .trecho { display: grid; grid-template-columns: 1fr 120px; gap: 6px 8px; border-top: 1px solid var(--p-linha); padding: 10px 0; }
+  .trecho label { grid-column: 1 / -1; font-size: 12px; color: var(--p-texto-2); display: flex; gap: 8px; align-items: center; }
+  .trecho label button { margin-left: auto; font-size: 11px; padding: 2px 6px; }
+  .trecho textarea { width: 100%; min-height: 2.6em; resize: vertical; border: 1px solid var(--p-linha); background: var(--p-elevado); padding: 6px 8px; field-sizing: content; }
+  .trecho select { border: 1px solid var(--p-linha); background: var(--p-elevado); padding: 4px; align-self: start; }
+  .trecho.mudou textarea { border-color: var(--p-destaque); }
+  .s-ok { color: var(--dgz-sea-deep); } .s-draft { color: var(--dgz-clay); } .s-pick { color: var(--dgz-sea); } .s-missing { color: var(--dgz-canyon); }
+  .contagem { font-size: 12px; color: var(--p-texto-2); }
+
+  /* prévia */
+  .barra { display: flex; gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--p-linha); flex-wrap: wrap; align-items: center; background: var(--p-fundo); }
+  .barra .sep { flex: 1; }
+  .barra small { color: var(--p-texto-2); font-size: 12px; }
+  .palco { position: relative; overflow: hidden; }
+  .palco iframe { position: absolute; top: 0; left: 50%; border: 0; background: #fff; transform-origin: top center; box-shadow: 0 0 0 1px var(--p-linha); }
+
+  .aviso { position: fixed; bottom: 16px; left: 16px; background: var(--p-texto); color: var(--p-fundo); padding: 8px 14px; font-size: 13px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+  .aviso.ver { opacity: 1; }
+
+  @media (max-width: 900px) {
+    .painel { grid-template-columns: 1fr; grid-template-rows: auto 70vh; height: auto; }
+    .esq { border-right: 0; }
+    .registros { grid-template-columns: 1fr; }
+    .tipo { grid-template-columns: 1fr auto; } .tipo .exemplo { grid-column: 1 / -1; }
+  }
+  @media (prefers-reduced-motion: reduce) { .aviso { transition: none; } }
+</style>
+</head>
+<body data-register="{{ site.register | default: 'nacional' }}">
+<div class="painel">
+
+  <div class="esq">
+    <header class="topo">
+      <div class="titulo">
+        <h1>Painel · {{ site.title }}</h1>
+        <span>Construção do site · só na sua máquina</span>
+      </div>
+      <div role="tablist" aria-label="Seções do painel">
+        <button role="tab" id="t-ds" aria-controls="a-ds" aria-selected="true">Design system</button>
+        <button role="tab" id="t-comp" aria-controls="a-comp" aria-selected="false" tabindex="-1">Componentes</button>
+        <button role="tab" id="t-copy" aria-controls="a-copy" aria-selected="false" tabindex="-1">Copy <span class="contagem" id="n-mudou"></span></button>
+      </div>
+    </header>
+
+    <!-- DESIGN SYSTEM ------------------------------------------------------>
+    <section class="aba" id="a-ds" role="tabpanel" aria-labelledby="t-ds">
+      <p class="ajuda">Os valores vêm de <code>css/marca-tokens.css</code>, cópia do <code>tokens.css</code> v0.2 do hub. Mudança de valor se faz no hub e se copia de novo; aqui só se mostra.
+        <button class="btn" id="copiar-tokens">Copiar tokens (CSS)</button></p>
+
+      <h2>Paleta</h2>
+      <div class="amostras" id="paleta"></div>
+
+      <h2>Registros — papéis de cada cor</h2>
+      <p class="ajuda">Uma identidade, dois registros (ADR 0222). O site usa o <b>nacional</b>.</p>
+      <div class="registros">
+        <div class="registro" data-register="nacional"><h3>Nacional</h3><div class="papeis"></div></div>
+        <div class="registro" data-register="internacional-leitura"><h3>Internacional</h3><div class="papeis"></div></div>
+      </div>
+
+      <h2>Tipografia</h2>
+      <p class="ajuda">Tamanhos de projeto a 1920 px, e o piso para a web. O exemplo usa o título aprovado.</p>
+      <div id="tipos"></div>
+    </section>
+
+    <!-- COMPONENTES -------------------------------------------------------->
+    <section class="aba" id="a-comp" role="tabpanel" aria-labelledby="t-comp" hidden>
+      <p class="ajuda"><b>Copiar para o Paper</b> copia a seção como HTML com o estilo embutido, na largura que está na prévia agora. Escolha <b>PC</b> para o quadro de 1440 e <b>Celular</b> para o de 390, e cole no Paper. É o Job 0 do fluxo: conteúdo em cinza, sem layout.</p>
+      <div id="componentes"><p class="ajuda">Carregando a prévia…</p></div>
+    </section>
+
+    <!-- COPY --------------------------------------------------------------->
+    <section class="aba" id="a-copy" role="tabpanel" aria-labelledby="t-copy" hidden>
+      <p class="ajuda">Edite aqui e veja na prévia na hora. <b>Nada é gravado sozinho:</b> as edições ficam neste navegador até você <b>baixar o copy.yml</b> e colocar no lugar de <code>_data/copy.yml</code>. Trecho fora de <code>ok</code> nunca vai ao ar.</p>
+      <div class="filtros">
+        <input type="search" id="busca" placeholder="Buscar texto ou caminho" aria-label="Buscar trecho">
+        <select id="filtro-status" aria-label="Filtrar por situação">
+          <option value="">Todas as situações</option>
+          <option value="ok">ok</option><option value="draft">draft</option>
+          <option value="pick">pick</option><option value="missing">missing</option>
+        </select>
+        <span class="sep"></span>
+        <button class="btn forte" id="baixar">Baixar copy.yml</button>
+        <button class="btn" id="copiar-yaml">Copiar YAML</button>
+        <button class="btn" id="descartar">Descartar edições</button>
+      </div>
+      <div id="trechos"></div>
+    </section>
+  </div>
+
+  <!-- PRÉVIA ---------------------------------------------------------------->
+  <div class="dir">
+    <div class="barra" role="toolbar" aria-label="Prévia">
+      <button class="btn" data-largura="390" aria-pressed="true">Celular</button>
+      <button class="btn" data-largura="768" aria-pressed="false">Tablet</button>
+      <button class="btn" data-largura="1440" aria-pressed="false">PC</button>
+      <span class="sep"></span>
+      <select class="btn" id="pagina" aria-label="Página da prévia">
+        <option value="{{ '/proto/' | relative_url }}">Wireframe</option>
+        <option value="{{ '/' | relative_url }}">Site real</option>
+      </select>
+      <button class="btn" id="recarregar" title="Recarregar a prévia">↻</button>
+      <small id="escala"></small>
+    </div>
+    <div class="palco" id="palco">
+      <iframe id="previa" title="Prévia do site" src="{{ '/proto/' | relative_url }}"></iframe>
+    </div>
+  </div>
+</div>
+
+<div class="aviso" id="aviso" role="status" aria-live="polite"></div>
+
+<script id="dados-copy" type="application/json">{{ site.data.copy | jsonify }}</script>
+<script>
+(function () {
+  "use strict";
+  var ORIGINAL = JSON.parse(document.getElementById("dados-copy").textContent);
+  var CHAVE = "painel:{{ site.url }}:copy";
+  var copy = clonar(ORIGINAL);
+  try { var salvo = localStorage.getItem(CHAVE); if (salvo) copy = JSON.parse(salvo); } catch (e) {}
+
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var previa = $("#previa"), palco = $("#palco");
+  var largura = 390;
+
+  function clonar(o) { return JSON.parse(JSON.stringify(o)); }
+  function aviso(t) { var a = $("#aviso"); a.textContent = t; a.classList.add("ver"); clearTimeout(aviso.t); aviso.t = setTimeout(function () { a.classList.remove("ver"); }, 1800); }
+  function salvar() { try { localStorage.setItem(CHAVE, JSON.stringify(copy)); } catch (e) {} }
+  function pegar(obj, path) { return path.split(".").reduce(function (o, k) { return o == null ? o : o[k]; }, obj); }
+  function copiar(texto, html) {
+    if (html && window.ClipboardItem) {
+      return navigator.clipboard.write([new ClipboardItem({
+        "text/html": new Blob([html], { type: "text/html" }),
+        "text/plain": new Blob([texto], { type: "text/plain" })
+      })]);
+    }
+    return navigator.clipboard.writeText(texto);
+  }
+
+  /* ---------- abas ---------- */
+  var abas = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  function abrir(tab) {
+    abas.forEach(function (t) {
+      var sel = t === tab;
+      t.setAttribute("aria-selected", sel); t.tabIndex = sel ? 0 : -1;
+      document.getElementById(t.getAttribute("aria-controls")).hidden = !sel;
+    });
+    try { localStorage.setItem("painel:aba", tab.id); } catch (e) {}
+  }
+  abas.forEach(function (t, i) {
+    t.addEventListener("click", function () { abrir(t); });
+    t.addEventListener("keydown", function (e) {
+      var d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+      if (d) { var n = abas[(i + d + abas.length) % abas.length]; abrir(n); n.focus(); }
+    });
+  });
+  try { var a0 = document.getElementById(localStorage.getItem("painel:aba")); if (a0) abrir(a0); } catch (e) {}
+
+  /* ---------- design system ---------- */
+  var PALETA = [
+    ["ink", "fundo"], ["bone", "fundo"],
+    ["sea-deep", "mar"], ["sea", "mar"], ["blue", "mar"],
+    ["canyon", "cânion"], ["clay", "cânion"], ["earth", "cânion"],
+    ["purple", "cyberpunk"], ["orchid", "cyberpunk"]
+  ];
+  var PAPEIS = ["bg", "bg-raised", "fg", "fg-dim", "rule", "affordance", "accent", "response", "frame"];
+  var TIPOS = [
+    ["h0", "display", 300, "-0.02em", true], ["h1", "display", 600, "0.02em", true],
+    ["h2", "display", 700, "0.02em", true], ["sub", "display", 700, "0.12em", false],
+    ["caption", "display", 700, "0.26em", true], ["button", "body", 700, "0.04em", true],
+    ["body", "body", 400, "0.04em", false]
+  ];
+  var raiz = getComputedStyle(document.documentElement);
+  function token(nome, el) { return (el ? getComputedStyle(el) : raiz).getPropertyValue("--dgz-" + nome).trim(); }
+
+  $("#paleta").innerHTML = PALETA.map(function (p) {
+    var v = token(p[0]);
+    return '<div class="amostra"><div class="cor" style="background:' + v + '"></div>' +
+      '<div class="info"><b>' + p[0] + '</b><code>--dgz-' + p[0] + '</code><code>' + v + ' · ' + p[1] + '</code></div>' +
+      '<button class="btn" data-copiar="' + v + '">Copiar ' + v + '</button></div>';
+  }).join("");
+
+  document.querySelectorAll(".registro").forEach(function (r) {
+    /* O painel está no registro nacional; o internacional é o :root dos tokens,
+       então os valores dele são lidos do <html>, que não tem registro. */
+    var fonte = r.getAttribute("data-register") === "nacional" ? r : document.documentElement;
+    r.style.background = token("bg", fonte); r.style.color = token("fg", fonte);
+    $(".papeis", r).innerHTML = PAPEIS.map(function (p) {
+      var v = token(p, fonte);
+      return '<div class="papel"><i style="background:' + v + '"></i>' + p + '<code>' + v + '</code></div>';
+    }).join("");
+  });
+
+  var exemplo = (pegar(copy, "home.hero.titulo") || {}).text || "Feito à mão, pensado como sistema.";
+  $("#tipos").innerHTML = TIPOS.map(function (t) {
+    var tam = token(t[0] + "-size"), piso = token(t[0] + "-floor");
+    var familia = "var(--dgz-font-" + t[1] + ")";
+    var css = "font-family: " + familia + ";\nfont-weight: " + t[2] + ";\nfont-size: clamp(" + piso + ", " + (parseFloat(tam) / 19.2).toFixed(2) + "vw, " + tam + ");\nletter-spacing: " + t[3] + ";\nline-height: var(--dgz-leading);" + (t[4] ? "\ntext-transform: uppercase;" : "");
+    var mostra = Math.min(parseFloat(tam), 56);
+    return '<div class="tipo"><div class="meta"><b>' + t[0] + '</b>' + (t[1] === "display" ? "Chakra Petch" : "Space Grotesk") + ' ' + t[2] + '<br>' + tam + ' · piso ' + piso + '</div>' +
+      '<div class="exemplo" style="font-family:' + familia + ';font-weight:' + t[2] + ';font-size:' + mostra + 'px;letter-spacing:' + t[3] + (t[4] ? ';text-transform:uppercase' : '') + '">' + exemplo.replace(/</g, "&lt;") + '</div>' +
+      '<button class="btn" data-copiar="' + css.replace(/"/g, "&quot;") + '">Copiar CSS</button></div>';
+  }).join("");
+
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-copiar]"); if (!b) return;
+    copiar(b.getAttribute("data-copiar")).then(function () { aviso("Copiado"); });
+  });
+  $("#copiar-tokens").addEventListener("click", function () {
+    fetch("{{ '/css/marca-tokens.css' | relative_url }}").then(function (r) { return r.text(); })
+      .then(copiar).then(function () { aviso("Tokens copiados — cole na aba Theme do Paper"); });
+  });
+
+  /* ---------- prévia ---------- */
+  function encaixar() {
+    var w = palco.clientWidth - 24, h = palco.clientHeight;
+    var esc = Math.min(1, w / largura);
+    previa.style.width = largura + "px";
+    previa.style.height = (h / esc) + "px";
+    previa.style.transform = "translateX(-50%) scale(" + esc + ")";
+    $("#escala").textContent = largura + " px · " + Math.round(esc * 100) + "%";
+  }
+  new ResizeObserver(encaixar).observe(palco);
+  document.querySelectorAll("[data-largura]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      largura = +b.getAttribute("data-largura");
+      document.querySelectorAll("[data-largura]").forEach(function (x) { x.setAttribute("aria-pressed", x === b); });
+      encaixar();
+    });
+  });
+  $("#pagina").addEventListener("change", function () { previa.src = this.value; });
+  $("#recarregar").addEventListener("click", function () { previa.contentWindow.location.reload(); });
+
+  function enviar(msg) { if (previa.contentWindow) previa.contentWindow.postMessage(msg, location.origin); }
+  function enviarTudo() { enviar({ tipo: "copy", lista: trechos().map(function (t) { return { path: t.path, text: t.slot.text, status: t.slot.status }; }) }); }
+  window.addEventListener("message", function (e) {
+    if (e.origin === location.origin && e.data && e.data.tipo === "pronto") enviarTudo();
+  });
+  previa.addEventListener("load", function () { listarComponentes(); });
+
+  /* ---------- componentes ---------- */
+  var PROPS = ["display", "flex-direction", "flex-wrap", "justify-content", "align-items", "gap",
+    "grid-template-columns", "padding", "margin", "width", "max-width", "min-height", "aspect-ratio",
+    "font-family", "font-size", "font-weight", "line-height", "letter-spacing", "text-transform",
+    "text-align", "color", "background-color", "border-top", "border-bottom", "border-radius", "list-style"];
+  var PADRAO = ["normal", "none", "auto", "0px", "start", "row", "nowrap", "rgba(0, 0, 0, 0)",
+    "0px none rgb(34, 34, 34)", "0px 0px", "0px none rgb(0, 0, 0)"];
+  function comEstilo(el, win) {
+    var copia = el.cloneNode(true);
+    var orig = [el].concat(Array.prototype.slice.call(el.querySelectorAll("*")));
+    var novos = [copia].concat(Array.prototype.slice.call(copia.querySelectorAll("*")));
+    orig.forEach(function (o, i) {
+      var cs = win.getComputedStyle(o), n = novos[i];
+      /* Só o que difere do padrão: o Paper recebe um estilo legível, não 26 linhas por elemento. */
+      n.setAttribute("style", PROPS.map(function (p) { return [p, cs.getPropertyValue(p)]; })
+        .filter(function (d) { return d[0] === "display" || PADRAO.indexOf(d[1]) < 0; })
+        .map(function (d) { return d[0] + ":" + d[1]; }).join(";"));
+      n.removeAttribute("class"); n.removeAttribute("data-copy");
+    });
+    copia.setAttribute("data-paper", copia.getAttribute("data-componente") || "");
+    copia.removeAttribute("data-componente");
+    return copia.outerHTML;
+  }
+  function listarComponentes() {
+    var doc, alvo = $("#componentes");
+    try { doc = previa.contentDocument; } catch (e) {}
+    var secoes = doc ? doc.querySelectorAll("[data-componente]") : [];
+    if (!secoes.length) { alvo.innerHTML = '<p class="ajuda">Esta página da prévia não tem componentes marcados. Escolha <b>Wireframe</b>.</p>'; return; }
+    alvo.innerHTML = "";
+    secoes.forEach(function (s) {
+      var nome = s.getAttribute("data-componente");
+      var n = s.querySelectorAll("[data-copy]").length;
+      var linha = document.createElement("div"); linha.className = "comp";
+      linha.innerHTML = "<b></b>" +
+        '<button class="btn" data-acao="ver">Ver na prévia</button>' +
+        '<button class="btn forte" data-acao="paper">Copiar para o Paper</button>' +
+        "<small>" + n + " trechos de copy</small>";
+      $("b", linha).textContent = nome;
+      linha.addEventListener("click", function (e) {
+        var b = e.target.closest("[data-acao]"); if (!b) return;
+        if (b.getAttribute("data-acao") === "ver") s.scrollIntoView({ block: "start" });
+        else {
+          var html = comEstilo(s, previa.contentWindow);
+          copiar(s.innerText, html).then(function () { aviso(nome + " copiado em " + largura + " px — cole no Paper"); });
+        }
+      });
+      alvo.appendChild(linha);
+    });
+  }
+
+  /* ---------- copy ---------- */
+  function trechos() {
+    var out = [];
+    (function andar(o, path) {
+      if (Array.isArray(o)) { o.forEach(function (v, i) { andar(v, path.concat(i)); }); return; }
+      if (o && typeof o === "object") {
+        if (typeof o.text === "string" && "status" in o) { out.push({ path: path.join("."), slot: o }); return; }
+        Object.keys(o).forEach(function (k) { andar(o[k], path.concat(k)); });
+      }
+    })(copy, []);
+    return out;
+  }
+  function rotulo(path) { return path.replace(/^home\./, "").replace(/\.(\d+)\./g, function (_, n) { return " " + (+n + 1) + " · "; }).replace(/\./g, " · "); }
+
+  function desenharCopy() {
+    var busca = $("#busca").value.toLowerCase(), filtro = $("#filtro-status").value;
+    var grupos = {}, ordem = [];
+    trechos().forEach(function (t) {
+      if (filtro && t.slot.status !== filtro) return;
+      if (busca && (t.path + " " + t.slot.text).toLowerCase().indexOf(busca) < 0) return;
+      var g = t.path.split(".").slice(0, t.path.indexOf("home.") === 0 ? 2 : 1).join(".");
+      if (!grupos[g]) { grupos[g] = []; ordem.push(g); }
+      grupos[g].push(t);
+    });
+    var html = ordem.map(function (g) {
+      return '<div class="grupo"><h2>' + g.replace(/^home\./, "") + "</h2>" + grupos[g].map(function (t) {
+        var orig = pegar(ORIGINAL, t.path) || {};
+        var mudou = orig.text !== t.slot.text || orig.status !== t.slot.status;
+        var id = "c-" + t.path.replace(/\./g, "-");
+        return '<div class="trecho' + (mudou ? " mudou" : "") + '" data-path="' + t.path + '">' +
+          '<label for="' + id + '"><span class="s-' + t.slot.status + '">●</span>' + rotulo(t.path) +
+          '<button class="btn" data-apontar type="button">Ver</button></label>' +
+          '<textarea id="' + id + '" rows="2"></textarea>' +
+          '<select aria-label="Situação de ' + rotulo(t.path) + '">' +
+          ["ok", "draft", "pick", "missing"].map(function (s) { return "<option" + (s === t.slot.status ? " selected" : "") + ">" + s + "</option>"; }).join("") +
+          "</select></div>";
+      }).join("") + "</div>";
+    }).join("");
+    $("#trechos").innerHTML = html || '<p class="ajuda">Nenhum trecho com esse filtro.</p>';
+    document.querySelectorAll(".trecho").forEach(function (el) {
+      var slot = pegar(copy, el.getAttribute("data-path"));
+      $("textarea", el).value = slot.text;
+    });
+    contar();
+  }
+  function contar() {
+    var n = trechos().filter(function (t) { var o = pegar(ORIGINAL, t.path) || {}; return o.text !== t.slot.text || o.status !== t.slot.status; }).length;
+    $("#n-mudou").textContent = n ? "(" + n + ")" : "";
+  }
+  $("#trechos").addEventListener("input", function (e) {
+    var el = e.target.closest(".trecho"); if (!el) return;
+    var path = el.getAttribute("data-path"), slot = pegar(copy, path);
+    if (e.target.tagName === "TEXTAREA") slot.text = e.target.value;
+    if (e.target.tagName === "SELECT") { slot.status = e.target.value; $("span", el).className = "s-" + slot.status; }
+    var o = pegar(ORIGINAL, path) || {};
+    el.classList.toggle("mudou", o.text !== slot.text || o.status !== slot.status);
+    salvar(); contar();
+    enviar({ tipo: "copy", path: path, text: slot.text, status: slot.status });
+  });
+  $("#trechos").addEventListener("click", function (e) {
+    if (!e.target.closest("[data-apontar]")) return;
+    enviar({ tipo: "apontar", path: e.target.closest(".trecho").getAttribute("data-path") });
+  });
+  $("#busca").addEventListener("input", desenharCopy);
+  $("#filtro-status").addEventListener("change", desenharCopy);
+  $("#descartar").addEventListener("click", function () {
+    if (!confirm("Descartar todas as edições e voltar ao copy.yml do repositório?")) return;
+    copy = clonar(ORIGINAL); try { localStorage.removeItem(CHAVE); } catch (e) {}
+    desenharCopy(); enviarTudo(); aviso("Edições descartadas");
+  });
+
+  /* ---------- YAML ---------- */
+  function escalar(v) {
+    if (v === null || v === undefined) return "";
+    if (typeof v === "string") return JSON.stringify(v);
+    return String(v);
+  }
+  function plano(o) { return o && typeof o === "object" && !Array.isArray(o) && Object.keys(o).every(function (k) { return o[k] === null || typeof o[k] !== "object"; }); }
+  function emLinha(o) { return "{ " + Object.keys(o).map(function (k) { return k + ": " + escalar(o[k]); }).join(", ") + " }"; }
+  function yaml(o, ind) {
+    var p = new Array(ind + 1).join(" "), linhas = [];
+    if (Array.isArray(o)) {
+      o.forEach(function (v) {
+        if (v === null || typeof v !== "object") linhas.push(p + "- " + escalar(v));
+        else if (plano(v)) linhas.push(p + "- " + emLinha(v));
+        else {
+          var sub = yaml(v, ind + 2);
+          linhas.push(p + "- " + sub[0].trim());
+          linhas = linhas.concat(sub.slice(1));
+        }
+      });
+      return linhas;
+    }
+    Object.keys(o).forEach(function (k) {
+      var v = o[k];
+      if (v === null || typeof v !== "object") linhas.push(p + k + ": " + escalar(v));
+      else if (plano(v)) linhas.push(p + k + ": " + emLinha(v));
+      else if (Array.isArray(v) && !v.length) linhas.push(p + k + ": []");
+      else { linhas.push(p + k + ":"); linhas = linhas.concat(yaml(v, ind + 2)); }
+    });
+    return linhas;
+  }
+  function gerarYaml() {
+    return [
+      "# copy.yml — toda palavra que o site diz.",
+      "# Gerado pelo painel (/painel/) em " + new Date().toISOString().slice(0, 10) + ".",
+      "# Todo trecho é { text, status }: ok vai ao ar; draft, pick e missing não.",
+      "# As notas e as fontes de cada trecho ficam no deck de copy do projeto, no DigitalOffice.",
+      ""
+    ].concat(yaml(copy, 0)).join("\n") + "\n";
+  }
+  $("#baixar").addEventListener("click", function () {
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([gerarYaml()], { type: "text/yaml" }));
+    a.download = "copy.yml"; a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+    aviso("copy.yml baixado — substitua _data/copy.yml");
+  });
+  $("#copiar-yaml").addEventListener("click", function () { copiar(gerarYaml()).then(function () { aviso("YAML copiado"); }); });
+
+  desenharCopy();
+  encaixar();
+})();
+</script>
+</body>
+</html>

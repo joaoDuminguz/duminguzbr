@@ -12,3 +12,7 @@ layout: base
 </main>
 
 {%- include footer.html %}
+
+{%- if page.show_status %}
+<script src="{{ '/proto/ponte.js' | relative_url }}"></script>
+{%- endif %}

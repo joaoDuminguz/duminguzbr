@@ -4,17 +4,117 @@ stylesheets:
   - /proto/proto.css
 ---
 {%- comment -%}
-  Wireframe da home: o mesmo HTML da página real, em cinza, com TODO trecho
-  visível e marcado pela situação (rascunho, escolher, faltando). É onde a
-  página é combinada ANTES de ser desenhada, para o quadro FINAL no Paper já
-  nascer do tamanho do texto real.
-{%- endcomment -%}
-{%- assign h = site.data.copy.home.hero -%}
+  Wireframe da home: a página inteira, em cinza, com TODO trecho visível e
+  marcado pela situação (rascunho, escolher, faltando). É onde a página é
+  combinada ANTES de ser desenhada, para o quadro FINAL no Paper já nascer do
+  tamanho do texto real.
 
-<section class="hero">
+  Cada seção é um componente (data-componente): o painel lista, mostra e copia
+  para o Paper. Cada trecho tem data-copy, o endereço dele no copy.yml, com os
+  índices de lista como números (home.passos.itens.0.texto).
+  A ordem é a do deck de copy (copia.md, "A página, de cima para baixo").
+{%- endcomment -%}
+{%- assign c = site.data.copy.home -%}
+
+{%- assign h = c.hero %}
+<section class="hero" data-componente="Primeira tela">
   <div class="wrap">
-    <h1 class="{% include mark.html slot=h.titulo %}">{{ h.titulo.text }}</h1>
-    <p class="hero__sub{% include mark.html slot=h.subtitulo %}">{{ h.subtitulo.text }}</p>
-    <a class="botao{% include mark.html slot=h.cta %}" href="{{ h.cta.url }}">{{ h.cta.text }}</a>
+    {% include slot.html s=h.titulo path="home.hero.titulo" tag="h1" %}
+    {% include slot.html s=h.subtitulo path="home.hero.subtitulo" class="hero__sub" %}
+    <a class="botao{% include mark.html slot=h.cta %}" href="{{ h.cta.url }}" data-copy="home.hero.cta">{{ h.cta.text }}</a>
+    <ul class="provas">
+      {%- for p in h.provas %}
+      {%- capture cp %}home.hero.provas.{{ forloop.index0 }}{% endcapture %}
+      <li>{% include slot.html s=p path=cp tag="span" %}</li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>
+
+{%- assign sv = c.servicos %}
+<section class="servicos" data-componente="O que eu faço">
+  <div class="wrap">
+    {% include slot.html s=sv.titulo path="home.servicos.titulo" tag="h2" %}
+    <ul class="grade">
+      {%- for i in sv.itens %}
+      {%- capture cp %}home.servicos.itens.{{ forloop.index0 }}{% endcapture %}
+      {%- assign p1 = cp | append: ".nome" %}{% assign p2 = cp | append: ".texto" %}
+      <li class="cartao">
+        {% include slot.html s=i.nome path=p1 tag="h3" %}
+        {% include slot.html s=i.texto path=p2 %}
+      </li>
+      {%- endfor %}
+    </ul>
+    {% include slot.html s=sv.tambem path="home.servicos.tambem" class="nota" %}
+  </div>
+</section>
+
+{%- assign t = c.trabalhos %}
+<section class="trabalhos" id="trabalhos" data-componente="Trabalhos">
+  <div class="wrap">
+    {% include slot.html s=t.titulo path="home.trabalhos.titulo" tag="h2" %}
+    <ol class="lista-trabalhos">
+      {%- for i in t.itens %}
+      {%- capture cp %}home.trabalhos.itens.{{ forloop.index0 }}{% endcapture %}
+      {%- assign p1 = cp | append: ".nome" %}{% assign p2 = cp | append: ".texto" %}
+      <li class="trabalho" id="trabalho-{{ i.id }}">
+        <div class="imagem" role="img" aria-label="Imagem: {{ i.nome.text }}">IMAGEM · {{ i.id }}</div>
+        {% include slot.html s=i.nome path=p1 tag="h3" %}
+        {% include slot.html s=i.texto path=p2 %}
+      </li>
+      {%- endfor %}
+    </ol>
+    {% include slot.html s=t.mais.titulo path="home.trabalhos.mais.titulo" tag="h3" %}
+    {% include slot.html s=t.mais.texto path="home.trabalhos.mais.texto" %}
+  </div>
+</section>
+
+{%- assign p = c.passos %}
+<section class="passos" id="como-funciona" data-componente="Como funciona">
+  <div class="wrap">
+    {% include slot.html s=p.titulo path="home.passos.titulo" tag="h2" %}
+    <ol class="grade">
+      {%- for i in p.itens %}
+      {%- capture cp %}home.passos.itens.{{ forloop.index0 }}{% endcapture %}
+      {%- assign p1 = cp | append: ".nome" %}{% assign p2 = cp | append: ".texto" %}
+      <li class="cartao">
+        {% include slot.html s=i.nome path=p1 tag="h3" %}
+        {% include slot.html s=i.texto path=p2 %}
+      </li>
+      {%- endfor %}
+    </ol>
+  </div>
+</section>
+
+{%- assign b = c.sobre %}
+<section class="sobre" data-componente="Quem sou">
+  <div class="wrap">
+    <div class="imagem retrato" role="img" aria-label="Retrato do João">RETRATO</div>
+    {% include slot.html s=b.titulo path="home.sobre.titulo" tag="h2" %}
+    {% include slot.html s=b.texto path="home.sobre.texto" %}
+  </div>
+</section>
+
+{%- assign q = c.perguntas %}
+<section class="perguntas" id="perguntas" data-componente="Perguntas frequentes">
+  <div class="wrap">
+    {% include slot.html s=q.titulo path="home.perguntas.titulo" tag="h2" %}
+    {%- for i in q.itens %}
+    {%- capture cp %}home.perguntas.itens.{{ forloop.index0 }}{% endcapture %}
+    {%- assign p1 = cp | append: ".pergunta" %}{% assign p2 = cp | append: ".resposta" %}
+    <details>
+      <summary>{% include slot.html s=i.pergunta path=p1 tag="span" %}</summary>
+      {% include slot.html s=i.resposta path=p2 %}
+    </details>
+    {%- endfor %}
+  </div>
+</section>
+
+{%- assign k = c.contato %}
+<section class="contato" data-componente="Contato">
+  <div class="wrap">
+    {% include slot.html s=k.titulo path="home.contato.titulo" tag="h2" %}
+    {% include slot.html s=k.texto path="home.contato.texto" %}
+    <a class="botao{% include mark.html slot=k.cta %}" href="#contato" data-copy="home.contato.cta">{{ k.cta.text }}</a>
   </div>
 </section>

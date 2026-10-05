@@ -1,0 +1,11 @@
+{%- comment -%}
+  slot.html — escreve um trecho de copy num elemento, com a marca de situação e
+  o endereço do trecho (data-copy), que o painel usa para editar ao vivo.
+
+    {% include slot.html s=h.titulo path="home.hero.titulo" tag="h1" class="" %}
+
+  `s` é o trecho de _data/copy.yml ({ text, status }); `path` é o caminho dele
+  no arquivo, com índices de lista como números (home.passos.itens.0.texto).
+{%- endcomment -%}
+{%- assign tag = include.tag | default: "p" -%}
+<{{ tag }} class="{{ include.class }}{% include mark.html slot=include.s %}" data-copy="{{ include.path }}">{{ include.s.text }}</{{ tag }}>

@@ -14,5 +14,5 @@
   cada um: um corte do lado de DENTRO do `if` de abertura come o espaço inicial,
   e duas classes viram uma só, que não casa com nada.
 {%- endcomment -%}
-{%- assign s = include.slot -%}
-{%- if page.show_status and s.status and s.status != "ok" %} is-{{ s.status }}{% endif -%}
+{%- assign mark_slot = include.slot -%}
+{%- if page.show_status and mark_slot.status and mark_slot.status != "ok" %} is-{{ mark_slot.status }}{% endif -%}
