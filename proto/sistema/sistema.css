@@ -1,0 +1,92 @@
+/* sistema.css — o wireframe "sistema", em cinza. Estrutura, não aparência:
+   onde fica o menu, como as telas se encaixam, o tamanho relativo da frase.
+   Cor, fonte, ícone e fundo de verdade saem do layout no Paper. */
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { font: 16px/1.5 system-ui, sans-serif; color: #222; background: #f4f4f4; overflow: hidden; }
+
+.pular { position: absolute; left: -999px; }
+.pular:focus { left: 16px; top: 16px; background: #fff; padding: 8px; z-index: 10; }
+:focus-visible { outline: 2px solid #06c; outline-offset: 3px; }
+
+/* --- a moldura: menu à esquerda, telas à direita ------------------------- */
+.sis { display: grid; grid-template-columns: 260px 1fr; height: 100dvh; }
+
+.sis-menu { background: #ddd; padding: 28px 20px; display: flex; flex-direction: column; gap: 32px; overflow: auto; }
+.sis-marca { font-weight: 700; color: #222; text-decoration: none; }
+.sis-menu ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.sis-menu nav a { display: flex; align-items: center; gap: 10px; padding: 10px; color: #222; text-decoration: none; border-left: 3px solid transparent; }
+.sis-menu nav a:hover { background: #e8e8e8; }
+.sis-menu nav a[aria-current="true"] { border-left-color: #222; background: #eee; font-weight: 700; }
+.sis-menu .botao { margin-top: auto; text-align: center; }
+
+.idx { font: 12px ui-monospace, monospace; color: #666; }
+.icone { flex: none; display: inline-grid; place-items: center; width: 28px; height: 28px; background: #bbb; color: #666; font-size: 6px; letter-spacing: .05em; }
+
+.sis-topo { display: none; }
+
+/* --- as telas: rolar leva à próxima, na ordem do menu --------------------
+   scroll-snap do navegador, "mandatory": a rolagem sempre para numa tela,
+   nunca entre duas. Numa tela mais alta que a janela, o navegador ainda deixa
+   rolar dentro dela. Nenhum JavaScript segura ou anima a rolagem. */
+.sis-telas { overflow-y: auto; scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.tela { position: relative; min-height: 100dvh; scroll-snap-align: start; display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; padding: 64px clamp(20px, 6vw, 96px); border-bottom: 1px dashed #bbb; overflow: hidden; }
+.fundo { position: absolute; inset: 0; display: grid; place-items: end; padding: 16px; background: repeating-linear-gradient(135deg, #ececec 0 12px, #e4e4e4 12px 24px); color: #999; font-size: .75rem; letter-spacing: .1em; }
+.conteudo { position: relative; max-width: 960px; min-width: 0; }   /* min-width: 0 — o carrossel não alarga a coluna */
+
+.olho { font: 600 .8rem/1 ui-monospace, monospace; text-transform: uppercase; letter-spacing: .12em; color: #666; margin: 0 0 16px; }
+.frase { font-size: clamp(2.25rem, 6vw, 5rem); line-height: 1.05; margin: 0 0 24px; max-width: 14em; }
+.apoio { font-size: clamp(1rem, 1.6vw, 1.25rem); max-width: 36em; }
+.botao { display: inline-block; padding: 14px 22px; background: #999; color: #fff; text-decoration: none; margin: 8px 0 0; }
+
+.provas { list-style: none; padding: 0; margin: 40px 0 0; display: flex; flex-wrap: wrap; gap: 8px 24px; font: .85rem ui-monospace, monospace; }
+.grade { list-style: none; padding: 0; margin: 32px 0 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.grade li { background: rgba(255,255,255,.7); padding: 18px; }
+.grade h3 { margin: 10px 0 6px; font-size: 1.05rem; }
+.grade p { margin: 0; font-size: .95rem; }
+
+/* Trabalhos: um carrossel numa tela só, com contador */
+.faixa { list-style: none; margin: 24px 0 0; padding: 0; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; }
+.faixa::-webkit-scrollbar { display: none; }
+.trabalho { flex: 0 0 100%; scroll-snap-align: start; display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: center; padding-right: 8px; }
+.imagem { aspect-ratio: 4 / 3; background: #ccc; color: #666; display: grid; place-items: center; font-size: .8rem; letter-spacing: .1em; }
+.controles { display: flex; align-items: center; gap: 16px; margin-top: 16px; font: .9rem ui-monospace, monospace; }
+.seta { font: inherit; background: none; border: 1px solid #999; padding: 6px 12px; cursor: pointer; }
+.mais { color: #555; font-size: .9rem; margin-top: 24px; }
+
+details { border-top: 1px solid #ccc; padding: 12px 0; max-width: 720px; }
+summary { cursor: pointer; font-weight: 600; }
+.rodape-linha { margin-top: 48px; font-size: .85rem; color: #555; }
+
+/* --- celular: o menu vira barra no topo + menu que abre ------------------ */
+@media (max-width: 899px) {
+  .sis { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+  .sis-topo { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; background: #ddd; grid-row: 1; }
+  .sis-atual { font: 600 .85rem ui-monospace, monospace; }
+  .sis-abrir { font: inherit; background: #fff; border: 1px solid #999; padding: 6px 12px; cursor: pointer; }
+  .sis-telas { grid-row: 2; }
+  .sis-menu { display: none; position: fixed; inset: 0; z-index: 5; padding-top: 72px; }
+  .menu-aberto .sis-menu { display: flex; }
+  .menu-aberto .sis-topo { position: relative; z-index: 6; }
+  .tela { min-height: calc(100dvh - 56px); padding: 40px 20px; align-items: start; }
+  .trabalho { grid-template-columns: 1fr; gap: 12px; }
+  .trabalho .imagem { max-height: 32dvh; aspect-ratio: auto; height: 32dvh; }
+}
+
+/* As marcas de situação da copy, iguais às do /proto/ */
+.is-draft   { outline: 2px dashed #c80; outline-offset: 4px; }
+.is-pick    { outline: 2px dashed #06c; outline-offset: 4px; }
+.is-missing { outline: 2px dashed #c00; outline-offset: 4px; color: #c00; }
+.is-draft::after   { content: " RASCUNHO"; font-size: .7rem; color: #c80; }
+.is-pick::after    { content: " ESCOLHER"; font-size: .7rem; color: #06c; }
+.is-missing::after { content: " FALTANDO"; font-size: .7rem; color: #c00; }
+.frase.is-draft::after { font-size: .8rem; vertical-align: super; }
+
+.painel-alvo { animation: painel-alvo 1.2s ease-out; }
+@keyframes painel-alvo { from { background: #ffe58a; } to { background: transparent; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .sis-telas, .faixa { scroll-behavior: auto; }
+  .painel-alvo { animation: none; background: #ffe58a; }
+}

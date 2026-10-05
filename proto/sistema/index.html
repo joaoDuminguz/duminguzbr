@@ -1,0 +1,231 @@
+---
+layout: base
+copy_key: home
+link_base: "/proto"
+stylesheets:
+  - /proto/sistema/sistema.css
+---
+{%- comment -%}
+  Wireframe "sistema" (2026-10-05): a mesma copy da home, como um sistema em vez
+  de uma página que rola. Proposta do João:
+
+    - tela de boas-vindas, que é a primeira tela (sem clique para entrar);
+    - menu lateral de navegação, numerado;
+    - rolar leva à próxima tela, na ordem do menu — scroll-snap nativo, sem
+      JavaScript segurando a rolagem;
+    - minimalista e direto: uma frase de efeito grande por tela, fundo e ícone.
+
+  No celular, o menu lateral vira uma barra no topo com a tela atual e um botão
+  que abre o menu. Trabalhos é um carrossel com contador, para caber numa tela.
+
+  FUNDO e ÍCONE são caixas cinza com o nome: o que vai nelas é do Estúdio.
+  Compare com /proto/ (a página que rola) no painel.
+{%- endcomment -%}
+{%- assign c = site.data.copy.home -%}
+{%- capture telas -%}
+inicio|hero|menu
+servicos|servicos|titulo
+trabalhos|trabalhos|titulo
+passos|passos|titulo
+sobre|sobre|titulo
+perguntas|perguntas|titulo
+contato|contato|titulo
+{%- endcapture -%}
+{%- assign telas = telas | newline_to_br | split: "<br />" %}
+
+<a class="pular" href="#s-inicio">Pular para o conteúdo</a>
+
+<div class="sis">
+  <aside class="sis-menu" id="sis-menu" aria-label="Navegação">
+    <a class="sis-marca" href="#s-inicio">{{ site.title }}</a>
+    <nav>
+      <ol>
+        {%- for t in telas %}
+        {%- assign partes = t | strip | split: "|" %}
+        {%- assign k1 = partes[1] %}{% assign k2 = partes[2] %}
+        {%- assign sec = c[k1] %}{% assign rot = sec[k2] %}
+        {%- capture cp %}home.{{ partes[1] }}.{{ partes[2] }}{% endcapture %}
+        <li><a href="#s-{{ partes[0] }}" data-alvo="s-{{ partes[0] }}">
+          <span class="idx">[{{ forloop.index | prepend: "0" | slice: -2, 2 }}]</span>
+          <span class="icone" aria-hidden="true">ÍCONE</span>
+          {% include slot.html s=rot path=cp tag="span" class="rotulo" %}
+        </a></li>
+        {%- endfor %}
+      </ol>
+    </nav>
+    <a class="botao{% include mark.html slot=c.hero.cta %}" href="#s-contato" data-copy="home.hero.cta">{{ c.hero.cta.text }}</a>
+  </aside>
+
+  <header class="sis-topo">
+    <span class="sis-atual" id="sis-atual" aria-live="polite">[01] {{ c.hero.menu.text }}</span>
+    <button class="sis-abrir" aria-expanded="false" aria-controls="sis-menu">Menu</button>
+  </header>
+
+  <main class="sis-telas" id="conteudo">
+
+    {%- assign h = c.hero %}
+    <section class="tela" id="s-inicio" data-componente="Boas-vindas">
+      <div class="fundo" aria-hidden="true">FUNDO · render ou loop do Blender</div>
+      <div class="conteudo">
+        {% include slot.html s=h.titulo path="home.hero.titulo" tag="h1" class="frase" %}
+        {% include slot.html s=h.subtitulo path="home.hero.subtitulo" class="apoio" %}
+        <a class="botao{% include mark.html slot=h.cta %}" href="#s-contato" data-copy="home.hero.cta">{{ h.cta.text }}</a>
+        <ul class="provas">
+          {%- for p in h.provas %}
+          {%- capture cp %}home.hero.provas.{{ forloop.index0 }}{% endcapture %}
+          <li>{% include slot.html s=p path=cp tag="span" %}</li>
+          {%- endfor %}
+        </ul>
+      </div>
+    </section>
+
+    {%- assign sv = c.servicos %}
+    <section class="tela" id="s-servicos" data-componente="O que eu faço">
+      <div class="fundo" aria-hidden="true">FUNDO</div>
+      <div class="conteudo">
+        {% include slot.html s=sv.titulo path="home.servicos.titulo" class="olho" %}
+        {% include slot.html s=sv.frase path="home.servicos.frase" tag="h2" class="frase" %}
+        <ul class="grade">
+          {%- for i in sv.itens %}
+          {%- capture cp %}home.servicos.itens.{{ forloop.index0 }}{% endcapture %}
+          {%- assign p1 = cp | append: ".nome" %}{% assign p2 = cp | append: ".texto" %}
+          <li><span class="icone" aria-hidden="true">ÍCONE</span>
+            {% include slot.html s=i.nome path=p1 tag="h3" %}
+            {% include slot.html s=i.texto path=p2 %}</li>
+          {%- endfor %}
+        </ul>
+      </div>
+    </section>
+
+    {%- assign t = c.trabalhos %}
+    <section class="tela" id="s-trabalhos" data-componente="Trabalhos">
+      <div class="conteudo">
+        {% include slot.html s=t.titulo path="home.trabalhos.titulo" class="olho" %}
+        {% include slot.html s=t.frase path="home.trabalhos.frase" tag="h2" class="frase" %}
+        <div class="carrossel" aria-roledescription="carrossel" aria-label="Trabalhos">
+          <ol class="faixa" id="faixa" tabindex="0">
+            {%- for i in t.itens %}
+            {%- capture cp %}home.trabalhos.itens.{{ forloop.index0 }}{% endcapture %}
+            {%- assign p1 = cp | append: ".nome" %}{% assign p2 = cp | append: ".texto" %}
+            <li class="trabalho" aria-roledescription="slide" aria-label="{{ forloop.index }} de {{ t.itens.size }}">
+              <div class="imagem" role="img" aria-label="Imagem: {{ i.nome.text }}">IMAGEM · {{ i.id }}</div>
+              <div>
+                {% include slot.html s=i.nome path=p1 tag="h3" %}
+                {% include slot.html s=i.texto path=p2 %}
+              </div>
+            </li>
+            {%- endfor %}
+          </ol>
+          <div class="controles">
+            <button class="seta" data-ir="-1" aria-label="Trabalho anterior">‹ Anterior</button>
+            <span class="contador" id="contador" aria-live="polite">1 / {{ t.itens.size }}</span>
+            <button class="seta" data-ir="1" aria-label="Próximo trabalho">Próximo ›</button>
+          </div>
+        </div>
+        <p class="mais">{% include slot.html s=t.mais.texto path="home.trabalhos.mais.texto" tag="span" %}</p>
+      </div>
+    </section>
+
+    {%- assign p = c.passos %}
+    <section class="tela" id="s-passos" data-componente="Como funciona">
+      <div class="fundo" aria-hidden="true">FUNDO</div>
+      <div class="conteudo">
+        {% include slot.html s=p.titulo path="home.passos.titulo" class="olho" %}
+        {% include slot.html s=p.frase path="home.passos.frase" tag="h2" class="frase" %}
+        <ol class="grade passos">
+          {%- for i in p.itens %}
+          {%- capture cp %}home.passos.itens.{{ forloop.index0 }}{% endcapture %}
+          {%- assign p1 = cp | append: ".nome" %}{% assign p2 = cp | append: ".texto" %}
+          <li><span class="idx">[0{{ forloop.index }}]</span>
+            {% include slot.html s=i.nome path=p1 tag="h3" %}
+            {% include slot.html s=i.texto path=p2 %}</li>
+          {%- endfor %}
+        </ol>
+      </div>
+    </section>
+
+    {%- assign b = c.sobre %}
+    <section class="tela" id="s-sobre" data-componente="Quem sou">
+      <div class="fundo" aria-hidden="true">FUNDO · retrato ou personagem 3D</div>
+      <div class="conteudo">
+        {% include slot.html s=b.titulo path="home.sobre.titulo" class="olho" %}
+        {% include slot.html s=b.frase path="home.sobre.frase" tag="h2" class="frase" %}
+        {% include slot.html s=b.texto path="home.sobre.texto" class="apoio" %}
+      </div>
+    </section>
+
+    {%- assign q = c.perguntas %}
+    <section class="tela" id="s-perguntas" data-componente="Perguntas frequentes">
+      <div class="conteudo">
+        {% include slot.html s=q.titulo path="home.perguntas.titulo" class="olho" %}
+        {% include slot.html s=q.frase path="home.perguntas.frase" tag="h2" class="frase" %}
+        {%- for i in q.itens %}
+        {%- capture cp %}home.perguntas.itens.{{ forloop.index0 }}{% endcapture %}
+        {%- assign p1 = cp | append: ".pergunta" %}{% assign p2 = cp | append: ".resposta" %}
+        <details>
+          <summary>{% include slot.html s=i.pergunta path=p1 tag="span" %}</summary>
+          {% include slot.html s=i.resposta path=p2 %}
+        </details>
+        {%- endfor %}
+      </div>
+    </section>
+
+    {%- assign k = c.contato %}
+    <section class="tela" id="s-contato" data-componente="Contato">
+      <div class="fundo" aria-hidden="true">FUNDO</div>
+      <div class="conteudo">
+        {% include slot.html s=k.titulo path="home.contato.titulo" class="olho" %}
+        {% include slot.html s=k.frase path="home.contato.frase" tag="h2" class="frase" %}
+        {% include slot.html s=k.texto path="home.contato.texto" class="apoio" %}
+        <a class="botao{% include mark.html slot=k.cta %}" href="#" data-copy="home.contato.cta">{{ k.cta.text }}</a>
+        {% include slot.html s=site.data.copy.shared.footer.line path="shared.footer.line" class="rodape-linha" %}
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="{{ '/proto/ponte.js' | relative_url }}"></script>
+<script>
+/* O sistema: menu que acompanha a tela, menu do celular, carrossel. A rolagem é
+   do navegador (scroll-snap no CSS); nada aqui segura ou anima o scroll. */
+(function () {
+  var telas = document.querySelectorAll(".tela"), links = document.querySelectorAll("[data-alvo]");
+  var atual = document.getElementById("sis-atual"), menu = document.getElementById("sis-menu");
+  var abrir = document.querySelector(".sis-abrir");
+
+  /* A tela que ocupa mais da metade da janela é a atual: marca no menu e no topo. */
+  var olho = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      links.forEach(function (l) {
+        if (l.getAttribute("data-alvo") === e.target.id) {
+          l.setAttribute("aria-current", "true");
+          atual.textContent = l.querySelector(".idx").textContent + " " + l.querySelector(".rotulo").textContent;
+        } else l.removeAttribute("aria-current");
+      });
+    });
+  }, { root: document.querySelector(".sis-telas"), threshold: 0.5 });
+  telas.forEach(function (t) { olho.observe(t); });
+
+  function fechar() { document.body.classList.remove("menu-aberto"); abrir.setAttribute("aria-expanded", "false"); abrir.textContent = "Menu"; }
+  abrir.addEventListener("click", function () {
+    var aberto = document.body.classList.toggle("menu-aberto");
+    abrir.setAttribute("aria-expanded", aberto);
+    abrir.textContent = aberto ? "Fechar" : "Menu";
+    if (aberto) menu.querySelector("a").focus();
+  });
+  links.forEach(function (l) { l.addEventListener("click", fechar); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") { fechar(); abrir.focus(); } });
+
+  var faixa = document.getElementById("faixa"), contador = document.getElementById("contador");
+  var n = faixa.children.length;
+  function indice() { return Math.round(faixa.scrollLeft / faixa.clientWidth); }
+  faixa.addEventListener("scroll", function () { contador.textContent = (indice() + 1) + " / " + n; }, { passive: true });
+  document.querySelectorAll("[data-ir]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var i = Math.max(0, Math.min(n - 1, indice() + +b.getAttribute("data-ir")));
+      faixa.scrollTo({ left: i * faixa.clientWidth });
+    });
+  });
+})();
+</script>

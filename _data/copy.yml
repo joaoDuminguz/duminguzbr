@@ -45,6 +45,7 @@ meta:
 # A ordem das seções é a do deck (copia.md, "A página, de cima para baixo").
 home:
   hero:
+    menu:      { text: "Início", status: draft }
     titulo:    { text: "Feito à mão, pensado como sistema.", status: ok }
     subtitulo: { text: "Marca, site, vídeo e 3D para o seu negócio. Sou João Duminguz, designer e artista em João Pessoa, e desenho tudo isso como uma coisa só.", status: draft }
     cta:       { text: "Pedir orçamento pelo WhatsApp", url: "#contato", status: draft }
@@ -54,6 +55,7 @@ home:
       - { text: "Atendo o Brasil inteiro", status: draft }
 
   servicos:
+    frase:  { text: "Uma marca. Quatro jeitos de aparecer.", status: draft }
     titulo: { text: "O que eu faço", status: draft }
     itens:
       - nome:  { text: "Marca", status: draft }
@@ -67,6 +69,7 @@ home:
     tambem: { text: "Também faço design de interface e de aplicativo, apresentações e pitch decks, ilustração 2D e 3D para marcas, e impressos como rótulo e cardápio.", status: draft }
 
   trabalhos:
+    frase:  { text: "Do rótulo de cerveja ao jogo.", status: draft }
     titulo: { text: "Trabalhos", status: draft }
     itens:
       - id: redcred
@@ -89,6 +92,7 @@ home:
       texto:  { text: "Logotipos e identidades para negócios reais, e o logo e o rótulo da cerveja artesanal Maledita.", status: draft }
 
   passos:
+    frase:  { text: "Quatro passos, e você fala comigo em todos.", status: draft }
     titulo: { text: "Como funciona", status: draft }
     itens:
       - nome:  { text: "Conversa", status: draft }
@@ -101,10 +105,12 @@ home:
         texto: { text: "Você recebe todos os arquivos, prontos para usar, e o manual de como usar.", status: draft }
 
   sobre:
+    frase:  { text: "Desde 2012, desenhando à mão.", status: draft }
     titulo: { text: "Quem sou", status: draft }
     texto:  { text: "Sou João Duminguz, artista digital e designer de João Pessoa, na Paraíba. Desde 2012 desenho marcas, interfaces e peças de comunicação. Passei dez anos cuidando do design de um produto de tecnologia e os últimos anos dirigindo arte para estúdios de games. O que levo de lá para o seu negócio é o hábito de pensar a marca como um sistema: cada peça nova já nasce sabendo como se encaixar nas outras.", status: draft }
 
   perguntas:
+    frase:  { text: "Antes de você perguntar.", status: draft }
     titulo: { text: "Perguntas frequentes", status: draft }
     itens:
       - pergunta: { text: "Quanto custa?", status: draft }
@@ -121,6 +127,7 @@ home:
         resposta: { text: "Depende do tamanho do projeto. O prazo vem escrito no orçamento, antes de começar.", status: draft }
 
   contato:
-    titulo: { text: "Vamos conversar sobre o seu negócio?", status: draft }
+    frase:  { text: "Me conta o que o seu negócio faz.", status: draft }
+    titulo: { text: "Contato", status: draft }
     texto:  { text: "Me manda uma mensagem no WhatsApp. Respondo eu mesmo.", status: draft }
     cta:    { text: "Abrir o WhatsApp", status: draft }
