@@ -1,0 +1,55 @@
+# ==========================================================================
+# Duminguz (duminguz.com.br) — configuração do Jekyll
+#
+# Base do DigitalOffice (4_biblioteca/modelos/site-jekyll/). O projeto deste
+# site mora no escritório: 1_clientes/<cliente>/<projeto>/04-site.md, ou em
+# 2_casa/<marca>/<projeto>/ se for da casa. Este: 2_casa/duminguz/nacional/2026-site/.
+#
+# A regra do Jekyll sobre o que é publicado:
+#   - pastas que começam com "_" são do Jekyll ou ignoradas;
+#   - arquivos que começam com "." são ignorados;
+#   - todo o resto é copiado para _site/, e todo arquivo que começa com um
+#     bloco de front matter (--- … ---) passa pelo Liquid antes.
+# ==========================================================================
+
+title: "Duminguz - Design digital"   # provisório: o título final vem do deck de copy
+description: >-   # provisório: a descrição final vem do deck de copy
+  Design digital para pequenos e médios negócios no Brasil: marca, site e redes.
+url: "https://duminguz.com.br"
+baseurl: ""
+lang: pt-BR
+timezone: America/Recife
+
+# Sem plugins. Meta tags, nav e rodapé são includes simples, então toda tag da
+# página pode ser lida neste repositório.
+plugins: []
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - vendor
+  - paper-in        # Job 0: o que vai do repositório para o Paper
+  - paper-out       # Job 1: o que volta do Paper (CSS copiado, PNGs de referência)
+  - .claude
+
+# ---------------------------------------------------------------------------
+# Front matter padrão, por pasta. A regra mais específica vence.
+# ---------------------------------------------------------------------------
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: page
+      robots: index
+
+  # O wireframe: o MESMO layout, o mesmo HTML e a mesma copy do site real.
+  # Só três coisas mudam — a folha cinza que as páginas pedem, show_status
+  # (que marca a copy não aprovada) e noindex.
+  - scope:
+      path: "proto"
+    values:
+      layout: page
+      show_status: true
+      robots: noindex
+      link_base: "/proto"

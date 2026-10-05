@@ -1,0 +1,20 @@
+---
+copy_key: home
+stylesheets:
+  - /proto/proto.css
+---
+{%- comment -%}
+  Wireframe da home: o mesmo HTML da página real, em cinza, com TODO trecho
+  visível e marcado pela situação (rascunho, escolher, faltando). É onde a
+  página é combinada ANTES de ser desenhada, para o quadro FINAL no Paper já
+  nascer do tamanho do texto real.
+{%- endcomment -%}
+{%- assign h = site.data.copy.home.hero -%}
+
+<section class="hero">
+  <div class="wrap">
+    <h1 class="{% include mark.html slot=h.titulo %}">{{ h.titulo.text }}</h1>
+    <p class="hero__sub{% include mark.html slot=h.subtitulo %}">{{ h.subtitulo.text }}</p>
+    <a class="botao{% include mark.html slot=h.cta %}" href="{{ h.cta.url }}">{{ h.cta.text }}</a>
+  </div>
+</section>

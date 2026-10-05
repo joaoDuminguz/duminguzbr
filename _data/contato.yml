@@ -1,0 +1,9 @@
+# Contato e redes. Uma lista, lida pelo _includes/footer.html: uma rede nova é
+# uma entrada aqui e aparece em todas as páginas de uma vez.
+
+email:
+whatsapp:        # só números, com código do país: 5583999999999
+
+links: []
+#  - name: Instagram
+#    url: https://www.instagram.com/<perfil>

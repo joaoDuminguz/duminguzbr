@@ -1,0 +1,70 @@
+# Monta o site com Jekyll e publica no GitHub Pages.
+#
+# O repositório guarda as FONTES (_layouts, _includes, _data, Gemfile); o que vai
+# ao ar é o que o Jekyll faz com elas — o conteúdo de _site/.
+#
+# O GitHub também monta Jekyll sozinho, sem workflow, mas preso ao Jekyll 3.9 e a
+# um conjunto fixo de plugins. Este repositório usa o Jekyll 4.4 e o mesmo
+# Gemfile.lock que monta o site na máquina de quem trabalha nele.
+#
+# O Gemfile.lock precisa listar a plataforma Linux, ou este build falha:
+#   bundle lock --add-platform x86_64-linux
+#
+# Para publicar no servidor do escritório em vez do Pages, use o
+# deploy-servidor.yml.exemplo (ver README) e apague este arquivo.
+
+name: Montar e publicar com Jekyll
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Uma publicação por vez; as que estão na fila são puladas, a que está rodando
+# nunca é cancelada.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+
+      - name: Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Build
+        run: bundle exec jekyll build --trace
+        env:
+          JEKYLL_ENV: production
+
+      - name: Enviar o site montado
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "_site"
+
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publicar no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

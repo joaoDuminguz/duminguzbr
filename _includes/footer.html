@@ -1,0 +1,33 @@
+{%- comment -%}
+  footer.html — o rodapé e o bloco de contato, em toda página. Contato e redes
+  vêm de _data/contato.yml; as palavras, de _data/copy.yml → shared.footer.
+
+  O rodapé leva id="contato", e é para lá que o item "Contato" do menu aponta.
+  Assim "Contato" existe em toda página sem precisar de uma página de contato.
+{%- endcomment -%}
+{%- assign f = site.data.copy.shared.footer -%}
+{%- assign c = site.data.contato -%}
+<footer class="rodape" id="contato">
+  <div class="wrap">
+    {%- if f.line.text and f.line.text != "" %}
+    <p class="rodape__frase{% include mark.html slot=f.line %}">{{ f.line.text }}</p>
+    {%- endif %}
+
+    {%- if c.whatsapp %}
+    <a class="rodape__whats" href="https://wa.me/{{ c.whatsapp }}" target="_blank" rel="noopener">WhatsApp</a>
+    {%- endif %}
+    {%- if c.email %}
+    <a class="rodape__email" href="mailto:{{ c.email }}">{{ c.email }}</a>
+    {%- endif %}
+
+    {%- if c.links %}
+    <nav aria-label="Redes">
+      <ul>
+        {%- for link in c.links %}
+        <li><a href="{{ link.url }}" target="_blank" rel="noopener">{{ link.name }}</a></li>
+        {%- endfor %}
+      </ul>
+    </nav>
+    {%- endif %}
+  </div>
+</footer>

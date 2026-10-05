@@ -1,0 +1,17 @@
+/* tokens.css — as variáveis da marca do cliente.
+
+   Vêm da aba Theme do Paper (copiadas pelo Estúdio para paper-out/tokens.css)
+   com os MESMOS nomes. Nunca redigite um valor à mão: um valor digitado não se
+   distingue de uma exceção, um token sim. */
+
+:root {
+  --cor-fundo: #ffffff;
+  --cor-texto: #1a1a1a;
+  --cor-destaque: #333333;
+
+  --fonte-titulo: system-ui, sans-serif;
+  --fonte-texto: system-ui, sans-serif;
+
+  --espaco: 16px;
+  --largura: 1120px;
+}

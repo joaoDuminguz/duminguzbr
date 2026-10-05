@@ -1,0 +1,28 @@
+/* site.css — a base de engenharia, não o visual.
+
+   O visual vem do layout FINAL no Paper (Job 2 do fluxo de sites). Aqui fica só
+   o que todo site precisa e que não muda a aparência: box-sizing, foco visível,
+   movimento reduzido, imagens fluidas, o link de pular. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cor-fundo);
+  color: var(--cor-texto);
+  font-family: var(--fonte-texto);
+  line-height: 1.5;
+}
+
+img, video { max-width: 100%; height: auto; display: block; }
+
+.wrap { max-width: var(--largura); margin: 0 auto; padding: 0 var(--espaco); }
+
+.pular { position: absolute; left: -999px; }
+.pular:focus { left: var(--espaco); top: var(--espaco); background: var(--cor-fundo); padding: 8px; z-index: 10; }
+
+:focus-visible { outline: 2px solid var(--cor-destaque); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

@@ -1,0 +1,24 @@
+---
+copy_key: home
+stylesheets:
+  - /css/site.css
+---
+{%- comment -%}
+  Home real. Toda palavra vem de _data/copy.yml → home; nada é digitado no HTML.
+  Um trecho que não está `ok` não aparece aqui (o /proto/ mostra com marca).
+{%- endcomment -%}
+{%- assign h = site.data.copy.home.hero -%}
+
+<section class="hero">
+  <div class="wrap">
+    {%- if h.titulo.status == "ok" %}
+    <h1>{{ h.titulo.text }}</h1>
+    {%- endif %}
+    {%- if h.subtitulo.status == "ok" %}
+    <p class="hero__sub">{{ h.subtitulo.text }}</p>
+    {%- endif %}
+    {%- if h.cta.status == "ok" %}
+    <a class="botao" href="{{ h.cta.url }}">{{ h.cta.text }}</a>
+    {%- endif %}
+  </div>
+</section>

@@ -1,0 +1,54 @@
+# EXEMPLO — não roda enquanto o nome terminar em .exemplo.
+#
+# Monta o site com Jekyll e copia o resultado para o servidor do escritório por
+# SSH. Para usar: renomeie para deploy-servidor.yml, apague o jekyll.yml, e
+# cadastre os segredos em Settings → Secrets and variables → Actions:
+#
+#   SERVIDOR_HOST     o endereço do servidor
+#   SERVIDOR_USUARIO  o usuário de deploy (um por sócio, nunca senha compartilhada)
+#   SERVIDOR_CHAVE    a chave SSH PRIVADA desse usuário
+#   SERVIDOR_DESTINO  a pasta pública do site no servidor, ex.: /var/www/<dominio>/
+#
+# NUNCA escreva nenhum desses valores num arquivo do repositório.
+#
+# NÃO TESTADO: escrito em 2026-10-01, antes do primeiro site no servidor. O
+# primeiro uso confirma (ou corrige) este arquivo.
+
+name: Montar e publicar no servidor
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+concurrency:
+  group: "servidor"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+
+      - name: Build
+        run: bundle exec jekyll build --trace
+        env:
+          JEKYLL_ENV: production
+
+      - name: Chave SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVIDOR_CHAVE }}" > ~/.ssh/deploy
+          chmod 600 ~/.ssh/deploy
+          ssh-keyscan -H "${{ secrets.SERVIDOR_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Copiar _site/ para o servidor
+        run: |
+          rsync -az --delete -e "ssh -i ~/.ssh/deploy" _site/ \
+            "${{ secrets.SERVIDOR_USUARIO }}@${{ secrets.SERVIDOR_HOST }}:${{ secrets.SERVIDOR_DESTINO }}"

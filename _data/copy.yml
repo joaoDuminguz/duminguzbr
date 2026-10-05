@@ -1,0 +1,46 @@
+# ==========================================================================
+# copy.yml — toda palavra que o site diz.
+#
+# ESTE ARQUIVO É UM ESPELHO, NÃO A FONTE.
+# A fonte é o deck de copy do projeto no DigitalOffice
+# (1_clientes/<cliente>/<projeto>/copia.md, escrito pelo Marketing). Uma palavra
+# errada é corrigida lá primeiro, depois copiada para cá.
+#
+# Todo trecho é { text, status }. A situação viaja junto com o texto, para o
+# build saber o que foi aprovado:
+#
+#   ok       aprovado pelo cliente — pode ir ao ar
+#   pick     candidato — alguém tem uma escolha a fazer
+#   draft    rascunho, NUNCA vai ao ar sem aprovação
+#   missing  ainda sem texto — a seção vai ao ar SEM o trecho, nunca com
+#            placeholder ou "em breve"
+#
+# O /proto/ mostra as marcas (show_status: true). As páginas reais mostram só
+# trechos `ok`.
+# ==========================================================================
+
+# --- Em toda página --------------------------------------------------------
+shared:
+  nav:
+    items:
+      - { label: "Início",  url: "/" }
+      - { label: "Contato", url: "#contato" }
+    status: ok
+  footer:
+    line:
+      text: "[FRASE DO RODAPÉ]"
+      status: missing
+
+# --- Título e descrição por página (o copy_key de cada página escolhe) -----
+meta:
+  home:
+    title:       { text: "[TÍTULO DA HOME]", status: missing }
+    description: { text: "[DESCRIÇÃO DA HOME]", status: missing }
+    share:       { src: "", status: missing }
+
+# --- Home ------------------------------------------------------------------
+home:
+  hero:
+    titulo:    { text: "[TÍTULO]",        status: missing }
+    subtitulo: { text: "[SUBTÍTULO]",     status: missing }
+    cta:       { text: "Fale com a gente", url: "#contato", status: draft }

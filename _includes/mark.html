@@ -1,0 +1,18 @@
+{%- comment -%}
+  mark.html — transforma a situação de um trecho de copy numa classe CSS, ou em
+  nada.
+
+  Chame de dentro de um atributo class, passando um trecho de _data/copy.yml
+  como `slot=`. Ele emite o próprio espaço antes, então encaixa depois de uma
+  classe existente.
+
+  Só emite numa página com show_status: true, que o /proto/ liga e as páginas
+  reais não. Assim o wireframe mostra o que ainda é rascunho e o site real fica
+  limpo — as marcas não vazam para produção por acidente.
+
+  Os hífens nos delimitadores cortam espaços em branco. Cuidado com o lado de
+  cada um: um corte do lado de DENTRO do `if` de abertura come o espaço inicial,
+  e duas classes viram uma só, que não casa com nada.
+{%- endcomment -%}
+{%- assign s = include.slot -%}
+{%- if page.show_status and s.status and s.status != "ok" %} is-{{ s.status }}{% endif -%}

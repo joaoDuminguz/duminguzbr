@@ -1,0 +1,11 @@
+# Saída do build e caches do Jekyll — gerados, nunca vão para o commit.
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+
+# Gems instaladas dentro do projeto.
+vendor/
+
+# Rascunho do Paper, antes de ser organizado em paper-out/
+paper-out/*.tmp

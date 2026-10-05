@@ -1,0 +1,16 @@
+<!doctype html>
+{%- comment -%}
+  base.html — o esqueleto do documento. Todo outro layout se embrulha neste,
+  então existe exatamente um lugar onde <html>, <head> e <body> são escritos.
+{%- endcomment -%}
+<html lang="{{ page.lang | default: site.lang }}">
+<head>
+{%- include head.html %}
+</head>
+
+<body{% if page.body_class %} class="{{ page.body_class }}"{% endif %}>
+
+{{ content }}
+
+</body>
+</html>

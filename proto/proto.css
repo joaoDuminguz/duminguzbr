@@ -1,0 +1,38 @@
+/* proto.css — o wireframe em cinza. Estrutura, não aparência: fonte do sistema,
+   tons de cinza, um nível de título e um de texto. Tudo que for aparência sai
+   do layout no Paper, nunca daqui. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font: 16px/1.5 system-ui, sans-serif;
+  color: #222;
+  background: #f4f4f4;
+}
+
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+.pular { position: absolute; left: -999px; }
+.pular:focus { left: 16px; top: 16px; background: #fff; padding: 8px; }
+
+.nav { background: #ddd; padding: 16px 0; }
+.nav .wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.nav ul { display: flex; gap: 16px; list-style: none; margin: 0; padding: 0; }
+.nav a { color: #222; }
+.logo { font-weight: 700; text-decoration: none; }
+
+section { padding: 64px 0; border-bottom: 1px dashed #bbb; }
+h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 16px; }
+.botao { display: inline-block; padding: 12px 20px; background: #999; color: #fff; text-decoration: none; }
+
+.rodape { background: #ddd; padding: 32px 0; }
+.rodape ul { list-style: none; padding: 0; display: flex; gap: 16px; }
+
+/* As marcas de situação da copy — só aparecem no /proto/ */
+.is-draft   { outline: 2px dashed #c80; outline-offset: 4px; }
+.is-pick    { outline: 2px dashed #06c; outline-offset: 4px; }
+.is-missing { outline: 2px dashed #c00; outline-offset: 4px; color: #c00; }
+.is-draft::after   { content: " RASCUNHO"; font-size: .7rem; color: #c80; }
+.is-pick::after    { content: " ESCOLHER"; font-size: .7rem; color: #06c; }
+.is-missing::after { content: " FALTANDO"; font-size: .7rem; color: #c00; }

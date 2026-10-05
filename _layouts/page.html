@@ -1,0 +1,14 @@
+---
+layout: base
+---
+{%- comment -%}
+  page.html — uma página normal: nav, conteúdo, rodapé. Nav e rodapé são
+  escritos uma vez, aqui, para todas as páginas.
+{%- endcomment -%}
+{%- include nav.html %}
+
+<main id="conteudo">
+{{ content }}
+</main>
+
+{%- include footer.html %}

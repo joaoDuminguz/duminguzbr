@@ -1,0 +1,31 @@
+{%- comment -%}
+  nav.html — o cabeçalho, um só para todas as páginas.
+
+  Os itens vêm de _data/copy.yml → shared.nav.items, então uma página nova no
+  menu é uma linha de dado, não três edições em três arquivos.
+
+  `link_base` deixa o mesmo cabeçalho servir dois mundos: o site real (base "",
+  então "/sobre/") e o wireframe (base "/proto", então "/proto/sobre/"). O
+  _config.yml define isso para toda a pasta proto/.
+{%- endcomment -%}
+{%- assign base = page.link_base | default: "" -%}
+
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="{{ base | append: '/' | relative_url }}">{{ site.title }}</a>
+    <nav aria-label="Principal">
+      <ul>
+        {%- for item in site.data.copy.shared.nav.items %}
+        {%- if item.url contains '#' -%}
+          {%- assign alvo = item.url -%}
+        {%- else -%}
+          {%- assign alvo = base | append: item.url | relative_url -%}
+        {%- endif %}
+        <li><a href="{{ alvo }}"{% if alvo == page.url %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
+        {%- endfor %}
+      </ul>
+    </nav>
+  </div>
+</header>

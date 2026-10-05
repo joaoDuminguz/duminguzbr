@@ -1,0 +1,55 @@
+{%- comment -%}
+  head.html — tudo dentro do <head>, para toda página.
+
+  Os valores por página vêm de dois lugares, e nenhum deles é este arquivo:
+    · as palavras → _data/copy.yml, em `meta.<page.copy_key>`
+    · as folhas   → o `stylesheets:` do front matter da própria página
+
+  Escrito à mão em vez de usar o jekyll-seo-tag, para que toda tag que chega à
+  página possa ser lida aqui.
+{%- endcomment -%}
+{%- assign m = site.data.copy.meta[page.copy_key] -%}
+{%- comment -%}
+  Só texto aprovado (`ok`) chega ao <title> e à descrição de uma página real; no
+  /proto/ (show_status) entra qualquer texto, para ser visto e revisado.
+{%- endcomment -%}
+{%- assign titulo = page.title | default: site.title -%}
+{%- if m.title.status == "ok" or page.show_status -%}{%- assign titulo = m.title.text | default: titulo -%}{%- endif -%}
+{%- assign desc = page.description | default: site.description -%}
+{%- if m.description.status == "ok" or page.show_status -%}{%- assign desc = m.description.text | default: desc -%}{%- endif -%}
+{%- assign share  = m.share.src | default: page.share -%}
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>{{ titulo }}</title>
+<meta name="description" content="{{ desc | strip_html | strip_newlines }}">
+{%- if page.robots == "noindex" %}
+<meta name="robots" content="noindex">
+{%- endif %}
+<link rel="canonical" href="{{ page.url | absolute_url }}">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ titulo }}">
+<meta property="og:description" content="{{ desc | strip_html | strip_newlines }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+{%- comment -%}
+  Sem imagem de compartilhamento, a tag é omitida em vez de apontar para um
+  placeholder: og:image quebrada fica pior numa prévia do WhatsApp que nenhuma.
+{%- endcomment -%}
+{%- if share and share != "" %}
+<meta property="og:image" content="{{ share | absolute_url }}">
+<meta name="twitter:card" content="summary_large_image">
+{%- endif %}
+
+{%- comment -%} Fontes: troque pelo link das fontes do projeto, ou apague. {%- endcomment %}
+{%- if site.fonts_url %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="{{ site.fonts_url }}" rel="stylesheet">
+{%- endif %}
+
+<link rel="stylesheet" href="{{ '/css/tokens.css' | relative_url }}">
+{%- for folha in page.stylesheets %}
+<link rel="stylesheet" href="{{ folha | relative_url }}">
+{%- endfor %}
