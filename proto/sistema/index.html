@@ -69,13 +69,16 @@ contato|contato|titulo
       <div class="conteudo">
         {% include slot.html s=h.titulo path="home.hero.titulo" tag="h1" class="frase" %}
         {% include slot.html s=h.subtitulo path="home.hero.subtitulo" class="apoio" %}
-        <a class="botao{% include mark.html slot=h.cta %}" href="#s-contato" data-copy="home.hero.cta">{{ h.cta.text }}</a>
-        <ul class="provas">
-          {%- for p in h.provas %}
-          {%- capture cp %}home.hero.provas.{{ forloop.index0 }}{% endcapture %}
-          <li>{% include slot.html s=p path=cp tag="span" %}</li>
-          {%- endfor %}
-        </ul>
+        {%- comment -%} O meio fica vazio: é o respiro para a arte de fundo (João, 2026-10-05). {%- endcomment %}
+        <div class="base">
+          <a class="botao{% include mark.html slot=h.cta %}" href="#s-contato" data-copy="home.hero.cta">{{ h.cta.text }}</a>
+          <ul class="provas">
+            {%- for p in h.provas %}
+            {%- capture cp %}home.hero.provas.{{ forloop.index0 }}{% endcapture %}
+            <li>{% include slot.html s=p path=cp tag="span" %}</li>
+            {%- endfor %}
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -103,6 +106,9 @@ contato|contato|titulo
         {% include slot.html s=t.titulo path="home.trabalhos.titulo" class="olho" %}
         {% include slot.html s=t.frase path="home.trabalhos.frase" tag="h2" class="frase" %}
         <div class="carrossel" aria-roledescription="carrossel" aria-label="Trabalhos">
+          <div class="historias" aria-hidden="true">
+            {%- for i in t.itens %}<span><i></i></span>{% endfor %}
+          </div>
           <ol class="faixa" id="faixa" tabindex="0">
             {%- for i in t.itens %}
             {%- capture cp %}home.trabalhos.itens.{{ forloop.index0 }}{% endcapture %}
@@ -120,6 +126,7 @@ contato|contato|titulo
             <button class="seta" data-ir="-1" aria-label="Trabalho anterior">‹ Anterior</button>
             <span class="contador" id="contador" aria-live="polite">1 / {{ t.itens.size }}</span>
             <button class="seta" data-ir="1" aria-label="Próximo trabalho">Próximo ›</button>
+            <button class="seta" id="tocar" aria-pressed="false">❚❚ Pausar</button>
           </div>
         </div>
         <p class="mais">{% include slot.html s=t.mais.texto path="home.trabalhos.mais.texto" tag="span" %}</p>
@@ -217,15 +224,72 @@ contato|contato|titulo
   links.forEach(function (l) { l.addEventListener("click", fechar); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") { fechar(); abrir.focus(); } });
 
+  /* Trabalhos: carrossel que roda sozinho, como um story. Cada trabalho fica
+     DURACAO na tela, com a barra do topo enchendo; no fim, passa ao próximo.
+     Qualquer reação da pessoa — clique, toque, arrastar, teclado — PARA a
+     contagem: ela está lendo. O botão ▶ retoma. Só conta com a tela de
+     Trabalhos à vista, e não começa para quem pede movimento reduzido. */
+  var DURACAO = 6000;
   var faixa = document.getElementById("faixa"), contador = document.getElementById("contador");
-  var n = faixa.children.length;
+  var barras = document.querySelectorAll(".historias i"), tocar = document.getElementById("tocar");
+  var n = faixa.children.length, atualI = 0, inicio = 0, visivel = false, quadro = 0;
+  var parado = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   function indice() { return Math.round(faixa.scrollLeft / faixa.clientWidth); }
-  faixa.addEventListener("scroll", function () { contador.textContent = (indice() + 1) + " / " + n; }, { passive: true });
-  document.querySelectorAll("[data-ir]").forEach(function (b) {
-    b.addEventListener("click", function () {
-      var i = Math.max(0, Math.min(n - 1, indice() + +b.getAttribute("data-ir")));
-      faixa.scrollTo({ left: i * faixa.clientWidth });
-    });
+  function pintar(fracao) {
+    barras.forEach(function (b, i) { b.style.transform = "scaleX(" + (i < atualI ? 1 : i > atualI ? 0 : fracao) + ")"; });
+    contador.textContent = (atualI + 1) + " / " + n;
+  }
+  function ir(i) {
+    atualI = (i + n) % n; inicio = performance.now();
+    faixa.scrollTo({ left: atualI * faixa.clientWidth });
+    pintar(parado ? 1 : 0);
+  }
+  function passo(agora) {
+    quadro = 0;
+    if (parado || !visivel || document.hidden) return;
+    var f = Math.min(1, (agora - inicio) / DURACAO);
+    pintar(f);
+    if (f >= 1) ir(atualI + 1);
+    quadro = requestAnimationFrame(passo);
+  }
+  function rodar() { if (!quadro && !parado && visivel) quadro = requestAnimationFrame(passo); }
+  function parar() {
+    if (parado) return;
+    parado = true; cancelAnimationFrame(quadro); quadro = 0; pintar(1);
+    tocar.textContent = "▶ Retomar"; tocar.setAttribute("aria-pressed", "true");
+  }
+  function retomar() {
+    parado = false; inicio = performance.now();
+    tocar.textContent = "❚❚ Pausar"; tocar.setAttribute("aria-pressed", "false");
+    pintar(0); rodar();
+  }
+
+  /* A pessoa reagiu: para de contar. */
+  ["pointerdown", "wheel", "keydown"].forEach(function (ev) {
+    faixa.addEventListener(ev, parar, { passive: true });
   });
+  faixa.addEventListener("scroll", function () {
+    if (!parado) return;                       /* rolagem do próprio carrossel não conta */
+    atualI = indice(); pintar(1);
+  }, { passive: true });
+  /* Tocar na imagem, como no story: terço esquerdo volta, o resto avança. */
+  faixa.addEventListener("click", function (e) {
+    var r = faixa.getBoundingClientRect();
+    ir(e.clientX - r.left < r.width / 3 ? atualI - 1 : atualI + 1);
+  });
+  document.querySelectorAll("[data-ir]").forEach(function (b) {
+    b.addEventListener("click", function () { parar(); ir(atualI + +b.getAttribute("data-ir")); });
+  });
+  tocar.addEventListener("click", function () { parado ? retomar() : parar(); });
+
+  new IntersectionObserver(function (es) {
+    visivel = es[0].isIntersecting;
+    if (visivel) { inicio = performance.now(); rodar(); }
+  }, { root: document.querySelector(".sis-telas"), threshold: 0.5 }).observe(document.getElementById("s-trabalhos"));
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) { inicio = performance.now(); rodar(); } });
+
+  if (parado) { tocar.textContent = "▶ Retomar"; tocar.setAttribute("aria-pressed", "true"); }
+  pintar(parado ? 1 : 0);
 })();
 </script>

@@ -32,8 +32,16 @@ body { font: 16px/1.5 system-ui, sans-serif; color: #222; background: #f4f4f4; o
    rolar dentro dela. Nenhum JavaScript segura ou anima a rolagem. */
 .sis-telas { overflow-y: auto; scroll-snap-type: y mandatory; scroll-behavior: smooth; }
 .tela { position: relative; min-height: 100dvh; scroll-snap-align: start; display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; padding: 64px clamp(20px, 6vw, 96px); border-bottom: 1px dashed #bbb; overflow: hidden; }
-.fundo { position: absolute; inset: 0; display: grid; place-items: end; padding: 16px; background: repeating-linear-gradient(135deg, #ececec 0 12px, #e4e4e4 12px 24px); color: #999; font-size: .75rem; letter-spacing: .1em; }
+.fundo { position: absolute; inset: 0; display: grid; place-items: start end; padding: 16px; background: repeating-linear-gradient(135deg, #ececec 0 12px, #e4e4e4 12px 24px); color: #999; font-size: .75rem; letter-spacing: .1em; }
 .conteudo { position: relative; max-width: 960px; min-width: 0; }   /* min-width: 0 — o carrossel não alarga a coluna */
+
+/* Boas-vindas: frase e apoio no alto, botão e provas na base, o meio livre
+   para a arte de fundo. A base bate com a do botão do menu lateral (28px). */
+#s-inicio { align-items: stretch; padding-top: 28px; padding-bottom: 28px; }
+#s-inicio .conteudo { display: flex; flex-direction: column; max-width: none; }
+#s-inicio .frase { margin-top: clamp(24px, 8dvh, 96px); }
+#s-inicio .base { margin-top: auto; padding-top: 32px; }
+#s-inicio .provas { margin-top: 24px; }
 
 .olho { font: 600 .8rem/1 ui-monospace, monospace; text-transform: uppercase; letter-spacing: .12em; color: #666; margin: 0 0 16px; }
 .frase { font-size: clamp(2.25rem, 6vw, 5rem); line-height: 1.05; margin: 0 0 24px; max-width: 14em; }
@@ -46,8 +54,12 @@ body { font: 16px/1.5 system-ui, sans-serif; color: #222; background: #f4f4f4; o
 .grade h3 { margin: 10px 0 6px; font-size: 1.05rem; }
 .grade p { margin: 0; font-size: .95rem; }
 
-/* Trabalhos: um carrossel numa tela só, com contador */
-.faixa { list-style: none; margin: 24px 0 0; padding: 0; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; }
+/* Trabalhos: um carrossel numa tela só, com contador e barras de story */
+.historias { display: flex; gap: 4px; margin-top: 24px; }
+.historias span { flex: 1; height: 3px; background: #ccc; overflow: hidden; }
+.historias i { display: block; height: 100%; background: #555; transform: scaleX(0); transform-origin: left; }
+.faixa { cursor: pointer; }
+.faixa { list-style: none; margin: 12px 0 0; padding: 0; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; }
 .faixa::-webkit-scrollbar { display: none; }
 .trabalho { flex: 0 0 100%; scroll-snap-align: start; display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: center; padding-right: 8px; }
 .imagem { aspect-ratio: 4 / 3; background: #ccc; color: #666; display: grid; place-items: center; font-size: .8rem; letter-spacing: .1em; }
@@ -70,6 +82,7 @@ summary { cursor: pointer; font-weight: 600; }
   .menu-aberto .sis-menu { display: flex; }
   .menu-aberto .sis-topo { position: relative; z-index: 6; }
   .tela { min-height: calc(100dvh - 56px); padding: 40px 20px; align-items: start; }
+  #s-inicio { align-items: stretch; padding: 24px 20px 20px; }
   .trabalho { grid-template-columns: 1fr; gap: 12px; }
   .trabalho .imagem { max-height: 32dvh; aspect-ratio: auto; height: 32dvh; }
 }
