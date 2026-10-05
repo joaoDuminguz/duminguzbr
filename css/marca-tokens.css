@@ -1,0 +1,110 @@
+/* CÓPIA. Fonte: DuminguzHUB, docs/brand/system/tokens.css, v0.2 — copiada em 2026-10-05.
+   Nunca edite aqui: mude no hub e copie de novo. */
+
+/* ==========================================================================
+   Duminguz brand system — TOKENS (canonical)
+
+   The one source of the brand's values. Every consumer imports these names:
+   the site, the panels, the social templates, the documents, and Paper's
+   Theme tab. Values are copied OUT of this file to its consumers once a
+   version is done; they are never authored anywhere else.
+
+   Source of the values: João's Figma text styles and variables, 2026-09-23
+   (portfolio/duminguz-art/ui/tokens.md). The newer material always wins over
+   the 2024 brandbook PDF (João, 2026-09-28).
+
+   Version: 0.1 — 2026-09-28, first cut for the Paper setup.
+   0.2 — 2026-10-01: --dgz-bg-raised, and the national register (ADR 0222).
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;600;700&family=Space+Grotesk:wght@400;700&display=swap");
+
+:root {
+
+  /* --- palette: ten values, three families plus the ground ------------- */
+
+  --dgz-ink:        #1C1A18;   /* ground. Near-black, WARM */
+  --dgz-bone:       #F3EBD5;   /* ground. Bone / warm cream: the type colour */
+
+  --dgz-sea-deep:   #195567;   /* sea */
+  --dgz-sea:        #3284C5;   /* sea */
+  --dgz-blue:       #73CAE7;   /* sea. Light sky blue, the brightest note. Not a neon */
+
+  --dgz-canyon:     #8C2813;   /* canyon. Paraiba, rusticity */
+  --dgz-clay:       #BC6036;   /* canyon */
+  --dgz-earth:      #906741;   /* canyon */
+
+  --dgz-purple:     #842484;   /* cyberpunk */
+  --dgz-orchid:     #A24795;   /* cyberpunk. Muted mid purple, not a hot magenta */
+
+  /* --- surface roles: components use these, never a raw hex ----------- */
+
+  --dgz-bg:         var(--dgz-ink);
+  --dgz-fg:         var(--dgz-bone);
+  --dgz-fg-dim:     #9A9285;              /* bone, dropped: secondary type */
+  --dgz-rule:       #2E2A26;              /* hairlines on the warm ground */
+  --dgz-bg-raised:  #26221F;              /* a card or tile lifted off the ground */
+
+  /* --- interaction roles: one colour per state, one from each family --
+     The rule João built the button set on: the same three-colour sequence
+     runs through every interactive component. Sea, canyon, cyberpunk.
+     NOTE: in the site's old brand.css, --dgz-accent meant blue. In the
+     system it means clay, per this model. Consumers migrate on rebuild. */
+
+  --dgz-affordance: var(--dgz-blue);      /* "you can act on this" — reserved */
+  --dgz-accent:     var(--dgz-clay);      /* "attention here" — hover, highlight */
+  --dgz-response:   var(--dgz-orchid);    /* "your action registered" — pressed */
+
+  --dgz-frame:      var(--dgz-orchid);    /* the HUD frame border */
+
+  /* --- type families --------------------------------------------------- */
+
+  --dgz-font-display: "Chakra Petch", "Rajdhani", sans-serif;       /* identity */
+  --dgz-font-body:    "Space Grotesk", ui-sans-serif, system-ui, sans-serif; /* interface */
+
+  /* --- type scale: eight named styles, DESIGN sizes (px at 1920) ------
+     Line height is one constant, 1.286-1.308, so it is carried as a ratio.
+     Fluid behaviour (clamp between a floor and these ceilings) belongs to
+     the web consumer, not to the token: a social post or a PDF uses the
+     design size as-is. Floors are listed for the web consumer. */
+
+  --dgz-h0-size: 116px;   --dgz-h0-floor: 40px;   /* Chakra 300, -0.02em, UPPER */
+  --dgz-h1-size:  72px;   --dgz-h1-floor: 30px;   /* Chakra 600,  0.02em, UPPER */
+  --dgz-h2-size:  58px;   --dgz-h2-floor: 26px;   /* Chakra 700,  0.02em, UPPER */
+  --dgz-sub-size: 46px;   --dgz-sub-floor: 20px;  /* Chakra 700,  0.12em */
+  --dgz-caption-size: 26px; --dgz-caption-floor: 12px; /* Chakra 700, 0.26em (mobile 0.02em), UPPER */
+  --dgz-button-size: 28px;  --dgz-button-floor: 13px; /* Grotesk 700, 0.04em, UPPER */
+  --dgz-body-size:   28px;  --dgz-body-floor: 15px;   /* Grotesk 400, 0.04em */
+
+  --dgz-leading: 1.3;     /* the system's line-height constant */
+}
+
+/* ==========================================================================
+   REGISTERS — one identity, two expressions (ADR 0222)
+
+   The brand has two fronts (ADR 0221) and shows them in two registers. The
+   palette, the logo and the families never change; only the ROLES are
+   reassigned. Default (:root, above) is the international register: ink
+   ground, Cyberpunk leading. The national register is set on any container:
+
+     <body data-register="nacional">
+
+   Contrast on bone, measured 2026-10-01 (WCAG): sea-deep 6.96, canyon 7.27,
+   fg-dim 5.99 — all pass for text. clay 3.63 — highlights and large shapes
+   only, never body text. blue 1.57 — NEVER on bone, which is why the
+   affordance moves from blue to sea-deep here. Cyberpunk stays out.
+   ========================================================================== */
+
+[data-register="nacional"] {
+  --dgz-bg:         var(--dgz-bone);
+  --dgz-bg-raised:  #EAE0C4;              /* bone, dropped: tiles and cards */
+  --dgz-fg:         var(--dgz-ink);
+  --dgz-fg-dim:     #5E574D;              /* ink, lifted: secondary type */
+  --dgz-rule:       #D6CBAE;              /* hairlines on bone */
+
+  --dgz-affordance: var(--dgz-sea-deep);  /* blue fails on bone (1.57) */
+  --dgz-accent:     var(--dgz-clay);      /* unchanged: highlights only */
+  --dgz-response:   var(--dgz-canyon);    /* orchid is out of this register */
+  --dgz-frame:      var(--dgz-sea-deep);
+}
+

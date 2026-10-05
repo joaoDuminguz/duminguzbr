@@ -18,6 +18,7 @@ description: >-   # provisório: a descrição final vem do deck de copy
 url: "https://duminguz.com.br"
 baseurl: ""
 lang: pt-BR
+register: nacional   # registro da marca no <body> (ADR 0222 do hub)
 timezone: America/Recife
 
 # Sem plugins. Meta tags, nav e rodapé são includes simples, então toda tag da

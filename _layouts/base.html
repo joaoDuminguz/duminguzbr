@@ -8,7 +8,7 @@
 {%- include head.html %}
 </head>
 
-<body{% if page.body_class %} class="{{ page.body_class }}"{% endif %}>
+<body{% if site.register %} data-register="{{ site.register }}"{% endif %}{% if page.body_class %} class="{{ page.body_class }}"{% endif %}>
 
 {{ content }}
 

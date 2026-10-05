@@ -1,16 +1,25 @@
-/* tokens.css — as variáveis da marca do cliente.
+/* tokens.css — as variáveis que o site usa.
 
-   Vêm da aba Theme do Paper (copiadas pelo Estúdio para paper-out/tokens.css)
-   com os MESMOS nomes. Nunca redigite um valor à mão: um valor digitado não se
-   distingue de uma exceção, um token sim. */
+   Os VALORES vêm da marca: css/marca-tokens.css, cópia do tokens.css v0.2 do hub
+   do João, com o registro nacional (ADR 0222) ligado no <body>. Aqui só se dá
+   nome de site aos papéis da marca; nenhum valor é digitado à mão.
 
-:root {
-  --cor-fundo: #ffffff;
-  --cor-texto: #1a1a1a;
-  --cor-destaque: #333333;
+   Quando o layout FINAL existir no Paper, os nomes da aba Theme entram aqui. */
 
-  --fonte-titulo: system-ui, sans-serif;
-  --fonte-texto: system-ui, sans-serif;
+@import url("marca-tokens.css");
+
+:root, [data-register] {   /* repetido no registro: o var() resolve onde é declarado */
+  --cor-fundo:    var(--dgz-bg);
+  --cor-elevado:  var(--dgz-bg-raised);
+  --cor-texto:    var(--dgz-fg);
+  --cor-texto-2:  var(--dgz-fg-dim);
+  --cor-linha:    var(--dgz-rule);
+  --cor-acao:     var(--dgz-affordance);
+  --cor-destaque: var(--dgz-accent);
+  --cor-resposta: var(--dgz-response);
+
+  --fonte-titulo: var(--dgz-font-display);
+  --fonte-texto:  var(--dgz-font-body);
 
   --espaco: 16px;
   --largura: 1120px;
