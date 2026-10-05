@@ -1,0 +1,221 @@
+/* visual.css — proposta visual do modelo "sistema" com o design system da
+   marca (tokens v0.2, registro nacional). Todo valor vem de um token
+   (--dgz-*, via css/tokens.css); números soltos aqui são só espaçamento.
+   Proposta do Claude, 2026-10-05: o layout final é do Estúdio, no Paper. */
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--dgz-bg); color: var(--dgz-fg);
+  font: 400 clamp(15px, 1.05vw, 18px) / 1.55 var(--dgz-font-body);
+  letter-spacing: .01em; overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--dgz-affordance); outline-offset: 3px; }
+.pular { position: absolute; left: -999px; }
+.pular:focus { left: 16px; top: 16px; z-index: 20; background: var(--dgz-bg); padding: 8px 12px; }
+
+.aviso-proposta {
+  position: fixed; right: 16px; bottom: 12px; z-index: 30; margin: 0;
+  font: 700 10px var(--dgz-font-display); letter-spacing: .14em; text-transform: uppercase;
+  color: var(--dgz-fg-dim); background: var(--dgz-bg-raised); padding: 6px 10px; border: 1px solid var(--dgz-rule);
+}
+
+/* --- tipografia: os estilos nomeados do design system ------------------- */
+.h0 {
+  font: 300 clamp(var(--dgz-h0-floor), 6.2vw, var(--dgz-h0-size)) / 1 var(--dgz-font-display);
+  letter-spacing: -.02em; text-transform: uppercase; margin: 0; max-width: 11em;
+}
+.h1 {
+  font: 600 clamp(var(--dgz-h1-floor), 4vw, var(--dgz-h1-size)) / 1.05 var(--dgz-font-display);
+  letter-spacing: .02em; text-transform: uppercase; margin: 0 0 clamp(24px, 4dvh, 48px); max-width: 16em;
+}
+.olho {
+  font: 700 12px / 1 var(--dgz-font-display); letter-spacing: .26em; text-transform: uppercase;
+  color: var(--dgz-affordance); margin: 0 0 18px; display: flex; align-items: center; gap: 12px;
+}
+.olho::before { content: ""; width: 28px; height: 1px; background: currentColor; }
+.apoio { font-size: clamp(16px, 1.35vw, 21px); max-width: 34em; color: var(--dgz-fg); margin: 24px 0 0; }
+h3 { font: 700 clamp(15px, 1.1vw, 18px) / 1.2 var(--dgz-font-display); letter-spacing: .06em; text-transform: uppercase; margin: 0 0 8px; }
+
+/* --- botão: o ciclo de três cores da marca -------------------------------
+   afford (sea-deep) → hover destaque (clay) → pressionado resposta (canyon) */
+.botao {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  font: 700 clamp(var(--dgz-button-floor), .9vw, 15px) / 1.3 var(--dgz-font-body); letter-spacing: .04em; text-transform: uppercase; text-align: center;
+  color: var(--dgz-bone); background: var(--dgz-affordance); text-decoration: none;
+  padding: 16px 22px; border: 0; clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  transition: background-color .15s;
+}
+.botao:hover { background: var(--dgz-accent); }
+.botao:active { background: var(--dgz-response); }
+.botao--grande { padding: 22px 32px; font-size: 16px; }
+
+/* --- a moldura do sistema ------------------------------------------------ */
+.sis { display: grid; grid-template-columns: 280px 1fr; height: 100dvh; }
+
+.sis-menu {
+  display: flex; flex-direction: column; gap: 6px; padding: 28px 22px; overflow: auto;
+  background: var(--dgz-bg-raised); border-right: 1px solid var(--dgz-rule);
+}
+.sis-marca { font: 700 22px var(--dgz-font-display); letter-spacing: .04em; text-transform: uppercase; text-decoration: none; }
+.sis-descritor { font: 700 10px var(--dgz-font-display); letter-spacing: .26em; text-transform: uppercase; color: var(--dgz-fg-dim); margin-bottom: 36px; }
+.sis-menu ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.sis-menu nav a {
+  position: relative; display: grid; grid-template-columns: 26px 24px 1fr; align-items: center; gap: 12px;
+  padding: 11px 10px; text-decoration: none; color: var(--dgz-fg-dim);
+  transition: color .15s, background-color .15s;
+}
+.sis-menu nav a:hover { color: var(--dgz-fg); background: color-mix(in srgb, var(--dgz-bone) 60%, transparent); }
+.sis-menu nav a[aria-current="true"] { color: var(--dgz-fg); }
+.sis-menu nav a[aria-current="true"]::before { content: ""; position: absolute; left: -22px; top: 8px; bottom: 8px; width: 3px; background: var(--dgz-accent); }
+.sis-menu nav a[aria-current="true"] .ico { color: var(--dgz-affordance); }
+.idx { font: 600 12px var(--dgz-font-display); letter-spacing: .08em; }
+.rotulo { font-weight: 700; font-size: 14px; letter-spacing: .02em; }
+.ico { width: 22px; height: 22px; flex: none; }
+.sis-menu .botao { margin-top: auto; }
+.sis-topo { display: none; }
+
+/* --- as telas ------------------------------------------------------------ */
+.sis-telas { overflow-y: auto; scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.tela {
+  position: relative; min-height: 100dvh; scroll-snap-align: start; overflow: hidden;
+  display: grid; grid-template-columns: minmax(0, 1fr); align-items: center;
+  padding: 64px clamp(24px, 6vw, 112px); border-bottom: 1px solid var(--dgz-rule);
+}
+.tela:nth-child(even) { background: var(--dgz-bg-raised); }
+.conteudo { position: relative; min-width: 0; max-width: 1180px; }
+
+/* cantos de recorte, o "quadro" do sistema (cor --dgz-frame) */
+.tela::before, .tela::after {
+  content: ""; position: absolute; width: 18px; height: 18px; border: 0 solid var(--dgz-frame); pointer-events: none;
+}
+.tela::before { top: 20px; left: 20px; border-top-width: 1px; border-left-width: 1px; }
+.tela::after { bottom: 20px; right: 20px; border-bottom-width: 1px; border-right-width: 1px; }
+
+/* 01 — boas-vindas: frase no alto, base embaixo, o meio é da arte */
+.tela--inicio { align-items: stretch; padding-top: 28px; padding-bottom: 28px; }
+.tela--inicio .conteudo { display: flex; flex-direction: column; max-width: none; }
+.tela--inicio .h0 { margin-top: clamp(24px, 9dvh, 110px); }
+.tela--inicio .base { margin-top: auto; padding-top: 32px; }
+.tela--inicio .h0 { font-size: clamp(var(--dgz-h0-floor), 4.8vw, var(--dgz-h0-size)); max-width: 8.5em; }
+.tela--inicio .apoio { max-width: min(30em, 50%); }
+.tela--inicio .h0 { position: relative; z-index: 2; }
+
+/* o leque: três cartazes no espaço livre à direita; abre no hover */
+.leque { position: absolute; right: clamp(40px, 6vw, 120px); top: 44%; translate: 0 -50%; width: min(24%, 38dvh); aspect-ratio: 9 / 14; }
+.leque img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  box-shadow: 0 18px 40px rgba(28, 26, 24, .28); transform-origin: 50% 110%;
+  transition: transform .45s cubic-bezier(.2, .8, .2, 1);
+}
+.leque img:nth-child(1) { transform: rotate(-8deg) translateX(-22%); }
+.leque img:nth-child(2) { transform: rotate(0deg); z-index: 1; }
+.leque img:nth-child(3) { transform: rotate(8deg) translateX(22%); }
+.tela--inicio:hover .leque img:nth-child(1) { transform: rotate(-13deg) translateX(-38%); }
+.tela--inicio:hover .leque img:nth-child(2) { transform: translateY(-4%); }
+.tela--inicio:hover .leque img:nth-child(3) { transform: rotate(13deg) translateX(38%); }
+.provas { list-style: none; padding: 0; margin: 22px 0 0; display: flex; flex-wrap: wrap; gap: 10px 28px; }
+.provas li { font: 600 12px var(--dgz-font-display); letter-spacing: .14em; text-transform: uppercase; display: flex; gap: 10px; align-items: center; }
+.provas li::before { content: ""; width: 6px; height: 6px; background: var(--dgz-accent); }
+
+/* 02 — o que eu faço */
+.cartoes { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); background: var(--dgz-rule); border: 1px solid var(--dgz-rule); }
+.cartao { background: var(--dgz-bg); padding: 28px 24px 30px; transition: background-color .2s; }
+.cartao .ico { width: 30px; height: 30px; color: var(--dgz-affordance); margin-bottom: 26px; transition: color .2s, transform .2s; }
+.cartao p { margin: 0; color: var(--dgz-fg-dim); font-size: 15px; }
+.cartao:hover { background: var(--dgz-bone); }
+.cartao:hover .ico { color: var(--dgz-accent); transform: translateY(-3px); }
+.nota { color: var(--dgz-fg-dim); margin: 24px 0 0; font-size: 15px; max-width: 52em; }
+
+/* 03 — trabalhos: carrossel story */
+.historias { display: flex; gap: 6px; }
+.historias span { flex: 1; height: 2px; background: var(--dgz-rule); overflow: hidden; }
+.historias i { display: block; height: 100%; background: var(--dgz-affordance); transform: scaleX(0); transform-origin: left; }
+.faixa { list-style: none; margin: 16px 0 0; padding: 0; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; cursor: pointer; }
+.faixa::-webkit-scrollbar { display: none; }
+.trabalho { flex: 0 0 100%; scroll-snap-align: start; display: grid; grid-template-columns: 1.35fr 1fr; gap: clamp(20px, 3vw, 48px); align-items: center; }
+.moldura { position: relative; margin: 0; aspect-ratio: 4 / 3; max-height: 52dvh; width: 100%; background: var(--dgz-ink); overflow: hidden; }
+.moldura img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s; }
+.moldura img.contido { object-fit: contain; background: var(--dgz-bone); padding: 6%; }
+.trabalho:hover .moldura img { transform: scale(1.03); }
+.contagem { position: absolute; left: 12px; bottom: 10px; font: 600 11px var(--dgz-font-display); letter-spacing: .16em; color: var(--dgz-bone); background: var(--dgz-ink); padding: 4px 8px; }
+.sem-imagem { height: 100%; display: grid; place-content: center; text-align: center; gap: 8px; color: var(--dgz-bone);
+  background: radial-gradient(circle at 70% 30%, var(--dgz-sea-deep), var(--dgz-ink) 70%); }
+.sem-imagem span { font: 600 clamp(20px, 2.4vw, 36px) var(--dgz-font-display); letter-spacing: .04em; text-transform: uppercase; }
+.sem-imagem small { font-size: 12px; color: var(--dgz-blue); letter-spacing: .1em; text-transform: uppercase; }
+.trabalho .texto p { color: var(--dgz-fg-dim); margin: 0; }
+.controles { display: flex; align-items: center; gap: 10px; margin-top: 18px; }
+.seta { font: 700 14px var(--dgz-font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--dgz-fg); background: transparent; border: 1px solid var(--dgz-rule); padding: 8px 14px; cursor: pointer; transition: border-color .15s, color .15s; }
+.seta:hover { border-color: var(--dgz-affordance); color: var(--dgz-affordance); }
+.seta--tocar { margin-left: auto; }
+.contador { font: 600 13px var(--dgz-font-display); letter-spacing: .14em; min-width: 56px; text-align: center; }
+.mais { display: flex; align-items: center; gap: 28px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--dgz-rule); }
+.mais p { margin: 0; color: var(--dgz-fg-dim); font-size: 14px; max-width: 24em; }
+.logos { list-style: none; margin: 0; padding: 0; display: flex; gap: 12px; flex-wrap: wrap; }
+.logos li { width: 96px; height: 56px; background: var(--dgz-bone); border: 1px solid var(--dgz-rule); overflow: hidden; }
+.logos img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.1); transition: filter .2s; }
+.logos li:hover img { filter: none; }
+
+/* 04 — como funciona */
+.passos { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--dgz-fg); }
+.passos li { padding: 22px 22px 0 0; position: relative; }
+.passos li + li { padding-left: 22px; border-left: 1px solid var(--dgz-rule); }
+.num { display: block; font: 300 clamp(40px, 5vw, 72px) / 1 var(--dgz-font-display); color: var(--dgz-affordance); margin-bottom: 18px; }
+.passos p { margin: 0; color: var(--dgz-fg-dim); font-size: 15px; }
+
+/* 05 — quem sou: o ano como arte */
+.ano {
+  position: absolute; right: -2vw; bottom: -6vw; font: 700 clamp(160px, 30vw, 480px) / .8 var(--dgz-font-display);
+  color: transparent; -webkit-text-stroke: 1px var(--dgz-clay); opacity: .55; pointer-events: none; letter-spacing: -.04em;
+}
+
+/* 06 — perguntas */
+.faq { max-width: 860px; border-top: 1px solid var(--dgz-fg); }
+.faq details { border-bottom: 1px solid var(--dgz-rule); }
+.faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; gap: 24px; padding: 20px 0; font: 700 clamp(15px, 1.15vw, 19px) var(--dgz-font-body); }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font: 300 26px / .8 var(--dgz-font-display); color: var(--dgz-affordance); transition: rotate .2s; }
+.faq details[open] summary::after { rotate: 45deg; color: var(--dgz-accent); }
+.faq summary:hover { color: var(--dgz-affordance); }
+.faq details p { margin: 0 0 22px; color: var(--dgz-fg-dim); max-width: 46em; }
+
+/* 07 — contato: o fecho, no tom escuro da marca */
+.tela--contato { background: var(--dgz-ink) !important; color: var(--dgz-bone); }
+.tela--contato .olho { color: var(--dgz-blue); }
+.tela--contato .apoio { color: var(--dgz-bone); }
+.tela--contato .botao { margin-top: 36px; }
+.rodape-linha { margin: 64px 0 0; font: 600 11px var(--dgz-font-display); letter-spacing: .18em; text-transform: uppercase; color: #9A9285; }
+
+/* --- celular -------------------------------------------------------------- */
+@media (max-width: 899px) {
+  .sis { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+  .sis-topo { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--dgz-bg-raised); border-bottom: 1px solid var(--dgz-rule); grid-row: 1; }
+  .sis-atual { font: 700 12px var(--dgz-font-display); letter-spacing: .18em; text-transform: uppercase; }
+  .sis-abrir { font: 700 12px var(--dgz-font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--dgz-fg); background: transparent; border: 1px solid var(--dgz-fg); padding: 8px 14px; }
+  .sis-telas { grid-row: 2; }
+  .sis-menu { display: none; position: fixed; inset: 0; z-index: 15; padding-top: 80px; }
+  .menu-aberto .sis-menu { display: flex; }
+  .menu-aberto .sis-topo { position: relative; z-index: 16; }
+  .tela { min-height: calc(100dvh - 58px); padding: 44px 22px 40px; align-items: start; }
+  .tela--inicio { padding: 24px 22px 22px; align-items: stretch; }
+  .tela--inicio .apoio { max-width: none; }
+  .leque { position: relative; right: auto; top: auto; translate: none; width: min(22%, 15dvh); margin: 22px auto 4px; }
+  .tela--inicio .h0 { margin-top: 12px; }
+  .tela--inicio .apoio { margin-top: 16px; font-size: 15px; }
+  .trabalho { grid-template-columns: 1fr; gap: 14px; }
+  .moldura { aspect-ratio: 4 / 3; }
+  .passos { grid-template-columns: 1fr 1fr; row-gap: 26px; }
+  .passos li:nth-child(3) { border-left: 0; padding-left: 0; }
+  .mais { flex-direction: column; align-items: start; gap: 14px; }
+  .logos li { width: 72px; height: 44px; }
+  .seta--tocar { margin-left: 0; }
+  .aviso-proposta { left: 12px; right: auto; bottom: 8px; font-size: 9px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sis-telas, .faixa { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; }
+}
