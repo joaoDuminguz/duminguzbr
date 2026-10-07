@@ -133,7 +133,9 @@ robots: noindex
     <!-- DESIGN SYSTEM ------------------------------------------------------>
     <section class="aba" id="a-ds" role="tabpanel" aria-labelledby="t-ds">
       <p class="ajuda">Os valores vêm de <code>css/marca-tokens.css</code>, cópia do <code>tokens.css</code> v0.2 do hub. Mudança de valor se faz no hub e se copia de novo; aqui só se mostra.
-        <button class="btn" id="copiar-tokens">Copiar tokens (CSS)</button></p>
+        <button class="btn" data-tokens="nacional">Copiar tokens · nacional</button>
+        <button class="btn" data-tokens="internacional">Copiar tokens · internacional</button></p>
+      <p class="ajuda">Os tokens saem como um bloco <code>:root</code> só com valores finais (sem <code>@import</code>, comentários nem <code>var()</code>). <b>O Paper não importa CSS na aba Theme</b> (2026-10): este bloco serve ao código e de referência para criar os tokens à mão. O site usa o <b>nacional</b>.</p>
 
       <h2>Paleta</h2>
       <div class="amostras" id="paleta"></div>
@@ -185,7 +187,7 @@ robots: noindex
       <select class="btn" id="pagina" aria-label="Página da prévia">
         <option value="{{ '/proto/' | relative_url }}">Wireframe página</option>
         <option value="{{ '/proto/sistema/' | relative_url }}">Wireframe sistema</option>
-        <option value="{{ '/proto/visual/' | relative_url }}">Proposta visual</option>
+        <option value="{{ '/proto/visual/' | relative_url }}" selected>Proposta visual</option>
         <option value="{{ '/' | relative_url }}">Site real</option>
       </select>
       <button class="btn" id="recarregar" title="Recarregar a prévia" aria-label="Recarregar a prévia">↻</button>
@@ -193,7 +195,7 @@ robots: noindex
       <small id="escala"></small>
     </div>
     <div class="palco" id="palco">
-      <iframe id="previa" title="Prévia do site" src="{{ '/proto/' | relative_url }}"></iframe>
+      <iframe id="previa" title="Prévia do site" src="{{ '/proto/visual/' | relative_url }}"></iframe>
     </div>
   </div>
 </div>
@@ -207,7 +209,27 @@ robots: noindex
   var ORIGINAL = JSON.parse(document.getElementById("dados-copy").textContent);
   var CHAVE = "painel:{{ site.url }}:copy";
   var copy = clonar(ORIGINAL);
-  try { var salvo = localStorage.getItem(CHAVE); if (salvo) copy = JSON.parse(salvo); } catch (e) {}
+  /* O navegador guarda só as EDIÇÕES, cada uma com o texto do repositório em que
+     foi feita (base). Se o copy.yml mudou naquele trecho depois, o repositório
+     vence e a edição sai. Antes se guardava o copy inteiro, e o painel ficava preso
+     numa versão velha do site; esse formato antigo vai para CHAVE + ":antigo". */
+  var avisoInicial = "";
+  try {
+    var salvo = JSON.parse(localStorage.getItem(CHAVE) || "null");
+    if (salvo && salvo.versao === 2) {
+      var caiu = 0;
+      Object.keys(salvo.edicoes).forEach(function (path) {
+        var ed = salvo.edicoes[path], atual = pegar(copy, path);
+        if (atual && atual.text === ed.base.text && atual.status === ed.base.status) { atual.text = ed.text; atual.status = ed.status; }
+        else caiu++;
+      });
+      if (caiu) avisoInicial = caiu + " edição(ões) descartada(s): o copy.yml mudou nesses trechos";
+    } else if (salvo) {
+      localStorage.setItem(CHAVE + ":antigo", JSON.stringify(salvo));
+      localStorage.removeItem(CHAVE);
+      avisoInicial = "Edições antigas guardadas à parte; o painel voltou ao copy.yml do repositório";
+    }
+  } catch (e) {}
 
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var previa = $("#previa"), palco = $("#palco");
@@ -215,7 +237,15 @@ robots: noindex
 
   function clonar(o) { return JSON.parse(JSON.stringify(o)); }
   function aviso(t) { var a = $("#aviso"); a.textContent = t; a.classList.add("ver"); clearTimeout(aviso.t); aviso.t = setTimeout(function () { a.classList.remove("ver"); }, 1800); }
-  function salvar() { try { localStorage.setItem(CHAVE, JSON.stringify(copy)); } catch (e) {} }
+  function salvar() {
+    var edicoes = {};
+    trechos().forEach(function (t) {
+      var o = pegar(ORIGINAL, t.path) || {};
+      if (o.text !== t.slot.text || o.status !== t.slot.status)
+        edicoes[t.path] = { text: t.slot.text, status: t.slot.status, base: { text: o.text, status: o.status } };
+    });
+    try { localStorage.setItem(CHAVE, JSON.stringify({ versao: 2, edicoes: edicoes })); } catch (e) {}
+  }
   function pegar(obj, path) { return path.split(".").reduce(function (o, k) { return o == null ? o : o[k]; }, obj); }
   function copiar(texto, html) {
     if (html && window.ClipboardItem) {
@@ -294,11 +324,37 @@ robots: noindex
 
   document.addEventListener("click", function (e) {
     var b = e.target.closest("[data-copiar]"); if (!b) return;
-    copiar(b.getAttribute("data-copiar")).then(function () { aviso("Copiado"); });
+    copiar(b.getAttribute("data-copiar")).then(function () { aviso("Copiado"); }, falhou);
   });
-  $("#copiar-tokens").addEventListener("click", function () {
-    fetch("{{ '/css/marca-tokens.css' | relative_url }}").then(function (r) { return r.text(); })
-      .then(copiar).then(function () { aviso("Tokens copiados — cole na aba Theme do Paper"); });
+
+  /* Tokens como bloco :root limpo, para o código e de referência. O Paper não importa
+     CSS na aba Theme (só cria tokens à mão ou por MCP). O arquivo inteiro não serve: só o
+     bloco :root, e com valores finais. Os nomes saem das regras :root de
+     marca-tokens.css; os valores, do estilo computado, que já resolve os var()
+     e aplica o registro. Tudo síncrono, para a cópia não perder o clique. */
+  function falhou(e) { aviso("Não copiou: " + (e && e.message || e)); }
+  var NOMES_TOKENS = [];
+  Array.prototype.forEach.call(document.styleSheets, function (folha) {
+    if (!/marca-tokens\.css/.test(folha.href || "")) return;
+    Array.prototype.forEach.call(folha.cssRules, function (regra) {
+      if (regra.selectorText !== ":root") return;
+      for (var i = 0; i < regra.style.length; i++)
+        if (regra.style[i].indexOf("--dgz-") === 0) NOMES_TOKENS.push(regra.style[i]);
+    });
+  });
+  function tokensTheme(registro) {
+    var el = registro === "nacional" ? $('.registro[data-register="nacional"]') : document.documentElement;
+    var cs = getComputedStyle(el);
+    return ":root {\n" + NOMES_TOKENS.map(function (n) {
+      return "  " + n + ": " + cs.getPropertyValue(n).trim() + ";";
+    }).join("\n") + "\n}\n";
+  }
+  document.querySelectorAll("[data-tokens]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      if (!NOMES_TOKENS.length) return falhou("tokens não encontrados em marca-tokens.css");
+      copiar(tokensTheme(b.getAttribute("data-tokens")))
+        .then(function () { aviso("Tokens copiados (CSS)"); }, falhou);
+    });
   });
 
   /* ---------- prévia ---------- */
@@ -318,7 +374,14 @@ robots: noindex
       encaixar();
     });
   });
-  $("#pagina").addEventListener("change", function () { previa.src = this.value; });
+  /* A prévia abre na última página escolhida; na primeira vez, na proposta visual. */
+  try { var pg = localStorage.getItem("painel:pagina"); if (pg && $('#pagina option[value="' + pg + '"]')) $("#pagina").value = pg; } catch (e) {}
+  if (previa.getAttribute("src") !== $("#pagina").value) previa.src = $("#pagina").value;
+  $("#pagina").addEventListener("change", function () {
+    previa.src = this.value;
+    try { localStorage.setItem("painel:pagina", this.value); } catch (e) {}
+  });
+  if (avisoInicial) aviso(avisoInicial);
   $("#recarregar").addEventListener("click", function () { previa.contentWindow.location.reload(); });
   $("#nova-aba").addEventListener("click", function () {
     var u = "{{ '/painel/ver/' | relative_url }}?w=" + largura + "&p=" + encodeURIComponent($("#pagina").value);
