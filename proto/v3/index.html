@@ -1,0 +1,141 @@
+---
+layout: base
+copy_key: design
+link_base: "/proto"
+show_status: false
+stylesheets:
+  - /proto/v3/v3.css
+---
+{%- comment -%}
+  v3 — o site como um sistema de telas (2026-10-08). Wireframes do João no
+  Figma (Duminguz-Table, frames 1–3) e a descrição dele: um painel de controle
+  "analógico" fixo à esquerda, e uma "tela de TV" à direita que troca de canal.
+
+  ATIVO DE TESTE. Textos de _data/copy.yml (v3); imagens são placeholders que
+  descrevem a peça. Animação com GSAP; quem pede movimento reduzido vê tudo
+  parado e legível.
+{%- endcomment -%}
+{%- assign v = site.data.copy.v3 -%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap">
+<script id="dados" type="application/json">{{ v | jsonify }}</script>
+
+<div class="sistema" id="sistema">
+
+  <aside class="painel" aria-label="Painel">
+    <a class="painel-logo" href="#inicio" aria-label="Duminguz, início"><img src="{{ '/img/logo-duminguz-escuro.svg' | relative_url }}" alt="Duminguz" width="278" height="116"></a>
+    <i class="painel-aba" aria-hidden="true"></i>
+    <nav class="canais" id="canais" aria-label="Canais">
+      {%- for m in v.menu %}
+      <a class="canal-botao canal-botao--{{ m.id }}" href="#{{ m.id }}" data-canal="{{ m.id }}" data-cor="{{ m.cor }}"><i class="canal-quadro" aria-hidden="true"></i><span>{{ m.rotulo }}</span></a>
+      {%- endfor %}
+    </nav>
+    <a class="cta" href="#contato">{{ v.cta }}</a>
+    <span class="painel-led" aria-hidden="true"></span>
+  </aside>
+
+  <main class="tela" id="tela" aria-live="polite">
+    <div class="tela-conteudo" id="tela-conteudo">
+
+      {%- comment -%} ===== INÍCIO ===== {%- endcomment -%}
+      <section class="canal canal--inicio" id="c-inicio" data-canal="inicio" aria-label="Início" hidden>
+        <div class="mosaico" aria-hidden="true"><div class="mosaico-faixa" id="mosaico"></div></div>
+        <p class="nota-fundo">Fundo: {{ v.inicio.fundo }}</p>
+        <i class="cantos" aria-hidden="true"></i>
+        <p class="prova prova--esq" data-montar>{{ v.inicio.prova_esq }}</p>
+        <p class="prova prova--dir" data-montar>{{ v.inicio.prova_dir }}</p>
+        <h1 class="manchete" data-montar>
+          <span class="manchete-mao" id="mao" data-texto="{{ v.inicio.titulo_mao }}">{{ v.inicio.titulo_mao }}</span>
+          <span class="manchete-sistema">{{ v.inicio.titulo_sistema }}</span>
+        </h1>
+        <p class="frase-servico" data-montar><span class="palavra" id="palavra">{{ v.inicio.frases[0].palavra }}</span> <span id="resto">{{ v.inicio.frases[0].resto }}</span></p>
+        <ul class="redes" data-montar>
+          {%- for r in v.inicio.redes %}<li><a href="{{ r.url }}" target="_blank" rel="noopener">{{ r.rotulo }}</a></li>{% endfor %}
+        </ul>
+      </section>
+
+      {%- comment -%} ===== DESIGN ===== {%- endcomment -%}
+      <section class="canal canal--design" id="c-design" data-canal="design" aria-label="Design" hidden>
+        <div class="fundo-servico" aria-hidden="true"><span class="fundo-rotulo"></span></div>
+        <div class="gancho-faixa" data-montar><h2 class="gancho" data-decode>{{ v.design.gancho }}</h2></div>
+        <div class="vitrine" id="vitrine-design" aria-roledescription="carrossel" aria-label="Serviços de design"></div>
+        <div class="info" id="info-design" aria-live="polite">
+          <i class="info-linha" aria-hidden="true"></i>
+          <h3 class="info-titulo"></h3>
+          <p class="info-logline"></p>
+          <div class="tags"></div>
+        </div>
+        <p class="nota-fundo nota-fundo--base"></p>
+      </section>
+
+      {%- comment -%} ===== ARTE ===== {%- endcomment -%}
+      <section class="canal canal--arte" id="c-arte" data-canal="arte" aria-label="Arte" hidden>
+        <div class="fundo-servico" aria-hidden="true"><span class="fundo-rotulo"></span></div>
+        <p class="nota-fundo nota-fundo--topo"></p>
+        <h2 class="gancho gancho--arte" data-decode data-montar>{{ v.arte.gancho }}</h2>
+        <i class="caixa-info" aria-hidden="true"></i>
+        <div class="info info--arte" id="info-arte" aria-live="polite">
+          <i class="info-barra" aria-hidden="true"></i>
+          <h3 class="info-titulo"></h3>
+          <p class="info-logline"></p>
+        </div>
+        <div class="vitrine vitrine--vertical" id="vitrine-arte" aria-roledescription="carrossel" aria-label="Serviços de arte"></div>
+        <div class="tags tags--arte" id="tags-arte"></div>
+        <div class="letreiro" data-montar aria-label="Jogos e filmes em que trabalhei"><div class="letreiro-faixa" id="letreiro"></div></div>
+      </section>
+
+      {%- comment -%} ===== QUEM SOU (estrutura provisória: o layout do João vem a seguir) ===== {%- endcomment -%}
+      <section class="canal canal--sobre" id="c-sobre" data-canal="sobre" aria-label="Quem sou" hidden>
+        <p class="nota-fundo nota-fundo--topo">Estrutura provisória · o layout desta tela é do João</p>
+        <figure class="retrato ph" data-montar><figcaption>{{ v.sobre.retrato }}</figcaption></figure>
+        <div class="sobre-texto">
+          <h2 class="gancho gancho--sobre" data-decode data-montar>{{ v.sobre.gancho }}</h2>
+          <p class="sobre-apoio" data-montar>{{ v.sobre.texto }}</p>
+        </div>
+        <div class="linha-tempo" id="linha-tempo" data-montar aria-label="Trajetória de 2012 a 2026"></div>
+        <div class="sobre-botoes" data-montar>
+          <span class="botao botao--off" title="O currículo em PDF ainda não existe">{{ v.sobre.cv }} <small>em breve</small></span>
+          <a class="botao" href="{{ v.inicio.redes[1].url }}" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </section>
+
+      {%- comment -%} ===== CONTATO ===== {%- endcomment -%}
+      <section class="canal canal--contato" id="c-contato" data-canal="contato" aria-label="Contato" hidden>
+        <h2 class="gancho gancho--contato" data-decode data-montar>{{ v.contato.gancho }}</h2>
+        <div class="portas">
+          <article class="porta" data-montar>
+            <svg class="circuito" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40H120L150 10H400"/><path d="M400 260H260L230 290H0"/><circle cx="150" cy="10" r="4"/><circle cx="230" cy="290" r="4"/></svg>
+            <h3 data-decode>{{ v.contato.projeto.titulo }}</h3>
+            <p>{{ v.contato.projeto.texto }}</p>
+            <a class="botao" href="mailto:{{ v.contato.email }}?subject=Projeto">{{ v.contato.projeto.botao }}</a>
+          </article>
+          <article class="porta porta--vaga" data-montar>
+            <svg class="circuito" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40H220L250 10H400"/><path d="M400 260H160L130 290H0"/><circle cx="250" cy="10" r="4"/><circle cx="130" cy="290" r="4"/></svg>
+            <h3 data-decode>{{ v.contato.vaga.titulo }}</h3>
+            <p>{{ v.contato.vaga.texto }}</p>
+            <a class="botao" href="{{ v.inicio.redes[1].url }}" target="_blank" rel="noopener">{{ v.contato.vaga.botao }}</a>
+          </article>
+        </div>
+        <div class="email-linha" data-montar>
+          <span class="email" id="email">{{ v.contato.email }}</span>
+          <button class="copiar" id="copiar" type="button">Copiar</button>
+        </div>
+        <ul class="redes redes--contato" data-montar>
+          {%- for r in v.inicio.redes %}<li><a href="{{ r.url }}" target="_blank" rel="noopener">{{ r.rotulo }}</a></li>{% endfor %}
+        </ul>
+      </section>
+    </div>
+
+    {%- comment -%} A textura da TV: varredura, ruído, vinheta e a faixa de tracking do VHS {%- endcomment -%}
+    <div class="crt" aria-hidden="true">
+      <canvas class="crt-ruido" id="ruido" width="320" height="180"></canvas>
+      <i class="crt-varredura"></i><i class="crt-tracking"></i><i class="crt-vinheta"></i>
+    </div>
+    <div class="troca" id="troca" aria-hidden="true"><canvas id="estatica" width="160" height="90"></canvas><i class="troca-linha"></i></div>
+    <p class="aviso-teste">v3 · ativo de teste · placeholders descrevem as peças</p>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="{{ '/proto/v3/v3.js' | relative_url }}"></script>

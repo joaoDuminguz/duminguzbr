@@ -41,6 +41,11 @@ meta:
     description: { text: "Designer em João Pessoa, atendendo o Brasil inteiro. Marca, site e redes sociais pensados como um sistema só. Orçamento pelo WhatsApp.", status: draft }
     share:       { src: "", status: missing }
 
+  design:
+    title:       { text: "Design de marca, posts e site - João Duminguz", status: draft }
+    description: { text: "Logo, identidade visual, posts e site, desenhados juntos para o seu negócio ser reconhecido em qualquer lugar. Arquivos-fonte e guia de uso em toda entrega.", status: draft }
+    share:       { src: "", status: missing }
+
 # --- Home ------------------------------------------------------------------
 # A ordem das seções é a do deck (copia.md, "A página, de cima para baixo").
 home:
@@ -131,3 +136,192 @@ home:
     titulo: { text: "Contato", status: draft }
     texto:  { text: "Me manda uma mensagem no WhatsApp. Respondo eu mesmo.", status: draft }
     cta:    { text: "Abrir o WhatsApp", status: draft }
+
+# --- Portão Design (/design/) — deck v2, seções 02B a 04B e o tronco ------
+# ADR 0227 do hub: pouco texto, muito visual. Cada imagem é um placeholder
+# que descreve a peça que vai ocupar o espaço (no HTML, não aqui).
+design:
+  menu:
+    abertura:  { text: "Design", status: draft }
+    oque:      { text: "O que faço", status: draft }
+    sistema:   { text: "Um sistema", status: draft }
+    trabalhos: { text: "Trabalhos", status: draft }
+    passos:    { text: "Como funciona", status: draft }
+    perguntas: { text: "Perguntas", status: draft }
+    contato:   { text: "Contato", status: draft }
+  abertura:
+    frase: { text: "Uma marca. Todos os lugares onde ela aparece.", status: draft }
+    apoio: { text: "Logo, identidade, posts e site, desenhados juntos para o seu negócio ser reconhecido em qualquer lugar.", status: draft }
+    cta:   { text: "Tenho um projeto", status: draft }
+    provas:
+      - { text: "14 anos de design, desde 2012", status: draft }
+      - { text: "Uma identidade de produto que aguentou dez anos de crescimento", status: draft }
+      - { text: "Arquivos-fonte e guia de uso em toda entrega", status: draft }
+  oque:
+    frase: { text: "Do logo ao site.", status: draft }
+    itens:
+      - nome:  { text: "Logo e identidade", status: draft }
+        texto: { text: "Para negócio novo, ou para atualizar sem perder o que já é seu.", status: draft }
+      - nome:  { text: "Posts e pôster", status: draft }
+        texto: { text: "Peças avulsas ou um pacote para as redes.", status: draft }
+      - nome:  { text: "Site", status: draft }
+        texto: { text: "Landing page ou institucional, desenhado e construído por mim.", status: draft }
+    vaga: { text: "Também trabalho em time: dez anos como o designer da casa numa empresa de tecnologia.", status: draft }
+  sistema:
+    frase: { text: "Um negócio. Um sistema.", status: draft }
+    texto: { text: "Uma padaria de família. Redesenhei a marca sem tirar dela o que a dona reconhecia, e a partir dela fiz o manual e um kit de ilustrações.", status: draft }
+  trabalhos:
+    frase: { text: "Do rótulo de cerveja ao produto de tecnologia.", status: draft }
+    slots:
+      - { id: "D1", text: "Já fiz para alguém como você", status: draft }
+      - { id: "D2", text: "Trabalho pequeno é bem-vindo", status: draft }
+      - { id: "D3", text: "Dez anos como o designer de uma empresa de tecnologia", status: draft }
+      - { id: "D4", text: "Marca que vai para a prateleira", status: draft }
+  passos:
+    frase: { text: "Você não fica preso a mim.", status: pick }
+    itens:
+      - nome:  { text: "Conversa", status: draft }
+        texto: { text: "Você me conta o que o seu negócio precisa.", status: draft }
+      - nome:  { text: "Orçamento", status: draft }
+        texto: { text: "O que vou entregar, o prazo e o valor.", status: draft }
+      - nome:  { text: "Criação", status: draft }
+        texto: { text: "Desenho, mostro, ajustamos juntos.", status: draft }
+      - nome:  { text: "Entrega", status: draft }
+        texto: { text: "Arquivos-fonte, um guia de uso e uma conversa sobre ele. O que eu crio fica com você.", status: draft }
+  perguntas:
+    frase: { text: "Antes de você perguntar.", status: draft }
+    itens:
+      - pergunta: { text: "Quanto custa?", status: draft }
+        resposta: { text: "Depende do que você precisa: de um logo ou um pôster até a marca inteira com site. Me conta o projeto e eu mando o orçamento.", status: draft }
+      - pergunta: { text: "Você faz trabalho pequeno?", status: draft }
+        resposta: { text: "Faço. Um logo, um post ou um pôster são bem-vindos.", status: draft }
+      - pergunta: { text: "O que eu recebo no final?", status: draft }
+        resposta: { text: "Os arquivos-fonte, em todos os formatos de que você precisa, e um guia de como usar.", status: draft }
+      - pergunta: { text: "Você atende fora de João Pessoa?", status: draft }
+        resposta: { text: "Sim, o Brasil inteiro, por mensagem e por videochamada.", status: draft }
+  contato:
+    frase: { text: "Me conta o que você precisa.", status: draft }
+    cta:   { text: "Tenho um projeto", status: draft }
+    email: { text: "duminguz.art@gmail.com", status: ok }
+    vaga:  { text: "Tem uma vaga em design de interface? Veja a minha trajetória.", status: draft }
+
+# --- v3 (/proto/v3/) — o sistema com telas, 2026-10-08 ---------------------
+# Wireframes do João no Figma (Duminguz-Table, frames 1–3). Texto simples, sem
+# status: a situação de cada trecho e o limite de caracteres moram no documento
+# de copy da v3. Peças são placeholders que descrevem a arte (`arte`, `fundo`).
+v3:
+  menu:
+    - { id: "inicio",  rotulo: "Início",   cor: "clay" }
+    - { id: "design",  rotulo: "Design",   cor: "roxo" }
+    - { id: "arte",    rotulo: "Arte",     cor: "ciano" }
+    - { id: "sobre",   rotulo: "Quem sou", cor: "canion" }
+    - { id: "contato", rotulo: "Contato",  cor: "mar" }
+  cta: "Solicite seu orçamento"
+  inicio:
+    prova_esq: "14 anos de experiência"
+    prova_dir: "Atendo todo o Brasil"
+    titulo_mao: "Feito à mão,"
+    titulo_sistema: "pensado como sistema."
+    frases:
+      - { palavra: "Marca",         resto: "para o seu negócio." }
+      - { palavra: "Campanha",      resto: "para a sua marca." }
+      - { palavra: "Motion",        resto: "para o seu feed." }
+      - { palavra: "Interface",     resto: "para o seu produto." }
+      - { palavra: "Interface",     resto: "para o seu jogo." }
+      - { palavra: "Ilustração",    resto: "para a sua história." }
+      - { palavra: "Arte 3D",       resto: "para a sua campanha." }
+    fundo: "Cena 3D low poly do escritório, com os projetos passando nas TVs (releitura da ilustração de Gimme a Sign)"
+    redes:
+      - { rotulo: "ArtStation", url: "https://www.artstation.com/joaoduminguz" }
+      - { rotulo: "LinkedIn",   url: "https://www.linkedin.com/in/duminguz/" }
+      - { rotulo: "Behance",    url: "https://www.behance.net/duminguz" }
+  design:
+    gancho: "Uma marca. Todos os lugares onde ela aparece."
+    servicos:
+      - id: "marca"
+        titulo: "Marca"
+        logline: "Não importa o tamanho ou o segmento: eu resolvo o problema visual."
+        tags: ["Logo", "Identidade visual", "Manual de marca", "Mascote", "Rebrand"]
+        arte: "Pão Francês da Serra: o logo antigo e o novo, lado a lado"
+        fundo: "Logos e aplicações: Pão Francês, Alan Melo, marcas de produto da Fácil"
+      - id: "campanha"
+        titulo: "Campanha e pôster"
+        logline: "Uma imagem que para o scroll e vende sozinha."
+        tags: ["Pôster", "Posts", "Key visual", "Campanha", "Impressos"]
+        arte: "RedCred: o pôster Liberdade Financeira"
+        fundo: "Feed da campanha da RedCred e key art do Cosmogene"
+      - id: "motion"
+        titulo: "Motion e vinheta"
+        logline: "A sua marca em movimento, do logo ao feed."
+        tags: ["Vinheta", "Logo animado", "Motion para redes", "After Effects"]
+        arte: "Cosmogene: quadro de um teaser animado"
+        fundo: "Vídeo: teasers e atualizações do Cosmogene"
+      - id: "icones"
+        titulo: "Ícones e infográfico"
+        logline: "Símbolos e gráficos que se entendem de relance."
+        tags: ["Ícones", "Infográfico", "Emblemas", "Dados visuais"]
+        arte: "Chemical Compounds: a molécula e o ícone, lado a lado"
+        fundo: "Emblemas e banco de ícones do Cosmogene"
+      - id: "interface"
+        titulo: "Interface e design system"
+        logline: "Do componente à tela, um produto coerente."
+        tags: ["UI", "Design system", "Componentes", "Web e app", "Dashboard"]
+        arte: "Cosmogene: tipografia, componentes e uma tela pronta"
+        fundo: "Telas e componentes da Fácil, em tema claro e escuro"
+      - id: "jogos"
+        titulo: "Interface de jogo"
+        logline: "A interface que o jogador entende sem pensar."
+        tags: ["HUD", "Menus", "Cartas", "Ícones de jogo", "Logo de jogo"]
+        arte: "HemoQuest: a interface do jogo"
+        fundo: "Telas de jogo do Cosmogene e do HemoQuest"
+  arte:
+    gancho: "Do rascunho ao render."
+    servicos:
+      - id: "ilustracao"
+        titulo: "Ilustração"
+        logline: "Imagens feitas à mão que contam a história do seu projeto."
+        tags: ["Ilustração 2D", "Capa", "Pôster", "Editorial"]
+        arte: "Red Dream, da graphic novel O que Impele"
+        fundo: "Vídeo: processo de pintura, do rascunho à cor"
+      - id: "concept"
+        titulo: "Concept e visdev"
+        logline: "O mundo do seu jogo ou filme, antes de ele existir."
+        tags: ["Concept art", "Visual development", "Ambientes", "Storyboard"]
+        arte: "Arkladom: concept de ambiente"
+        fundo: "Vídeo: concept e storyboards (Ambiente Familiar)"
+      - id: "personagem"
+        titulo: "Personagem e props"
+        logline: "Personagens que se reconhecem pela silhueta."
+        tags: ["Character design", "Props", "Stylized 3D", "Pixel art"]
+        arte: "Personagem 3D esculpido no Blender, em turntable"
+        fundo: "Vídeo: turntable de personagens e props"
+      - id: "jogo"
+        titulo: "Arte de jogo"
+        logline: "Cartas, key art e tudo que o jogador vê."
+        tags: ["Key art", "Cartas", "Ambientes de jogo", "Pixel art"]
+        arte: "Key art de jogo (Hell Dominos quando lançar)"
+        fundo: "Vídeo: gameplay com a arte aplicada"
+      - id: "render"
+        titulo: "Render e animação 3D"
+        logline: "O produto ou o personagem em movimento, no Blender."
+        tags: ["Render de produto", "Animação 3D", "Blender", "Cinemática"]
+        arte: "A abertura da proposta em vídeo para a Nike (Sortium)"
+        fundo: "Vídeo: render de produto e animação 3D"
+    projetos: ["Cosmogene", "Shift Shepherd", "HemoQuest", "Lux Prologue", "Destiny Hangover", "Lontra", "Zaltana", "David Miranda", "Nomad Soul Zero", "Mata Pau", "Ambiente Familiar", "Limboo", "M. O Vampiro da Ilha do Amor"]
+  sobre:
+    gancho: "Desde 2012, desenhando à mão."
+    texto: "Dez anos como o designer da casa numa empresa de tecnologia, depois o mercado internacional. De tudo isso ficou um hábito: pensar cada peça como parte de um sistema."
+    retrato: "Retrato do João, pintado ou em 3D, com a assinatura por cima"
+    marcos:
+      - { de: 2012, ate: 2014, nome: "Flowkore", papel: "Cofundador, concept art" }
+      - { de: 2012, ate: 2022, nome: "Fácil Soluções", papel: "Designer da casa: marcas e interfaces", pillar: true }
+      - { de: 2014, ate: 2018, nome: "Mago Cinzento", papel: "Cofundador, direção de arte" }
+      - { de: 2018, ate: 2019, nome: "Ambiente Familiar", papel: "Direção de animação, longa-metragem" }
+      - { de: 2020, ate: 2021, nome: "RedCred", papel: "Marca, marketing e direção de arte" }
+      - { de: 2021, ate: 2026, nome: "Sortium", papel: "Art Team Leader e designer, EUA", pillar: true }
+    cv: "Baixar currículo"
+  contato:
+    gancho: "Me conta o que você precisa."
+    projeto: { titulo: "Tenho um projeto", texto: "Marca, campanha, interface, arte e 3D. Orçamento sem compromisso.", botao: "Escrever um e-mail" }
+    vaga:    { titulo: "Tenho uma vaga",   texto: "Design de interface e produto, arte 2D e 3D. CLT ou PJ, remoto ou presencial.", botao: "Ver o LinkedIn" }
+    email: "duminguz.art@gmail.com"

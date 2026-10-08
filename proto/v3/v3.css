@@ -1,0 +1,336 @@
+/* v3.css — o sistema de telas (2026-10-08).
+   Duas camadas: o PAINEL (analógico, fixo, à esquerda) e a TELA (a TV de tubo,
+   que troca de canal). Valores de cor e tipo vêm da marca (css/marca-tokens.css);
+   tamanhos dentro da tela em cqw/cqh, para escalar com ela. As posições dos
+   cartões dos carrosséis vêm do v3.js, a partir das coordenadas dos frames do
+   Figma (tela de 1530 × 1080). */
+
+:root {
+  --painel-bg: #DADADA;
+  --painel-linha: var(--dgz-clay);
+  --tela-bg: #FBFAF6;
+  --tinta: var(--dgz-ink);
+  --tinta-2: #5E574D;
+  --cinza-cartao: #A8A4A2;
+  --c-clay: var(--dgz-clay);
+  --c-roxo: var(--dgz-orchid);
+  --c-ciano: var(--dgz-blue);
+  --c-terra: var(--dgz-earth);
+  --c-canion: var(--dgz-canyon);
+  --c-mar: var(--dgz-sea-deep);
+  --cor-canal: var(--c-clay);           /* o canal atual pinta a tela */
+  --display: var(--dgz-font-display);
+  --corpo: var(--dgz-font-body);
+  --mao: "Caveat", "Segoe Script", cursive;
+  --painel-w: clamp(240px, 20.3vw, 390px);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { overflow: hidden; background: var(--painel-bg); color: var(--tinta); font: 400 16px/1.4 var(--corpo); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+img { display: block; max-width: 100%; height: auto; }
+:focus-visible { outline: 2px solid var(--c-mar); outline-offset: 3px; }
+[hidden] { display: none !important; }
+
+.sistema { display: grid; grid-template-columns: var(--painel-w) 1fr; height: 100dvh; }
+
+/* ===================== PAINEL (analógico) ===================== */
+.painel {
+  position: relative; z-index: 5; display: flex; flex-direction: column;
+  background: var(--painel-bg); border-right: 6px solid var(--painel-linha);
+  padding: 50px 0 32px;
+}
+.painel-logo { display: block; padding: 0 14.4%; margin-bottom: 92px; }
+.painel-logo img { width: 100%; }
+.painel-aba, .caixa-info { display: none; }
+.canais { display: grid; }
+.canal-botao {
+  position: relative; display: flex; align-items: center; gap: 20px; height: 56px; padding: 0 0 0 14.4%;
+  text-decoration: none; font: 700 clamp(18px, 1.45vw, 28px) var(--corpo); letter-spacing: .06em;
+  border-bottom: 1px solid var(--painel-linha); color: var(--tinta);
+  transition: background-color .25s;
+}
+.canal-botao:first-child { border-top: 1px solid var(--painel-linha); }
+.canal-quadro { width: 40px; height: 40px; flex: none; background: var(--c-clay); transition: background-color .3s, transform .3s; }
+.canal-botao:hover { background: #E6E6E6; }
+.canal-botao:hover .canal-quadro { transform: scale(.9); }
+.canal-botao[aria-current="page"] { background: #F3F3F3; border-color: var(--cor-botao); }
+.canal-botao[aria-current="page"] .canal-quadro { background: var(--cor-botao); }
+.canal-botao[aria-current="page"]::after { /* a aba que sai do painel e encosta na tela */
+  content: ""; position: absolute; right: -14px; top: -1px; bottom: -1px; width: 15px; background: var(--cor-botao);
+}
+[data-cor="clay"]  { --cor-botao: var(--c-clay); }
+[data-cor="roxo"]  { --cor-botao: var(--c-roxo); }
+[data-cor="ciano"] { --cor-botao: var(--c-ciano); }
+[data-cor="terra"] { --cor-botao: var(--c-terra); }
+[data-cor="canion"] { --cor-botao: var(--c-canion); }
+[data-cor="mar"]   { --cor-botao: var(--c-mar); }
+
+.cta {
+  margin: auto 9% 0; padding: 18px 16px; text-align: center; text-decoration: none;
+  font: 700 clamp(16px, 1.45vw, 28px) / 1.25 var(--display); letter-spacing: .04em; text-transform: uppercase;
+  color: var(--dgz-purple); background: var(--c-ciano);
+  clip-path: polygon(0 12%, 6% 0, 100% 0, 100% 86%, 94% 100%, 0 100%);   /* os cantos de recorte: o botão cyberpunk */
+  box-shadow: inset 0 -3px 0 var(--dgz-purple);
+  transition: filter .2s, transform .2s;
+}
+.cta:hover { filter: brightness(1.06); transform: translateY(-2px); }
+.painel-led { position: absolute; left: 14.4%; bottom: 10px; width: 6px; height: 6px; border-radius: 50%; background: var(--cor-canal); box-shadow: 0 0 8px var(--cor-canal); }
+
+/* ===================== TELA (a TV) ===================== */
+.tela {
+  position: relative; overflow: hidden; background: var(--tela-bg);
+  container-type: size;
+  border-radius: 1.6cqw 0 0 1.6cqw;               /* o tubo: cantos levemente arredondados */
+}
+.tela-conteudo { position: absolute; inset: 0; transform-origin: 50% 50%; }
+.canal { position: absolute; inset: 0; overflow: hidden; }
+
+/* a textura da TV, sempre por cima, sem pegar clique */
+.crt { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
+.crt-ruido { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .045; mix-blend-mode: multiply; }
+.crt-varredura { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(28,26,24,.055) 0 1px, transparent 1px 3px); }
+.crt-tracking { position: absolute; left: 0; right: 0; height: 12cqh; top: -14cqh; background: linear-gradient(transparent, rgba(255,255,255,.18) 45%, rgba(28,26,24,.05) 55%, transparent); animation: tracking 9s linear infinite; }
+.crt-vinheta { position: absolute; inset: 0; box-shadow: inset 0 0 6cqw rgba(28,26,24,.22), inset 0 0 1.2cqw rgba(28,26,24,.18); border-radius: inherit; }
+@keyframes tracking { 0% { top: -14cqh; } 70%, 100% { top: 110cqh; } }
+
+/* a troca de canal: a linha que colapsa e a estática */
+.troca { position: absolute; inset: 0; z-index: 25; pointer-events: none; opacity: 0; background: #0E0D0C; }
+.troca canvas { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; opacity: .9; }
+.troca-linha { position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: #fff; box-shadow: 0 0 18px 4px rgba(255,255,255,.8); transform: scaleX(0); }
+
+.aviso-teste { position: absolute; right: 16px; bottom: 8px; z-index: 30; margin: 0; font: 700 10px var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--tinta-2); background: rgba(243,243,243,.85); padding: 4px 8px; }
+
+/* desvio de cor nos títulos: o detalhe de tela, só nos pontos-chave */
+.rgb { text-shadow: .06em 0 0 rgba(115,202,231,.55), -.06em 0 0 rgba(162,71,149,.5); }
+
+/* ===================== componentes da tela ===================== */
+.gancho { margin: 0; font: 700 clamp(26px, 6.1cqw, 94px) / 1 var(--display); text-transform: uppercase; letter-spacing: .01em; color: var(--tinta); text-wrap: balance; }
+.nota-fundo { position: absolute; z-index: 2; margin: 0; font: 500 clamp(10px, .95cqw, 15px) var(--display); letter-spacing: .04em; text-transform: uppercase; color: var(--tinta-2); }
+.nota-fundo--base { right: 1.5cqw; bottom: 2.5cqh; max-width: 60cqw; text-align: right; }
+.nota-fundo--topo { left: 2.6cqw; top: 2cqh; }
+.ph {
+  margin: 0; display: grid; align-content: end; padding: 1.2cqw;
+  background: repeating-linear-gradient(135deg, transparent 0 10px, rgba(28,26,24,.05) 10px 11px), var(--cinza-cartao);
+  color: #fff; font: 500 clamp(10px, .95cqw, 15px) / 1.35 var(--corpo);
+}
+.botao {
+  display: inline-flex; align-items: center; gap: 8px; padding: 12px 18px; text-decoration: none; cursor: pointer; border: 0;
+  font: 700 clamp(13px, 1.05cqw, 17px) var(--display); letter-spacing: .08em; text-transform: uppercase;
+  color: var(--tela-bg); background: var(--tinta);
+  clip-path: polygon(0 0, 92% 0, 100% 30%, 100% 100%, 8% 100%, 0 70%);
+  transition: background-color .2s, transform .2s;
+}
+.botao:hover { background: var(--cor-canal); transform: translateY(-2px); }
+.botao--off { background: #CFCAC2; color: var(--tinta-2); cursor: default; }
+.botao--off:hover { background: #CFCAC2; transform: none; }
+.botao small { font-size: .75em; opacity: .8; }
+
+/* tags, com o +X que abre a lista */
+.tags { display: flex; flex-wrap: wrap; gap: .8cqw; align-items: center; position: relative; }
+.tag {
+  font: 700 clamp(11px, 1.25cqw, 20px) var(--display); letter-spacing: .2em; text-transform: uppercase;
+  padding: .5em 1.1em; border-radius: 999px; background: var(--cor-canal); color: #fff; border: 0;
+}
+.tag--mais { cursor: pointer; background: transparent; color: var(--cor-canal); box-shadow: inset 0 0 0 2px var(--cor-canal); }
+.tags-lista {
+  position: absolute; top: calc(100% + 8px); left: 0; z-index: 8; margin: 0; padding: 8px 0; list-style: none; min-width: 16em;
+  background: var(--tela-bg); box-shadow: 0 10px 30px rgba(28,26,24,.18), inset 0 0 0 1px rgba(28,26,24,.1);
+  font: 600 clamp(12px, 1.05cqw, 16px) var(--corpo);
+}
+.tags-lista li { padding: 6px 16px; }
+
+/* ===================== INÍCIO ===================== */
+.mosaico { position: absolute; inset: -10%; opacity: .08; filter: grayscale(.4); }
+.mosaico-faixa { display: grid; grid-template-columns: repeat(8, 1fr); gap: 1cqw; width: 140%; }
+.mosaico-faixa i { aspect-ratio: 4 / 3; background: var(--cinza-cartao); }
+.mosaico-faixa i:nth-child(3n) { background: var(--c-roxo); }
+.mosaico-faixa i:nth-child(5n) { background: var(--c-ciano); }
+.mosaico-faixa i:nth-child(7n) { background: var(--c-clay); }
+.canal--inicio .nota-fundo { left: 50%; translate: -50% 0; bottom: 14cqh; text-align: center; max-width: 60cqw; }
+.cantos { position: absolute; inset: 3cqh 3cqw; pointer-events: none;
+  background:
+    linear-gradient(var(--tinta), var(--tinta)) left top / 3.7cqw 1.5px no-repeat,
+    linear-gradient(var(--tinta), var(--tinta)) left top / 1.5px 5.4cqh no-repeat,
+    linear-gradient(var(--tinta), var(--tinta)) right top / 3.7cqw 1.5px no-repeat,
+    linear-gradient(var(--tinta), var(--tinta)) right top / 1.5px 5.4cqh no-repeat,
+    linear-gradient(var(--tinta), var(--tinta)) left bottom / 3.7cqw 1.5px no-repeat,
+    linear-gradient(var(--tinta), var(--tinta)) left bottom / 1.5px 5.4cqh no-repeat,
+    linear-gradient(var(--tinta), var(--tinta)) right bottom / 3.7cqw 1.5px no-repeat,
+    linear-gradient(var(--tinta), var(--tinta)) right bottom / 1.5px 5.4cqh no-repeat; }
+.prova { position: absolute; top: 5.8cqh; margin: 0; font: 600 clamp(11px, 1.57cqw, 24px) var(--display); letter-spacing: .35em; text-transform: uppercase; }
+.prova--esq { left: 7.2cqw; }
+.prova--dir { right: 7.2cqw; }
+.manchete {
+  position: absolute; left: 50%; top: 41cqh; translate: -50% 0; width: 70cqw; margin: 0; text-align: center;
+  font: 700 clamp(30px, 5.6cqw, 86px) / 1.05 var(--display); text-transform: uppercase; letter-spacing: .01em;
+}
+.manchete span { display: inline; }
+.manchete-mao { display: inline-block; position: relative; transition: none; }
+.manchete-mao.cursiva { font-family: var(--mao); text-transform: none; font-size: 1.25em; line-height: .8; letter-spacing: 0; font-weight: 700; }
+.manchete-mao.falha { animation: falha .32s steps(2) both; }
+@keyframes falha {
+  0%   { clip-path: inset(0 0 60% 0); transform: translate(-.04em, 0); text-shadow: .08em 0 rgba(115,202,231,.8), -.08em 0 rgba(162,71,149,.8); }
+  25%  { clip-path: inset(40% 0 20% 0); transform: translate(.05em, .02em); }
+  50%  { clip-path: inset(10% 0 50% 0); transform: translate(-.02em, -.02em); }
+  75%  { clip-path: inset(65% 0 0 0); transform: translate(.03em, 0); }
+  100% { clip-path: inset(0); transform: none; text-shadow: none; }
+}
+.frase-servico {
+  position: absolute; left: 50%; top: 61cqh; translate: -50% 0; width: 80cqw; margin: 0; text-align: center;
+  font: 700 clamp(12px, 1.6cqw, 24px) var(--display); letter-spacing: .3em; text-transform: uppercase;
+}
+.palavra { color: var(--c-roxo); display: inline-block; min-width: 1ch; }
+.redes { position: absolute; left: 7.2cqw; right: 7.2cqw; bottom: 4cqh; display: flex; justify-content: space-between; margin: 0; padding: 0 3.6cqw; list-style: none; }
+.redes a { font: 700 clamp(13px, 1.75cqw, 27px) var(--display); letter-spacing: .04em; text-transform: uppercase; text-decoration: none; color: var(--c-ciano); transition: color .2s; }
+.redes a:hover { color: var(--c-roxo); }
+
+/* ===================== DESIGN e ARTE: os carrosséis ===================== */
+.fundo-servico { position: absolute; inset: 0; z-index: 0; opacity: .5; }
+.fundo-servico::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at var(--fx, 70%) var(--fy, 40%), color-mix(in srgb, var(--cor-canal) 26%, transparent), transparent 60%); transition: background .8s; }
+.fundo-rotulo { display: none; }
+.vitrine { position: absolute; inset: 0; z-index: 3; }
+.cartao {
+  position: absolute; overflow: hidden; cursor: pointer; border: 0; padding: 0; text-align: left;
+  background: var(--cinza-cartao); color: #fff;
+  transition: background-color .5s cubic-bezier(.45, 0, .2, 1), filter .2s;   /* a cor acompanha o movimento, sem estalo */
+}
+.cartao .ph { position: absolute; inset: 0; background-color: transparent; }
+.cartao-num { position: absolute; left: 1cqw; top: 1cqw; font: 700 clamp(11px, 1.1cqw, 18px) var(--display); letter-spacing: .16em; }
+.cartao-arte { opacity: 0; transition: opacity .3s; }
+.cartao.foco { background: var(--cor-canal); cursor: default; }
+.cartao.foco .cartao-arte { opacity: 1; }
+.cartao:not(.foco):hover { filter: brightness(1.08); }
+
+/* Design: o gancho numa faixa, a moldura de informação ao lado do foco */
+.gancho-faixa { position: absolute; z-index: 2; left: 23.4cqw; right: 0; top: 5.2cqh; min-height: 15.9cqh; display: flex; align-items: center; justify-content: flex-end; padding: 0 4.9cqw; background: #DADADA; }
+.canal--design .gancho { font-size: clamp(20px, 3.3cqw, 56px); text-align: right; padding: 1.6cqh 0; }
+.info { position: absolute; z-index: 4; }
+.fantasma { display: none; }
+#info-design { left: 43.8cqw; top: 26.4cqh; width: 52cqw; padding-top: 1.6cqh; }
+.info-linha { position: absolute; left: -29.2cqw; width: 70.6cqw; top: 0; height: 7px; background: var(--cor-canal); transform-origin: left; }
+.info-titulo { margin: 0; font: 700 clamp(22px, 4.4cqw, 68px) / 1.05 var(--display); text-transform: uppercase; }
+.info-logline { margin: 1.4cqh 0 2.2cqh; font: 600 clamp(14px, 1.75cqw, 27px) / 1.3 var(--corpo); letter-spacing: .02em; max-width: 34em; }
+
+/* Arte: o gancho solto, a barra lateral, a faixa grande, a coluna vertical */
+.gancho--arte { position: absolute; z-index: 4; left: 3.7cqw; top: 11.7cqh; max-width: 60cqw; font-size: clamp(22px, 4.4cqw, 70px); }
+#info-arte { left: 9.9cqw; top: 24.1cqh; width: 55cqw; }
+.info-barra { position: absolute; left: -1.7cqw; top: 1cqh; width: 7px; height: 51.6cqh; background: var(--cor-canal); transform-origin: top; }
+.tags--arte { position: absolute; z-index: 4; left: 9.9cqw; top: 78.2cqh; }
+.letreiro { position: absolute; z-index: 4; left: 9.9cqw; right: 36cqw; bottom: 3cqh; overflow: hidden; white-space: nowrap; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.letreiro-faixa { display: inline-flex; gap: 2.4cqw; font: 700 clamp(11px, 1.1cqw, 17px) var(--display); letter-spacing: .2em; text-transform: uppercase; color: var(--tinta-2); }
+.letreiro-faixa span::before { content: "▸ "; color: var(--cor-canal); }
+
+/* ===================== QUEM SOU (estrutura provisória) ===================== */
+.retrato { position: absolute; left: 3.7cqw; top: 18cqh; width: 26cqw; height: 66cqh; }
+.sobre-texto { position: absolute; left: 34cqw; top: 14cqh; width: 60cqw; }
+.gancho--sobre { font-size: clamp(22px, 4.4cqw, 68px); }
+.sobre-apoio { margin: 2cqh 0 0; font: 500 clamp(14px, 1.5cqw, 23px) / 1.45 var(--corpo); max-width: 40em; }
+.linha-tempo { position: absolute; left: 34cqw; right: 4cqw; top: 46cqh; height: 34cqh; }
+.lt-eixo { position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--tinta); }
+.lt-ano { position: absolute; bottom: -2.6cqh; translate: -50% 0; font: 600 clamp(9px, .85cqw, 13px) var(--display); letter-spacing: .06em; color: var(--tinta-2); }
+.lt-barra { position: absolute; height: 3.4cqh; background: var(--cinza-cartao); transform-origin: left; display: flex; align-items: center; padding: 0 .6cqw; overflow: visible; }
+.lt-barra.pillar { background: var(--cor-canal); }
+.lt-barra b { font: 700 clamp(10px, .95cqw, 15px) var(--display); letter-spacing: .06em; color: #fff; white-space: nowrap; }
+.lt-barra small { position: absolute; left: calc(100% + .6cqw); white-space: nowrap; font: 500 clamp(9px, .85cqw, 13px) var(--corpo); color: var(--tinta-2); }
+.lt-barra small.a-esquerda { left: auto; right: calc(100% + .6cqw); text-align: right; }
+.sobre-botoes { position: absolute; left: 34cqw; bottom: 5cqh; display: flex; gap: 1.2cqw; }
+
+/* ===================== CONTATO ===================== */
+.gancho--contato { position: absolute; left: 6cqw; top: 9cqh; width: 80cqw; font-size: clamp(24px, 5cqw, 78px); }
+.portas { position: absolute; left: 6cqw; right: 6cqw; top: 32cqh; height: 40cqh; display: grid; grid-template-columns: 1fr 1fr; gap: 3cqw; }
+.porta { position: relative; display: flex; flex-direction: column; justify-content: flex-end; gap: 1.6cqh; padding: 3cqw; background: #ECE8E0; box-shadow: inset 0 0 0 1px rgba(28,26,24,.12); transition: background-color .3s, transform .3s; }
+.porta:hover { background: #E4DFD4; transform: translateY(-4px); }
+.porta h3 { margin: 0; font: 700 clamp(20px, 3.1cqw, 48px) / 1 var(--display); text-transform: uppercase; }
+.porta p { margin: 0; font: 500 clamp(13px, 1.3cqw, 20px) / 1.4 var(--corpo); color: var(--tinta-2); max-width: 26em; }
+.porta .botao { align-self: flex-start; }
+.circuito { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: var(--cor-canal); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.circuito circle { fill: var(--cor-canal); }
+.porta--vaga .circuito { stroke: var(--c-roxo); }
+.porta--vaga .circuito circle { fill: var(--c-roxo); }
+.email-linha { position: absolute; left: 6cqw; top: 78cqh; display: flex; align-items: center; gap: 1.2cqw; }
+.email { font: 700 clamp(16px, 2.2cqw, 34px) var(--display); letter-spacing: .04em; user-select: all; }
+.copiar { font: 700 clamp(11px, .95cqw, 15px) var(--display); letter-spacing: .14em; text-transform: uppercase; padding: 8px 14px; border: 1.5px solid var(--tinta); background: transparent; cursor: pointer; }
+.copiar:hover { background: var(--tinta); color: var(--tela-bg); }
+.redes--contato { left: 6cqw; right: auto; gap: 4cqw; padding: 0; }
+
+/* ===================== celular (frames Mobile_Frame1–3, 402 × 874) =====================
+   Logo no topo com a linha e a aba da cor do canal; a barra de canais embaixo,
+   quadrados coloridos, o ativo vira aba de pasta com o nome. Início é o logo. */
+@media (max-width: 899px) {
+  :root { --c-ciano: var(--dgz-sea); }            /* no celular, a Arte é o azul do frame */
+  .sistema { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr auto; }
+  .painel { display: contents; }
+  .painel-logo { grid-row: 1; position: relative; z-index: 6; display: flex; justify-content: center; margin: 0; padding: 10px 0 12px; background: var(--painel-bg); border-bottom: 4px solid var(--cor-canal); transition: border-color .4s; }
+  .painel-logo img { width: 150px; }
+  .painel-logo::after { content: ""; position: absolute; left: 50%; bottom: -14px; translate: -50% 0; width: 46px; height: 10px; background: var(--cor-canal); clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%); transition: background-color .4s; }
+  .tela { grid-row: 2; border-radius: 0; }
+  .canais { grid-row: 3; display: flex; justify-content: space-around; align-items: flex-end; height: 62px; padding: 0 10px 8px; background: var(--painel-bg); z-index: 6; }
+  .canal-botao, .canal-botao:first-child { height: 48px; padding: 0; border: 0; background: none; gap: 0; position: relative; }
+  .canal-botao--inicio { display: none; }
+  .canal-botao span { display: none; }
+  .canal-quadro { width: 48px; height: 48px; background: var(--cor-botao); }
+  .canal-botao:hover { background: none; }
+  .canal-botao[aria-current="page"] { width: 138px; height: 54px; background: none; }
+  .canal-botao[aria-current="page"]::after { display: none; }
+  .canal-botao[aria-current="page"] .canal-quadro { position: absolute; inset: 0; width: 100%; height: 100%; clip-path: polygon(0 0, 38% 0, 46% 20%, 100% 20%, 100% 100%, 0 100%); }
+  .canal-botao[aria-current="page"] span { display: block; position: absolute; right: 6px; bottom: 0; padding: 8px 14px; background: #F3F3F3; font: 700 14px var(--display); letter-spacing: .04em; text-transform: uppercase; }
+  .cta, .painel-led { display: none; }
+  .crt-ruido { opacity: .04; }
+  .aviso-teste { font-size: 8px; right: 6px; bottom: 4px; }
+
+  /* Início */
+  .prova, .redes { display: none; }
+  .cantos { inset: 3cqh 6cqw; }
+  .manchete { width: 88cqw; top: 30cqh; font-size: clamp(26px, 9cqw, 44px); line-height: 1.15; }
+  .frase-servico { top: 58cqh; width: 82cqw; font-size: 13px; letter-spacing: .2em; line-height: 1.6; }
+  .canal--inicio .nota-fundo { bottom: 8cqh; max-width: 80cqw; }
+
+  /* Design: o foco no centro, os vizinhos espiando nas bordas, a caixa por cima da base do cartão */
+  .gancho-faixa { left: 0; right: 0; top: 3cqh; min-height: 0; justify-content: center; padding: 0 5cqw; background: transparent; }
+  .canal--design .gancho { font-size: clamp(22px, 9cqw, 40px); text-align: center; }
+  #info-design { left: 11.7cqw; top: auto; bottom: 7.6cqh; width: 76.6cqw; padding: 2.6cqw 3.2cqw; background: #DADADA; }
+  .info-linha { display: none; }
+  /* os fantasmas do glitch: cópias coloridas da caixa, atrás do texto; ao se descolarem, viram franjas de cor */
+  .fantasma { display: block; position: absolute; inset: 0; z-index: -1; opacity: 0; pointer-events: none; mix-blend-mode: multiply; }
+  .fantasma--ciano { background: var(--dgz-blue); }
+  .fantasma--orquidea { background: var(--dgz-orchid); }
+  .info-titulo { font-size: clamp(18px, 6.2cqw, 28px); }
+  .info-logline { margin: .6cqh 0 1.2cqh; font-size: 13px; }
+  .tags { gap: 1.6cqw; }
+  .tag { font-size: 10px; padding: .45em .8em; letter-spacing: .08em; }
+  .cartao-num { left: auto; right: 2.4cqw; }
+  .cartao .ph { align-content: start; padding-right: 10cqw; }
+  .nota-fundo--base { display: none; }
+
+  /* Arte: a tela inteira azul, a caixa no topo, a mídia grande e as abas dos outros serviços na borda */
+  .canal--arte { background: var(--c-ciano); }
+  .canal--arte .fundo-servico, .canal--arte .nota-fundo--topo, .letreiro, .info-barra { display: none; }
+  .gancho--arte { left: 5cqw; top: 3cqh; max-width: 90cqw; font-size: clamp(26px, 9cqw, 40px); color: #D8E6F0; }
+  .caixa-info { display: block; position: absolute; z-index: 3; left: 1.25cqw; right: 2cqw; top: 19.2cqh; height: 16.4cqh; background: #DADADA; clip-path: polygon(0 0, 100% 0, 100% 88%, 96% 100%, 0 100%); }
+  #info-arte { left: 5cqw; top: 21cqh; width: 88cqw; }
+  .canal--arte .info-titulo { font-size: clamp(18px, 6.2cqw, 28px); }
+  .canal--arte .info-logline { margin: .4cqh 0 0; font-size: 13px; }
+  .tags--arte { left: 5cqw; top: 30.8cqh; }
+  .canal--arte .cartao.foco { background: #1A4563; }
+  .canal--arte .cartao:not(.foco) { background: var(--c-roxo); }
+  .canal--arte .cartao:nth-child(even):not(.foco) { background: #2F7FC0; filter: brightness(.9); }
+  .canal--arte .cartao:not(.foco) > * { display: none; }
+
+  /* Quem sou e Contato: ainda sem frame de celular */
+  .retrato { left: 6cqw; top: 26cqh; width: 36cqw; height: 22cqh; }
+  .sobre-texto { left: 6cqw; top: 6cqh; width: 88cqw; }
+  .linha-tempo { left: 6cqw; right: 22cqw; top: 54cqh; height: 26cqh; }
+  .sobre-botoes { left: 6cqw; }
+  .gancho--contato { left: 6cqw; width: 88cqw; top: 5cqh; font-size: clamp(24px, 8cqw, 40px); }
+  .portas { grid-template-columns: 1fr; top: 22cqh; left: 6cqw; right: 6cqw; height: 50cqh; gap: 3cqh; }
+  .email-linha { left: 6cqw; top: 78cqh; flex-wrap: wrap; }
+  .redes--contato { display: flex; left: 6cqw; bottom: 4cqh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crt-tracking, .crt-ruido { display: none; }
+  .manchete-mao.falha { animation: none; }
+  *, *::before, *::after { transition: none !important; }
+}
