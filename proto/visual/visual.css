@@ -260,7 +260,7 @@ h3 { font: 700 clamp(15px, 1.1vw, 18px) / 1.2 var(--dgz-font-display); letter-sp
 
 /* --- celular -------------------------------------------------------------- */
 @media (max-width: 899px) {
-  .sis { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+  .sis { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; } /* minmax(0, …): a coluna nunca cresce com o conteúdo */
   .sis-topo { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; grid-row: 1;
     background: var(--topo-bg, var(--dgz-bg-raised)); color: var(--topo-fg, var(--dgz-fg)); border-bottom: 3px solid var(--sinal-atual); transition: background-color .25s, color .25s; }
   .sis-abrir { color: inherit !important; border-color: currentColor !important; }

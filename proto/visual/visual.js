@@ -85,6 +85,7 @@
   /* ---------- 2. carrossel story ---------- */
   var DURACAO = 6000;
   var faixa = document.getElementById("faixa"), contador = document.getElementById("contador");
+  if (!faixa) return; /* páginas sem carrossel (o Portão Design, por exemplo) */
   var barras = document.querySelectorAll(".historias i"), tocar = document.getElementById("tocar");
   var n = faixa.children.length, atualI = 0, inicio = 0, visivel = false, quadro = 0, parado = calmo;
 

@@ -1,0 +1,166 @@
+---
+layout: base
+copy_key: design
+link_base: "/proto"
+show_status: false
+stylesheets:
+  - /proto/visual/visual.css
+  - /proto/design/design.css
+---
+{%- comment -%}
+  Portão Design (glifo B) — primeiro módulo do site v2 (deck de copy v2,
+  ADR 0227 do hub, 2026-10-07). Landing page própria para o dono de negócio,
+  anunciável sozinha. Mesmo modelo "sistema" da proposta visual.
+
+  WIREFRAME DE CONTEÚDO: pouco texto, muito visual. Cada imagem é um
+  placeholder que DESCREVE a peça que vai ocupar o espaço; a peça é feita
+  ou resgatada uma a uma. O layout final é do Estúdio, no Paper.
+
+  Numeração do site inteiro (02–04 com o glifo B, tronco 05–08). O "06 Quem
+  sou" é outra página e aparece no menu como link.
+{%- endcomment -%}
+{%- assign c = site.data.copy.design -%}
+{%- assign email = c.contato.email.text -%}
+{%- capture mailto %}mailto:{{ email }}?subject=Projeto%20de%20design{% endcapture -%}
+
+<a class="pular" href="#s-abertura">Pular para o conteúdo</a>
+<p class="aviso-proposta">Portão Design · wireframe de conteúdo · placeholders descrevem a peça</p>
+
+<div class="sis">
+  <aside class="sis-menu" id="sis-menu" aria-label="Navegação" data-componente="Menu lateral">
+    <a class="sis-marca" href="#s-abertura"><img src="{{ '/img/logo-duminguz-escuro.svg' | relative_url }}" alt="Duminguz" width="150" height="63"></a>
+    <span class="sis-descritor">Design</span>
+    <nav>
+      <ol>
+        <li data-tema="osso"><a href="#s-abertura" data-alvo="s-abertura"><span class="idx"><i class="sinal" aria-hidden="true"></i>02</span><span class="glifo" title="Glifo B, do manual de marca (a extrair)" aria-hidden="true">B</span><span class="rotulo" data-embaralhar>{{ c.menu.abertura.text }}</span></a></li>
+        <li data-tema="areia"><a href="#s-sistema" data-alvo="s-sistema"><span class="idx"><i class="sinal" aria-hidden="true"></i>03</span><span class="glifo" aria-hidden="true">B</span><span class="rotulo" data-embaralhar>{{ c.menu.sistema.text }}</span></a></li>
+        <li data-tema="tinta"><a href="#s-trabalhos" data-alvo="s-trabalhos"><span class="idx"><i class="sinal" aria-hidden="true"></i>04</span><span class="glifo" aria-hidden="true">B</span><span class="rotulo" data-embaralhar>{{ c.menu.trabalhos.text }}</span></a></li>
+        <li data-tema="canion"><a href="#s-passos" data-alvo="s-passos"><span class="idx"><i class="sinal" aria-hidden="true"></i>05</span>{% include icone.html nome="passos" %}<span class="rotulo" data-embaralhar>{{ c.menu.passos.text }}</span></a></li>
+        <li><a href="{{ '/proto/sobre/' | relative_url }}" class="externo"><span class="idx"><i class="sinal" aria-hidden="true"></i>06</span>{% include icone.html nome="pessoa" %}<span class="rotulo">Quem sou <small>em breve</small></span></a></li>
+        <li data-tema="argila"><a href="#s-perguntas" data-alvo="s-perguntas"><span class="idx"><i class="sinal" aria-hidden="true"></i>07</span>{% include icone.html nome="pergunta" %}<span class="rotulo" data-embaralhar>{{ c.menu.perguntas.text }}</span></a></li>
+        <li data-tema="noite"><a href="#s-contato" data-alvo="s-contato"><span class="idx"><i class="sinal" aria-hidden="true"></i>08</span>{% include icone.html nome="conversa" %}<span class="rotulo" data-embaralhar>{{ c.menu.contato.text }}</span></a></li>
+      </ol>
+    </nav>
+    <p class="portas">Outra porta: <a href="{{ '/proto/arte/' | relative_url }}">Arte e 3D <small>em breve</small></a></p>
+    <a class="botao" href="{{ mailto }}">{{ c.abertura.cta.text }}</a>
+  </aside>
+
+  <header class="sis-topo" data-componente="Barra do topo (celular)">
+    <span class="sis-atual" id="sis-atual" aria-live="polite">02 {{ c.menu.abertura.text }}</span>
+    <button class="sis-abrir" aria-expanded="false" aria-controls="sis-menu">Menu</button>
+  </header>
+
+  <main class="sis-telas" id="conteudo">
+
+    {%- assign a = c.abertura %}
+    <section class="tela tela--abertura" id="s-abertura" data-tema="osso" data-componente="02B Abertura e O que faço">
+      <div class="conteudo">
+        <h1 class="h0" data-embaralhar>{{ a.frase.text }}</h1>
+        <p class="apoio">{{ a.apoio.text }}</p>
+        <figure class="ph ph--palco">
+          <figcaption><b>Placeholder · B02 · loop principal</b>
+            Uma marca real se desdobra nos lugares onde aparece: logo → cartão → post → embalagem → site no celular. 6 a 8 s, sem som, em loop.
+            <small>16:9 no PC, 4:5 no celular · vídeo pré-renderizado (webm/mp4) + pôster webp</small></figcaption>
+        </figure>
+        <div class="base">
+          <a class="botao" href="{{ mailto }}">{{ a.cta.text }}</a>
+          <ul class="provas">
+            {%- for p in a.provas %}<li>{{ p.text }}</li>{% endfor %}
+          </ul>
+        </div>
+
+        {%- assign o = c.oque %}
+        <h2 class="h1 oque-frase" data-embaralhar>{{ o.frase.text }}</h2>
+        <ul class="cartoes">
+          {%- assign descricoes = "Um logo aplicado: o mesmo símbolo no letreiro, no cartão e no avatar do Instagram. 4:3|Três posts e um pôster de uma mesma marca, lado a lado: a família visual. 4:3|Um site no celular e no PC, com a marca aplicada. 4:3" | split: "|" %}
+          {%- for i in o.itens %}
+          <li class="cartao">
+            <figure class="ph ph--cartao"><figcaption><b>Placeholder</b> {{ descricoes[forloop.index0] }}</figcaption></figure>
+            <h3>{{ i.nome.text }}</h3>
+            <p>{{ i.texto.text }}</p>
+          </li>
+          {%- endfor %}
+        </ul>
+        <p class="nota"><a href="{{ '/proto/sobre/' | relative_url }}">{{ o.vaga.text }}</a></p>
+      </div>
+    </section>
+
+    {%- assign s = c.sistema %}
+    <section class="tela" id="s-sistema" data-tema="areia" data-componente="03B Um negócio, um sistema">
+      <div class="conteudo">
+        <h2 class="h1" data-embaralhar>{{ s.frase.text }}</h2>
+        <p class="apoio">{{ s.texto.text }}</p>
+        <ol class="sequencia">
+          <li><figure class="ph"><figcaption><b>1 · Logo</b> O logo redesenhado da Pão Francês da Serra, ao lado do antigo. Quadrado.</figcaption></figure></li>
+          <li><figure class="ph"><figcaption><b>2 · Manual</b> Uma página aberta do manual da marca: cores, tipografia, usos. Quadrado.</figcaption></figure></li>
+          <li><figure class="ph"><figcaption><b>3 · Kit</b> As ilustrações do kit, espalhadas como peças soltas. Quadrado.</figcaption></figure></li>
+          <li><figure class="ph"><figcaption><b>4 · Aplicação</b> Embalagem ou post real com o kit. <em>Só entra se a aplicação existir.</em></figcaption></figure></li>
+        </ol>
+      </div>
+    </section>
+
+    {%- assign t = c.trabalhos %}
+    <section class="tela" id="s-trabalhos" data-tema="tinta" data-componente="04B Trabalhos de design">
+      <div class="conteudo">
+        <h2 class="h1" data-embaralhar>{{ t.frase.text }}</h2>
+        <div class="slots">
+          <article class="slot slot--d1">
+            <p class="slot-id">D1 · {{ t.slots[0].text }}</p>
+            <ul class="logos-grade">
+              {%- assign segmentos = "Comida|Saúde|Serviço|Bebida|Moda|Tecnologia|Cultura|Jogo" | split: "|" %}
+              {%- for seg in segmentos %}<li class="ph ph--logo"><span>Logo · {{ seg }}</span></li>{% endfor %}
+            </ul>
+          </article>
+          <article class="slot">
+            <p class="slot-id">D2 · {{ t.slots[1].text }}</p>
+            <figure class="ph"><figcaption><b>Placeholder</b> Três posts e um pôster da RedCred em sequência, como num feed. 4:5.</figcaption></figure>
+          </article>
+          <article class="slot">
+            <p class="slot-id">D3 · {{ t.slots[2].text }}</p>
+            <figure class="ph"><figcaption><b>Placeholder · 4 quadros</b> Fácil Soluções: as marcas dos produtos (Consig Fácil, FacilEat, CPay, BitPontos), as telas da interface, a campanha interna e o mascote robô 3D. 4:5 cada.</figcaption></figure>
+          </article>
+          <article class="slot">
+            <p class="slot-id">D4 · {{ t.slots[3].text }}</p>
+            <figure class="ph"><figcaption><b>Placeholder</b> O rótulo da Maledita aplicado na garrafa, fundo neutro. 4:5.</figcaption></figure>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    {%- assign p = c.passos %}
+    <section class="tela" id="s-passos" data-tema="canion" data-componente="05 Como funciona">
+      <div class="conteudo">
+        <h2 class="h1" data-embaralhar>{{ p.frase.text }}</h2>
+        <ol class="passos">
+          {%- for i in p.itens %}
+          <li><span class="num">{{ forloop.index | prepend: "0" | slice: -2, 2 }}</span><h3>{{ i.nome.text }}</h3><p>{{ i.texto.text }}</p></li>
+          {%- endfor %}
+        </ol>
+      </div>
+    </section>
+
+    {%- assign q = c.perguntas %}
+    <section class="tela" id="s-perguntas" data-tema="argila" data-componente="07 Perguntas">
+      <div class="conteudo">
+        <h2 class="h1" data-embaralhar>{{ q.frase.text }}</h2>
+        <div class="faq">
+          {%- for i in q.itens %}
+          <details><summary><span>{{ i.pergunta.text }}</span></summary><p>{{ i.resposta.text }}</p></details>
+          {%- endfor %}
+        </div>
+      </div>
+    </section>
+
+    {%- assign k = c.contato %}
+    <section class="tela tela--contato" id="s-contato" data-tema="noite" data-componente="08 Contato">
+      <div class="conteudo">
+        <h2 class="h0" data-embaralhar>{{ k.frase.text }}</h2>
+        <a class="botao botao--grande" href="{{ mailto }}">{{ k.cta.text }}</a>
+        <p class="email">{{ email }}</p>
+        <p class="nota"><a href="{{ '/proto/sobre/' | relative_url }}">{{ k.vaga.text }}</a></p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="{{ '/proto/visual/visual.js' | relative_url }}"></script>

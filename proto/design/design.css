@@ -1,0 +1,59 @@
+/* design.css — o Portão Design (/proto/design/), por cima de visual.css.
+   Só o que a página nova pede: o glifo do menu, os placeholders que descrevem
+   a peça, a sequência do sistema e os slots de trabalho. 2026-10-07. */
+
+/* o glifo do manual de marca marca a trilha. Até os nove glifos saírem do PDF
+   (tarefa aberta no brandbook do hub), uma letra no lugar. */
+.glifo {
+  display: inline-grid; place-items: center; width: 22px; height: 22px;
+  font: 700 11px var(--dgz-font-display); letter-spacing: 0;
+  border: 1px dashed currentColor; color: var(--dgz-fg-dim);
+}
+.sis-menu nav a[aria-current="true"] .glifo { color: var(--dgz-affordance); border-style: solid; }
+.rotulo small, .portas small { font-weight: 400; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--dgz-fg-dim); margin-left: 4px; }
+.portas { margin: 24px 0 0; font-size: 13px; color: var(--dgz-fg-dim); }
+
+/* placeholder: a caixa diz o que vai entrar ali, e em que formato */
+.ph {
+  margin: 0; position: relative; display: grid; align-content: end;
+  min-height: 160px; padding: 16px 18px;
+  background: repeating-linear-gradient(135deg, transparent 0 10px, color-mix(in srgb, var(--dgz-fg) 6%, transparent) 10px 11px), var(--dgz-bg-raised);
+  border: 1px dashed color-mix(in srgb, var(--dgz-fg) 45%, transparent);
+  color: var(--dgz-fg-dim); font-size: 13px; line-height: 1.45;
+}
+.ph b { display: block; font: 700 10px var(--dgz-font-display); letter-spacing: .2em; text-transform: uppercase; color: var(--dgz-affordance); margin-bottom: 6px; }
+.ph small { display: block; margin-top: 8px; font-size: 11px; letter-spacing: .06em; opacity: .85; }
+.ph em { font-style: normal; color: var(--dgz-fg); }
+
+/* 02B: o palco do loop, e os cartões de serviço logo abaixo */
+.tela--abertura { align-items: start; }
+.tela--abertura .h0 { margin-top: clamp(16px, 5dvh, 64px); max-width: 12em; }
+.ph--palco { aspect-ratio: 16 / 9; max-height: 46dvh; margin-top: 28px; }
+.tela--abertura .base { margin-top: 24px; }
+.oque-frase { margin-top: clamp(56px, 10dvh, 120px); }
+.ph--cartao { min-height: 0; aspect-ratio: 4 / 3; margin: -28px -24px 22px; }
+.cartao .ph--cartao { width: calc(100% + 48px); }
+.nota a { color: inherit; text-underline-offset: 3px; }
+
+/* 03B: a sequência logo → manual → kit → aplicação */
+.sequencia { list-style: none; margin: 32px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; counter-reset: s; }
+.sequencia .ph { aspect-ratio: 1; min-height: 0; }
+
+/* 04B: os slots de trabalho */
+.slots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.slot--d1 { grid-column: 1 / -1; }
+.slot-id { margin: 0 0 10px; font: 700 11px var(--dgz-font-display); letter-spacing: .18em; text-transform: uppercase; color: var(--dgz-affordance); }
+.slot .ph { aspect-ratio: 4 / 5; min-height: 0; }
+.logos-grade { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 10px; }
+.ph--logo { aspect-ratio: 1; min-height: 0; padding: 8px; place-content: center; text-align: center; font-size: 11px; }
+
+/* 08: o e-mail escrito, para quem prefere copiar */
+.email { margin: 18px 0 0; font: 600 14px var(--dgz-font-display); letter-spacing: .08em; color: var(--dgz-fg-dim); }
+
+@media (max-width: 899px) {
+  .sequencia { grid-template-columns: 1fr 1fr; }
+  .slots { grid-template-columns: 1fr; }
+  .logos-grade { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .slot .ph { aspect-ratio: 16 / 10; }
+  .ph--palco { aspect-ratio: 4 / 5; max-height: 52dvh; }
+}
