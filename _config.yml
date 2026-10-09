@@ -29,9 +29,13 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - README.md
+  - CLAUDE.md       # contexto para agentes: não é publicado
   - vendor
   - paper-in        # Job 0: o que vai do repositório para o Paper
   - paper-out       # Job 1: o que volta do Paper (CSS copiado, PNGs de referência)
+  - figma           # PNGs dos frames do Figma, por largura: referência de trabalho
+  - fichas          # fichas das telas: intenção, comportamento, responsivo
+  - pendencias.yml  # pendências de revisão, numeradas
   - .claude
   - painel          # o painel de construção: só local, ver _config.painel.yml
   - abrir-painel.bat
