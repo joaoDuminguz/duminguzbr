@@ -1,0 +1,30 @@
+# Pendências de revisão — escritas pelo painel de revisão ou à mão pelo João.
+# O agente lê este arquivo, resolve item a item e atualiza status e resolucao.
+#
+# Campos:
+#   id          número sequencial, nunca reaproveitado
+#   pagina      página do site
+#   secao       seção da ficha (ou nome da camada)
+#   largura     1440 | 768 | 390
+#   elemento    seletor ou descrição do elemento apontado
+#   pedido      o que mudar, em linguagem simples
+#   antes/depois  (opcional) valores medidos, quando a pendência veio da edição ao vivo
+#   referencia  PNG do Figma, se houver
+#   status      aberta | em-andamento | feita | descartada
+#   resolucao   preenchido pelo agente: o que foi feito, e o commit
+
+pendencias: []
+
+# Exemplo (apagar quando houver itens reais):
+#
+# - id: 1
+#   pagina: inicio
+#   secao: hero
+#   largura: 390
+#   elemento: ".hero__titulo"
+#   pedido: "O título está maior que no frame; ficar com o tamanho do Figma."
+#   antes: "font-size: 48px"
+#   depois: "font-size: 40px"
+#   referencia: "figma/inicio-390.png"
+#   status: aberta
+#   resolucao: ""
